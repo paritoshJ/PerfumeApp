@@ -1,0 +1,61 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Gambetta-Bold.otf",
+      "sha1": "c504f515773b06cf66e8ddaab9fc7e2c6cb22c2b"
+    },
+    {
+      "path": "assets/fonts/Gambetta-BoldItalic.otf",
+      "sha1": "f9226f1bf4d3f985d68557faf9559ac5038860ff"
+    },
+    {
+      "path": "assets/fonts/Gambetta-Italic.otf",
+      "sha1": "316830b5e4b41ebd90cc7246b3558ba007f6b87a"
+    },
+    {
+      "path": "assets/fonts/Gambetta-Light.otf",
+      "sha1": "546b38912f4f0cd678606aa18e2e26d7ff084c6a"
+    },
+    {
+      "path": "assets/fonts/Gambetta-LightItalic.otf",
+      "sha1": "ab59ebd88af7eeee710feca8ea589ffbf7493792"
+    },
+    {
+      "path": "assets/fonts/Gambetta-Medium.otf",
+      "sha1": "313553d9c7f29146ab7bc0e0de72f4d9d1e27b2d"
+    },
+    {
+      "path": "assets/fonts/Gambetta-MediumItalic.otf",
+      "sha1": "967248f3718ac4958a15da7f51546080ddef40e3"
+    },
+    {
+      "path": "assets/fonts/Gambetta-Regular.otf",
+      "sha1": "f5c07ba042fab53fac17395ccb9c1da53f2feadf"
+    },
+    {
+      "path": "assets/fonts/Gambetta-Semibold.otf",
+      "sha1": "dceeabb5c8cb30497e9f17d2daa0d426031c3117"
+    },
+    {
+      "path": "assets/fonts/Gambetta-SemiboldItalic.otf",
+      "sha1": "cb30af9be31658086af6f922921d8abda5bfe6ea"
+    },
+    {
+      "path": "assets/fonts/Gambetta-Variable.ttf",
+      "sha1": "bce6e05e5ae947006f0e76fe8135cbc0594ce4be"
+    },
+    {
+      "path": "assets/fonts/Gambetta-VariableItalic.ttf",
+      "sha1": "2f646a5ce8396f833d9166bc8aa25fbb4701de13"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Regular.ttf",
+      "sha1": "bc605aa08468cfb9a40275a6386ada56c92a5bed"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Variable.ttf",
+      "sha1": "d49872a745842f389bc9d24b73d0a3090fce50b1"
+    }
+  ]
+}
