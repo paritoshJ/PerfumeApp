@@ -22,36 +22,42 @@ import fontConstant from '../../constant/fontConstant';
 import { useTranslation } from 'react-i18next'
 import colorConstant from '../../constant/colorConstant';
 import {EMPTY_CART} from "../../api/getEmptyCart";
+import {CART_DATA} from "../../api/getCartData";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CART_DATA = [
-  {
-    id: '1',
-    image: require('../../../assets/per.png'),
-    title: 'Amber Wood Noir',
-    keyWord: 'EAU DE PARFUME / 75ML / WOMAN',
-    price: '48',
-    discountPrice: '24',
-  },
-  {
-    id: '2',
-    image: require('../../../assets/per-2.png'),
-    title: 'Amber Wood Noir',
-    keyWord: 'EAU DE PARFUME / 75ML / WOMAN',
-    price: '48',
-    discountPrice: '24',
-  },
-];
+// const CART_DATA = [
+//   {
+//     id: '1',
+//     image: require('../../../assets/per.png'),
+//     title: 'Amber Wood Noir',
+//     keyWord: 'EAU DE PARFUME / 75ML / WOMAN',
+//     price: '48',
+//     discountPrice: '24',
+//   },
+//   {
+//     id: '2',
+//     image: require('../../../assets/per-2.png'),
+//     title: 'Amber Wood Noir',
+//     keyWord: 'EAU DE PARFUME / 75ML / WOMAN',
+//     price: '48',
+//     discountPrice: '24',
+//   },
+// ];
 export default function MyCartScreen({navigation}) {
   const [isEmpty, setIsEmpty] = useState();
   const [cartId, setCartId] = useState("");
   const [orderClick, setOrderClick] = useState(false);
+  const [cartLst, setCartList] = useState([]);
   const { t } = useTranslation();
 
   const renderItem = ({item, index}) => {
     return (
       <>
-        <ProductCard item={item} offer={false} />
+        <ProductCard item={item} offer={false} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
       </>
     );
   };
@@ -81,15 +87,24 @@ export default function MyCartScreen({navigation}) {
 
   const handleCartId = async () => {
       let res = await EMPTY_CART();
-      if (res) {
-        AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
-        setCartId(res?.createEmptyCart)
+      console.log(res);
+      if (res && res?.createEmptyCart) {
+        try {
+    // await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+  setCartId(res?.createEmptyCart)
+  } catch (e) {
+    // saving error
+    console.log(e);
+  }
+        
       }
   }
 
-  const handleCartData = async () => {
-    console.log("dcgfhvbjnjm")
-    let res = await CART_DATA();
+  const handleCartData = async (cartId) => {
+    let res = await CART_DATA(cartId);
+    if(res)
+    setCartList(res);
+
     console.log("CART_DATA", res);
     // AsyncStorage.setItem('CART_ID', res);
     // setCartId(res?.createEmptyCart)
@@ -97,9 +112,9 @@ export default function MyCartScreen({navigation}) {
 
   useEffect(() => {
     handleCartId()
-  })
+  },[])
   useEffect(() => {
-    handleCartData()
+    handleCartData(cartId)
     console.log("cartId", cartId)
   },[cartId])
   
@@ -140,7 +155,7 @@ export default function MyCartScreen({navigation}) {
       ) : (
         <ScrollView>
           <View style={styles.cartDetailView}>
-            {CART_DATA.map(item => {
+            {cartLst.length>0 && cartLst.map(item => {
               return (
                 <Swipeout
                   right={swipeoutBtns}
@@ -307,6 +322,8 @@ export default function MyCartScreen({navigation}) {
                   data={perfumedata}
                   renderItem={renderItem}
                   horizontal={true}
+                              ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+
                   keyExtractor={item => item.id}
                   // ListFooterComponent={renderFooter}
                   showsHorizontalScrollIndicator={false}
@@ -471,7 +488,7 @@ const styles = StyleSheet.create({
   },
   orderNumberText: {
     fontSize: Metrics.rfv(18),
-    fontWeight: 500,
+    fontWeight: '500',
     paddingHorizontal: Metrics.rfv(20),
     color: COLORS_NEW.black,
     fontFamily: 'Gambetta-BoldItalic',

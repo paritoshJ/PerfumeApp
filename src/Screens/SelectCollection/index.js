@@ -9,6 +9,7 @@ import {
   Image,
   FlatList,
   I18nManager,
+  Alert,
 } from 'react-native';
 import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
@@ -27,17 +28,22 @@ const SelectCollection = props => {
   
   const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity
-        style={{marginTop: '5%'}}
-        onPress={() => {
-          //   props.navigation.navigate('ProductPage');
-          // refRBSheet.current.open();
-        }}>
-        <ProductCard item={item} offer={true} />
-      </TouchableOpacity>
+       <ProductCard item={item} offer={true} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
     );
   };
-
+  const renderShowAll = (key) =>{
+    return (<TouchableOpacity onPress={()=> {Alert.alert(key ?? 'Comming soon')}}>
+          <Image
+            source={imageConstant.button}
+            style={{height: 48,alignSelf:'center'}}
+            resizeMode="contain"
+          />
+        </TouchableOpacity>)
+  }
   return (
     <ScrollView style={{flex: 1, backgroundColor: 'rgba(255, 255, 255, 1)'}}>
       <ImageBackground
@@ -53,7 +59,7 @@ const SelectCollection = props => {
             onPress={() => {
               props.navigation.goBack();
             }}
-            style={{marginLeft: 15, transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
+            style={{transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
           />
           <EvilIcons name="search" size={30} color={colorConstant.BLACK} />
         </View>
@@ -72,13 +78,14 @@ const SelectCollection = props => {
       </ImageBackground>
       <View
         style={{
-          width: '90%',
-          height: 50,
           alignSelf: 'center',
           flexDirection: 'row',
           borderWidth: 1,
           borderColor: colorConstant.LIGHT_GREY,
           borderRadius: 25,
+          paddingHorizontal:20,
+          marginHorizontal:16,
+          paddingVertical:14,
           shadowColor: colorConstant.LIGHT_GREY,
           shadowOffset: {
             width: 2,
@@ -88,12 +95,12 @@ const SelectCollection = props => {
           shadowRadius: 3.22,
           elevation: 2,
           backgroundColor: colorConstant.WHITE,
-          bottom: '5%',
+          bottom:25,
         }}>
         <TouchableOpacity
           style={{
-            width: '45%',
             flexDirection: 'row',
+            flex:1,
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
@@ -101,20 +108,20 @@ const SelectCollection = props => {
             // props.navigation.navigate('short');
             setVisibale(true);
           }}>
-          <Text style={{marginLeft: 10}}>{t('Sort')}</Text>
+          <Text style={{}}>{t('Sort')}</Text>
           <Image source={imageConstant.short} style={{width: 20, height: 20}} />
         </TouchableOpacity>
-        <TouchableOpacity
+        <View
           style={{
             width: 1,
             height: 20,
             backgroundColor: colorConstant.LIGHT_GREY,
             alignSelf: 'center',
-            marginLeft: 10,
-          }}></TouchableOpacity>
+            marginHorizontal: 20,
+          }}></View>
         <TouchableOpacity
           style={{
-            width: '45%',
+            flex:1,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
@@ -122,7 +129,7 @@ const SelectCollection = props => {
           onPress={() => {
             props.navigation.navigate('FiltersScreen');
           }}>
-          <Text style={{marginLeft: 10}}>{t('Filters')}</Text>
+          <Text style={{}}>{t('Filters')}</Text>
           <Image
             source={imageConstant.filters}
             style={{width: 20, height: 20}}
@@ -130,7 +137,7 @@ const SelectCollection = props => {
         </TouchableOpacity>
       </View>
 
-      <View style={{width: '90%', alignSelf: 'center'}}>
+      <View style={{paddingHorizontal:16}}>
         <View
           style={{
             flexDirection: 'row',
@@ -157,9 +164,8 @@ const SelectCollection = props => {
           source={imageConstant.cat}
           borderRadius={10}
           style={{
-            width: '100%',
             height: 120,
-            marginTop: '5%',
+            marginTop: 8,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
@@ -175,28 +181,21 @@ const SelectCollection = props => {
           </Text>
         </ImageBackground>
 
-        <View style={{width: '100%', marginTop: 20}}>
           <FlatList
             data={perfumedata}
             renderItem={renderItem}
-            numColumns={2}
+            horizontal
+            contentContainerStyle={{marginTop: 20}}
             keyExtractor={item => item.id}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             showsHorizontalScrollIndicator={false}
           />
-        </View>
-        <TouchableOpacity>
-          <Image
-            source={imageConstant.button}
-            style={{width: '100%', height: 60, marginTop: '10%'}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+        {renderShowAll()}
 
         <ImageBackground
           source={imageConstant.catone}
           borderRadius={10}
           style={{
-            width: '100%',
             height: 120,
             marginTop: '10%',
             justifyContent: 'center',
@@ -214,30 +213,23 @@ const SelectCollection = props => {
           </Text>
         </ImageBackground>
 
-        <View style={{width: '100%', marginTop: 20}}>
           <FlatList
             data={perfumedata}
             renderItem={renderItem}
-            numColumns={2}
+            horizontal
+            contentContainerStyle={{marginTop: 20}}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             keyExtractor={item => item.id}
             showsHorizontalScrollIndicator={false}
           />
-        </View>
-        <TouchableOpacity>
-          <Image
-            source={imageConstant.button}
-            style={{width: '100%', height: 60, marginTop: '10%'}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+       {renderShowAll()}
 
         <ImageBackground
           source={imageConstant.citrus}
           borderRadius={10}
           style={{
-            width: '100%',
             height: 120,
-            marginTop: '10%',
+            marginTop: 16,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
@@ -253,23 +245,16 @@ const SelectCollection = props => {
           </Text> */}
         </ImageBackground>
 
-        <View style={{width: '100%', marginTop: 20}}>
           <FlatList
             data={perfumedata}
             renderItem={renderItem}
-            numColumns={2}
+             horizontal
+            contentContainerStyle={{marginTop: 20}}
+                        ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             keyExtractor={item => item.id}
             showsHorizontalScrollIndicator={false}
           />
-        </View>
-        <TouchableOpacity>
-          <Image
-            source={imageConstant.button}
-            style={{width: '100%', height: 60, marginTop: '10%'}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-
+       {renderShowAll()}
         <ImageBackground
           source={imageConstant.fruity}
           borderRadius={10}
@@ -292,22 +277,16 @@ const SelectCollection = props => {
           </Text> */}
         </ImageBackground>
 
-        <View style={{width: '100%', marginTop: 20}}>
           <FlatList
             data={perfumedata}
             renderItem={renderItem}
-            numColumns={2}
+            horizontal
+            contentContainerStyle={{marginTop: 20}}
+                        ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             keyExtractor={item => item.id}
             showsHorizontalScrollIndicator={false}
           />
-        </View>
-        <TouchableOpacity>
-          <Image
-            source={imageConstant.button}
-            style={{width: '100%', height: 60, marginTop: '10%'}}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
+       {renderShowAll()}
       </View>
       {visibale && (
         <ShortDataModal onOpenDailog={visibale} setOnOpenDailog={setVisibale} />

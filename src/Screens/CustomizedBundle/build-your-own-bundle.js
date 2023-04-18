@@ -88,7 +88,11 @@ export default function BuildYourOwnBundle({ navigation }) {
             <FlatGrid
               itemDimension={130}
               data={PerfumeData}
-              renderItem={({ item }) => (<ProductCard item={item} offer={true} wishlist={true}/>)}
+              renderItem={({ item }) => (<ProductCard item={item} offer={true} wishlist={true} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />)}
             />
 
           </ScrollView>

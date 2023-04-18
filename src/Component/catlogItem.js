@@ -20,7 +20,7 @@ function getRandomColor() {
         alignSelf: 'center',
         alignItems: 'center',
         flexDirection: 'row',
-        paddingVertical:16,
+        paddingVertical:icon ? 8 : 16,
         borderBottomColor: colorConstant.LIGHT_GREY,
         borderBottomWidth: 1,
       }}>
@@ -34,7 +34,7 @@ function getRandomColor() {
           <View style={{backgroundColor:getRandomColor(),borderRadius:25,alignItems:"center",justifyContent:"center"}}>
             <Image
               source={icon}
-              style={{width: 20, height: 20,}}
+              style={{width: 40, height: 40,}}
               resizeMode="contain"
             />
           </View>
@@ -43,6 +43,8 @@ function getRandomColor() {
             style={{
               color: colorConstant.BLACK,
               marginLeft: icon ? 10 : 0,
+              fontSize: 14,
+              textTransform:'uppercase'
             }}>
             {name}
           </Text>
@@ -53,7 +55,7 @@ function getRandomColor() {
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-          <AntDesign name="right" size={20} color={colorConstant.LIGHT_GREY} style={{ transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}/>
+          <AntDesign name="right" size={15} color={colorConstant.LIGHT_GREY} style={{ transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}/>
         </View>
       )}
     </View>

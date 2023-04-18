@@ -119,7 +119,11 @@ const ProductPage = props => {
   const renderItem = ({item, index}) => {
     return (
       <>
-        <ProductCard item={item} offer={false} />
+        <ProductCard item={item} offer={false} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
       </>
     );
   };

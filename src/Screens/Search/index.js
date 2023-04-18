@@ -85,7 +85,11 @@ const SearchScreen = () => {
   const renderItem = ({item}) => {
     return(
       <>
-      <ProductCard item={item}/>
+      <ProductCard item={item} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
       </>
     )
   };

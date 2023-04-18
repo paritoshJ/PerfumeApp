@@ -18,7 +18,6 @@ const ProductCard = props => {
   const {item, offer, wishlist} = props;
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
 
-
   let name = item?.name;
   let price = item?.price_range?.minimum_price?.regular_price?.value;
   let fav = item?.name;
@@ -47,17 +46,18 @@ const ProductCard = props => {
   }
 
   return (
-    <View style={{width: 180, flexDirection: 'column'}}>
+    <TouchableOpacity
+    key={item}
+    onPress={()=>props?.onFullItemPress()}
+    style={{width: 150,}}>
       <View
         style={{
-          width: wishlist ? 140 : 150,
           height: 200,
           backgroundColor: getRandomColor(),
           borderRadius: 20,
         }}>
         <View
           style={{
-            width: '100%',
             justifyContent: offer ? 'space-between' : 'flex-end',
             flexDirection: 'row',
           }}>
@@ -84,14 +84,6 @@ const ProductCard = props => {
             </View>
           )}
           <View style={{padding: 10}}>
-            {/* <Image
-            source={imageConstant.fav}
-            style={{
-              width: 18,
-              height: 18,
-            }}
-            resizeMode="contain"
-          /> */}
             <MaterialIcons
               name="favorite-border"
               size={22}
@@ -104,72 +96,32 @@ const ProductCard = props => {
         {String(imagetwo).length > 5 && (
           <Image
             source={{uri: offer ? imagetwo : image}}
-            // source={{uri: image}}
-            // source={{
-            //   uri: 'https://integration-5ojmyuq-vvqszukhxdw6q.eu-3.magentosite.cloud/media/catalog/product/cache/a71ef2688f252f761be19aa448a109e9/m/e/menu-img-2.jpg',
-            // }}
             style={{width: '50%', height: 120, alignSelf: 'center'}}
             resizeMode="contain"
           />
         )}
       </View>
 
-      <View
-        style={{
-          width: 200,
-          // alignItems: 'center',
-          justifyContent: 'center',
-          marginTop: '5%',
-          // alignItems:I18nManager.isRTL ? 'flex-start' : 'flex-end'
-          // marginLeft: 20,
-          // backgroundColor:"red"
-        }}>
-        <View style={{flexDirection: 'row'}}>
-          {/* <TouchableOpacity
-            style={{
-              // width: 40,
-              height: 25,
-              borderRadius: 20,
-              borderWidth: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderColor: colorConstant.LIGHT_GREY,
-            }}
-            onPress={() => {
-              setSelected(size);
-            }}>
-            <Text
-              style={{
-                paddingLeft: 10,
-                paddingRight: 10,
-                fontFamily: fontConstant.satoshi,
-                fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
-                fontWeight: fontConstant.WEIGHT_LEIGHT,
-                color: colorConstant.BLACK,
-              }}>
-              {size}
-            </Text>
-          </TouchableOpacity> */}
+     <View style={{flexDirection: 'row', marginVertical: 12,}}>
           <TouchableOpacity
             style={{
               // width: 50,
-              height: 25,
               borderRadius: 20,
               borderWidth: 1,
               alignItems: 'center',
               justifyContent: 'center',
-              marginLeft: 10,
               borderColor: colorConstant.LIGHT_GREY,
             }}
             onPress={() => {
               // setSelected(size);
+              props?.onSizeSelect();
             }}>
             <Text
               style={{
-                paddingLeft: 10,
-                paddingRight: 10,
+                paddingHorizontal: 12,
+                paddingVertical: 8,
                 fontFamily: fontConstant.satoshi,
-                fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
+                fontSize: 12,
                 fontWeight: fontConstant.WEIGHT_LEIGHT,
                 color: colorConstant.BLACK,
               }}>
@@ -177,19 +129,14 @@ const ProductCard = props => {
             </Text>
           </TouchableOpacity>
         </View>
-        <View
-          style={{
-            alignItems: 'flex-start',
-            justifyContent: 'flex-start',
-          }}>
+        
           <Text
             style={{
               fontFamily: fontConstant.satoshi,
-              fontSize: fontConstant.TEXT_12_SIZE_REGULAR,
+              fontSize: 12,
               fontStyle: 'normal',
               fontWeight: fontConstant.WEIGHT_LEIGHT,
               color: colorConstant.LIGHT_TEXT,
-              marginTop: '2%',
             }}>
             {cat}
           </Text>
@@ -200,11 +147,11 @@ const ProductCard = props => {
               fontStyle: 'italic',
               fontFamily: fontConstant.gambetta,
               fontWeight: fontConstant.WEIGHT_REGULAR,
-              marginTop: '2%',
+              marginTop:6,
+              textTransform:'capitalize',
             }}>
             {name}
           </Text>
-        </View>
         <View style={styles.price_view}>
           <Text style={styles.offer_price}>{item?.price_range?.minimum_price?.final_price
 ?.value} {item?.price_range?.minimum_price?.final_price
@@ -223,19 +170,7 @@ const ProductCard = props => {
 ?.currency}
           </Text> */}
         </View>
-        {/*
-        <Text
-          style={{
-            color: colorConstant.BLACK,
-            fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
-            fontStyle: 'italic',
-            fontFamily: fontConstant.gambetta,
-            fontWeight: fontConstant.WEIGHT_REGULAR,
-          }}>
-          {item.price}
-        </Text> */}
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -246,7 +181,7 @@ const styles = StyleSheet.create({
     fontSize: fontConstant.TEXT_20_SIZE_BOLD,
     fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
   },
-  price_view: {flexDirection: 'row', marginTop: '2%'},
+  price_view: {flexDirection: 'row', marginTop: 8},
 });
 
 export default ProductCard;

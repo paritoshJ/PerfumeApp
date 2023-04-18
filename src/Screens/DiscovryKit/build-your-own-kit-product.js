@@ -98,7 +98,12 @@ export default function BuildYourOwnBox({navigation}) {
           itemDimension={130}
           data={PerfumeData}
           renderItem={({item}) => (
-            <ProductCard item={item} offer={true} wishlist={true} />
+            
+            <ProductCard item={item} offer={true} wishlist={true} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
           )}
         />
       </ScrollView>

@@ -11,19 +11,18 @@ export default StyleSheet.create({
   header_view: {
     width: '100%',
     height: 200,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
     // backgroundColor: colorConstant.PRIMARY,
     // flexDirection: 'row',
     // borderBottomLeftRadius: 25,
     // borderBottomRightRadius: 25,
   },
   share_view: {
-    width: '100%',
-    height: 40,
     marginTop: '5%',
-    alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    marginTop:'10%'
+    paddingHorizontal: 16,
   },
 });

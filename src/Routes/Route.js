@@ -258,15 +258,16 @@ const Route = navigation => {
           activeIconBackColor="#BC8B57"
           navigationHandler={screen => {
             // call your navigation method
-            console.log(screen, '::::: SCREEN :::');
+            console.log(screen, '::::: SCREEN :::', props);
             navigate(screen);
           }}
           {...props}
         />
       )}
       screenOptions={{headerShown: false}}
+      // tabBarOptions={{}}
       initialRouteName="Main">
-      <TabsNavigator.Screen name="Catalog" component={CatalogStack} />
+      <TabsNavigator.Screen name="Catalog" component={CatalogStack}  />
       <TabsNavigator.Screen name="Wishlist" component={WishlistStack} />
       <TabsNavigator.Screen name="Main" component={MainStack} />
       <TabsNavigator.Screen name="My cart" component={MyCartStack} />

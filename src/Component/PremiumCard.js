@@ -23,7 +23,6 @@ const PremiumCard = props => {
         height: 270,
         backgroundColor: getRandomColor(),
         borderRadius: 10,
-        marginLeft: 20,
       }}
       onPress={() => {
         navigationRef.navigate('ProductPage');

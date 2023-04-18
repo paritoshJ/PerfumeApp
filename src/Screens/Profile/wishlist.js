@@ -40,7 +40,7 @@ export default function WishList({navigation}) {
                 width: Metrics.rfv(15),
                 height: Metrics.rfv(15),
                  resizeMode: 'contain',
-                transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+                transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : [{ rotate: '0deg' }],
               }}
   
               source={require('../../../assets/back-white.png')}
@@ -96,7 +96,11 @@ export default function WishList({navigation}) {
               itemDimension={130}
               data={PerfumeData}
               renderItem={({item}) => (
-                <ProductCard item={item} offer={true} wishlist={true} />
+                <ProductCard item={item} offer={true} wishlist={true} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
               )}
             />
           </ScrollView>

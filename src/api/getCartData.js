@@ -1,6 +1,7 @@
 import React from 'react';
 import {gql} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export const client = new ApolloClient({
@@ -9,14 +10,13 @@ export const client = new ApolloClient({
     connectToDevTools: true
   });
 
-export const CART_DATA = async () => {
-  const cartId  = await AsyncStorage.setItem('CART_ID');
+export const CART_DATA = async (cartId) => {
+  try {
+    // const cartId  = await AsyncStorage.setItem('CART_ID');
   console.log("cart id from api", cartId)
 
     const { data, error } = await client.mutate({
-      mutation: gql`
-      {
-        cart(cart_id: ${cartId}) {
+       mutation: gql`{cart(cart_id: ${cartId}) {
           email
           billing_address {
             city
@@ -111,10 +111,16 @@ export const CART_DATA = async () => {
         }
       }`});
     if (error) {
-      alert(`error => ${JSON.stringify(error)}`);
+      // alert(`error => ${JSON.stringify(error)}`);
       console.log('error', JSON.stringify(error));
       return;
     }
-    alert(`Response: ${JSON.stringify(data)}`);
+    // alert(`Response: ${JSON.stringify(data)}`);
     console.log('data', JSON.stringify(data));
+    return data;
+  } catch (error) {
+    console.log('error', error);
+    return [];
+  }
+  
   };

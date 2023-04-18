@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   BackHandler,
   I18nManager,
   Image,
@@ -24,6 +25,7 @@ const ProductModal = props => {
   const {t, i18n} = useTranslation();
   const {onOpenDailog, setOnOpenDailog, image, title, price, cat, offer, displaySize1, sku} = props;
   const [selected, setSelected] = useState('50 ml');
+
   const closeDailog = () => {
     setOnOpenDailog(false);
   };
@@ -42,58 +44,44 @@ const ProductModal = props => {
       transparent={true}
       isVisible={onOpenDailog}
       onRequestClose={() => {
-        closeDailog();
+        // closeDailog();
       }}
       onBackdropPress={() => {
-        closeDailog();
+        // closeDailog();
       }}>
-      <MyStatusBar backgroundColor={'rgba(0, 0, 0, 0.6)'} />
+      {/* <MyStatusBar backgroundColor={'rgba(0, 0, 0, 0.6)'} /> */}
       <View style={style.centeredView}>
-        <TouchableOpacity
-                style={{
-                }}
-                onPress={() => {
-                  props.setOnOpenDailog(false);
-                }}>
-                
-                <AntDesign
-                  name="close"
-                  size={22}
-                  color={colorConstant.DARK_PRIMARY}
-                  onPress={() => {}}
-                  style={{marginLeft: 10,transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
-                />
-              </TouchableOpacity>
         <View
           style={{
-            width: '100%',
-            height: 450,
+            minHeight: 450,
             backgroundColor: 'rgba(255, 255, 255, 1)',
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
+            padding:16,
           }}>
           <View
             style={{
-              width: '90%',
-              height: 150,
+              flex:1,
               backgroundColor: 'rgba(248, 244, 241, 1)',
-              alignSelf: 'center',
-              alignItems: 'center',
-              marginTop: '5%',
               justifyContent: 'center',
-              borderRadius: 10,
+              alignItems:'center',
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
             }}>
             <Image source={{uri: image}} style={{width: 150, height: 100}} />
+             <AntDesign
+                  name="close"
+                  size={22}
+                  color={colorConstant.DARK_PRIMARY}
+                  onPress={() => {props.setOnOpenDailog(false)}}
+                  style={{position:'absolute' ,right:10, top:10, transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
+                />
           </View>
-          <View style={{width: '90%', alignSelf: 'center'}}>
+          <View style={{marginTop:14}}>
             <View
               style={{
-                width: '100%',
-                height: 50,
-                justifyContent: 'space-between',
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: '3%',
               }}>
               <Text style={style.product_name}>{title}</Text>
               <TouchableOpacity
@@ -104,14 +92,19 @@ const ProductModal = props => {
                   alignSelf: 'center',
                 }}
                 onPress={() => {
-                  navigationRef.navigate('ProductPage');
+                  props.setOnOpenDailog(false)
+                  setTimeout(() => {
+                    navigationRef.navigate('ProductPage');
+                  }, 500);
+                  
+                  
                 }}>
                 <Text style={{color: colorConstant.DARK_PRIMARY}}>
                   {t('More')}
                 </Text>
                 <AntDesign
                   name="arrowright"
-                  size={22}
+                  size={16}
                   color={colorConstant.DARK_PRIMARY}
                   onPress={() => {}}
                   style={{marginLeft: 10,transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
@@ -120,17 +113,18 @@ const ProductModal = props => {
             </View>
             <View
               style={{
+                marginVertical:6,
                 alignItems: I18nManager.isRTL ? 'flex-start' : 'flex-start',
               }}>
               <Text
                 style={{
                   fontFamily: fontConstant.satoshi,
-                  fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
+                  fontSize: 14,
                   fontStyle: 'normal',
                   fontWeight: fontConstant.WEIGHT_LEIGHT,
                   color: colorConstant.LIGHT_TEXT,
                 }}>
-                {cat}
+                {`${cat} / ${props.item.customAttributesAjmalData[0]?.gender}`}
               </Text>
             </View>
             <View style={{flexDirection: 'row', marginTop: 10}}>
@@ -145,23 +139,7 @@ const ProductModal = props => {
                   },
                 ]}
                 onPress={() => {
-                  setSelected(displaySize1);
-                }}>
-                <Text style={style.product_size_text}>{displaySize1}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[
-                  style.product_size,
-                  {
-                    borderColor:
-                      selected == displaySize1
-                        ? 'rgba(188, 139, 87, 0.9)'
-                        : 'rgba(43, 40, 38, 0.1)',
-                    marginLeft: 10,
-                  },
-                ]}
-                onPress={() => {
-                  setSelected(displaySize1);
+                  setSelected(selected === displaySize1 ? '' : displaySize1);
                 }}>
                 <Text style={style.product_size_text}>{displaySize1}</Text>
               </TouchableOpacity>
@@ -182,43 +160,30 @@ const ProductModal = props => {
             </View>
             <View style={style.add_card_view}>
               <View
-                style={{
-                  width: '30%',
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <View
                   style={{
-                    width: 100,
-                    height: 40,
                     backgroundColor: 'rgba(188, 139, 87, 0.1)',
-                    borderRadius: 20,
-                    justifyContent: 'space-around',
+                    borderRadius:36,
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
                   <Image
                     source={imageConstant.mins}
-                    style={{width: 20, height: 20}}
+                    style={{width: 20, height: 20,marginHorizontal:12,}}
                     resizeMode="contain"
                   />
                   <Text style={style.product_size_text}>1</Text>
                   <Image
                     source={imageConstant.plus}
-                    style={{width: 20, height: 20}}
+                    style={{width: 20, height: 20, marginHorizontal:12}}
                     resizeMode="contain"
                   />
                 </View>
-              </View>
               <TouchableOpacity
                 onPress={() => handleAddToCart()}
                 style={{
-                  width: '55%',
-                  height: 50,
                   alignItems: 'center',
-                  justifyContent: 'center',
                   marginLeft: 10,
+                  flex:1,
                 }}>
                 <View
                   id={sku}
@@ -232,14 +197,7 @@ const ProductModal = props => {
                   </Text>
                 </View>
               </TouchableOpacity>
-              <View
-                style={{
-                  width: '15%',
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <View
+               <View
                   style={{
                     width: 40,
                     height: 40,
@@ -255,7 +213,6 @@ const ProductModal = props => {
                     onPress={() => {}}
                   />
                 </View>
-              </View>
             </View>
           </View>
         </View>
@@ -272,17 +229,18 @@ const style = StyleSheet.create({
   },
   product_name: {
     fontFamily: fontConstant.gambetta,
-    fontSize: fontConstant.TEXT_27_SIZE_REGULAR,
+    fontSize: 18,
     fontStyle: 'italic',
-    fontWeight: fontConstant.WEIGHT_REGULAR,
+    flex:1,
+    // fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
     // paddingTop: 15,
   },
   product_size: {
-    width: 80,
-    height: 50,
     borderRadius: 10,
     borderWidth: 1,
+    paddingHorizontal:16,
+    paddingVertical:12,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -292,21 +250,18 @@ const style = StyleSheet.create({
     fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
   },
-  price_view: {flexDirection: 'row', marginTop: 15, marginLeft: 5},
+  price_view: {flexDirection: 'row', marginTop: 16,},
   add_card_view: {
-    width: '90%',
-    height: 60,
     alignSelf: 'center',
-    marginTop: '8%',
-    marginBottom: '8%',
+    marginVertical: 16,
+    justifyContent:'space-between',
     flexDirection: 'row',
   },
   review_add_view: {
-    width: 150,
-    height: 40,
-    borderRadius: 20,
+    borderRadius: 36,
+    paddingHorizontal:56,
+    paddingVertical:12,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   text_viewall: {
     color: colorConstant.DARK_PRIMARY,
@@ -315,7 +270,7 @@ const style = StyleSheet.create({
     fontWeight: fontConstant.WEIGHT_LEIGHT,
   },
   product_size_text: {
-    color: colorConstant.DARK_PRIMARY,
+    color: colorConstant.BLACK,
   }
 });
 

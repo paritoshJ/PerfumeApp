@@ -9,6 +9,7 @@ import {
   TextInput,
   ImageBackground,
   I18nManager,
+  Alert,
 } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import style from './style';
@@ -33,6 +34,7 @@ import ProductModal from '../../modal/productmodal';
 import {useTranslation} from 'react-i18next';
 import {GET_PRODUCTS} from '../../api/getProduct';
 import {GET_HOME_DATA} from '../../api/getHomeData';
+import alertMsgConstant from '../../constant/alertMsgConstant';
 
 const MainScreen = props => {
   const [onOpenDailog, setonOpenDailog] = useState(false);
@@ -77,33 +79,34 @@ const MainScreen = props => {
 
   const renderItemProduct = ({item, index}) => {
     return (
-      <TouchableOpacity
-        key={item}
-        onPress={() => {
+      <ProductCard 
+      item={item} 
+      offer={false}
+      onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
           setSelectedProduct(item);
           setonOpenDailog(true);
-        }}>
-        <ProductCard item={item} offer={false} />
-      </TouchableOpacity>
+        }}/>
     );
   };
   const renderItem = ({item, index}) => {
     return (
-      <TouchableOpacity
-        key={item}
-        onPress={() => {
+       <ProductCard item={item} offer={false} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
           // setSelectedProduct(item);
           // setonOpenDailog(true);
-        }}>
-        <ProductCard item={item} offer={false} />
-      </TouchableOpacity>
+        }} />
     );
   };
 
   const renderSaleItem = ({item}) => {
     return (
       <View key={item}>
-        <ProductCard item={item} offer={true} />
+        <ProductCard item={item} offer={true} onSizeSelect={(data)=>{}} 
+      onFullItemPress ={() => {
+          // setSelectedProduct(item);
+          // setonOpenDailog(true);
+        }} />
       </View>
     );
   };
@@ -208,6 +211,7 @@ const onLayout = (e) => {
   //    />
 
   }
+  const closeDialog=()=>{setonOpenDailog(false)}
   return (
     <ScrollView style={style.container}>
       {/* <StatusBar
@@ -222,8 +226,9 @@ const onLayout = (e) => {
 
       {onOpenDailog && (
         <ProductModal
+          item={selectedProduct}
           onOpenDailog={onOpenDailog}
-          setOnOpenDailog={(val)=>{console.log(val); setonOpenDailog(false)}}
+          setOnOpenDailog={closeDialog}
           image={selectedProduct?.image.url}
           title={selectedProduct?.name}
           sku={selectedProduct.sku}
@@ -307,6 +312,7 @@ const onLayout = (e) => {
             data={productData}
             renderItem={renderItemProduct}
             horizontal={true}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             keyExtractor={(item, index) => index.toString()}
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}
@@ -328,6 +334,8 @@ const onLayout = (e) => {
             renderItem={cardrenderItem}
             // ListFooterComponent={renderFooterCard}
             showsHorizontalScrollIndicator={false}
+                        ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+
           />
         </View>
 
@@ -355,15 +363,15 @@ const onLayout = (e) => {
               data={premiumdata}
               renderItem={({item}) => {
                 return (
-                  <View style={style.premiumdata_contain}>
                     <PremiumCard item={item} offer={true} />
-                  </View>
                 );
               }}
               horizontal={true}
               keyExtractor={item => item.id}
               // ListFooterComponent={renderFooter}
               showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+
             />
           </ImageBackground>
         </View>
@@ -391,7 +399,8 @@ const onLayout = (e) => {
         </View>
         <View style={style.perfumeData}>
           <FlatList
-            
+                          ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+
             data={perfumedata}
             renderItem={renderItem}
             horizontal={true}
@@ -427,6 +436,7 @@ const onLayout = (e) => {
             renderItem={renderItem}
             horizontal={true}
             keyExtractor={item => item.id}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}
           />
@@ -440,6 +450,7 @@ const onLayout = (e) => {
             data={saleDataArr}
             renderItem={renderSaleItem}
             horizontal={true}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
             keyExtractor={item => item.id}
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}

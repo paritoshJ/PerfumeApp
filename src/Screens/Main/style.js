@@ -86,7 +86,7 @@ export default StyleSheet.create({
     fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_REGULAR,
     fontFamily: fontConstant.gambetta,
-    fontStyle: 'normal',
+    fontStyle: 'italic',
     color: colorConstant.TEXT_COLOR,
   },
   premium_text: {
@@ -107,7 +107,7 @@ export default StyleSheet.create({
   footer: {
     width: 150,
     height: 200,
-    marginRight: 15,
+    marginHorizontal: 16,
     borderWidth:1,
     borderColor:colorConstant.DARK_PRIMARY,
     borderRadius:20,

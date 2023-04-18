@@ -19,7 +19,13 @@ export const EMPTY_CART = async () => {
       alert(`error => ${JSON.stringify(error)}`);
       console.log('error', JSON.stringify(error));
       return;
+    }else{
+      console.log('data', JSON.stringify(data));
+return data;
     }
-    alert(`Response: ${JSON.stringify(data)}`);
-    console.log('data', JSON.stringify(data));
+    // alert(`Response: ${JSON.stringify(data)}`);
+    // resolve(!error)
+    
+    
+    
   };

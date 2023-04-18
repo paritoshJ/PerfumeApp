@@ -45,7 +45,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
+    marginHorizontal: 16,
     borderBottomColor: colorConstant.LIGHT_GREY,
     borderBottomWidth: 1,
   },
@@ -65,8 +65,10 @@ export default StyleSheet.create({
     fontWeight: fontConstant.WEIGHT_LEIGHT,
   },
   new_Contain:{
-    width: '90%',
+    marginHorizontal: 20,
+    marginVertical: 10,
     alignSelf: 'center',
+    paddingBottom: 60,
   },
   micnoneIcon_Contain:{
     width: '10%',

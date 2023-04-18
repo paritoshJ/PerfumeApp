@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const CatalogScreen = props => {
   const [text, setText] = useState('');
-  const [categoryData, setcategoryData] = useState('');
+  const [categoryData, setcategoryData] = useState([]);
   const {t, i18n} = useTranslation();
   const navigation = useNavigation()
 
@@ -30,6 +30,9 @@ const CatalogScreen = props => {
     getCategory()
   },[])
   
+  const onChangeText = () =>{
+    
+  }
   const getCategory = async () => {
     let res = await GET_CATEGORY();
     setcategoryData(res.category.children)
@@ -58,45 +61,8 @@ const CatalogScreen = props => {
       </TouchableOpacity>
     );
   };
-  return (
-    <View style={style.container}>
-      <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
-      <View style={style.CatalogScreen_Contain}>
-        <TouchableOpacity
-          style={style.EvilIcons_Icon_Contain}
-          onPress={() => {
-            navigation.navigate('SearchScreen');
-          }}>
-          <EvilIcons name="search" size={30} color={colorConstant.LIGHT_GREY} />
-        </TouchableOpacity>
-        <View style={style.searchbar_Contain}>
-          <TextInput
-            value={text}
-            onChangeText={setText}
-            placeholder={t('Search for perfume')}
-            style={style.searchtext_Contain}
-          />
-        </View>
-        <View style={style.micnoneIcon_Contain}>
-          <View style={style.micnoneIcon_Row}></View>
-          <MaterialIcons
-            name="mic-none"
-            size={25}
-            color={colorConstant.LIGHT_GREY}
-            style={style.micnoneIcon}
-          />
-        </View>
-      </View>
-
-      <View style={style.new_Contain}>
-        <View style={{alignItems: 'flex-start'}}>
-          <Text style={style.header_title}>{t('New')}</Text>
-        </View>
-        <View style={style.border}></View>
-
-        <FlatList data={categorydata} renderItem={renderItem} />
-
-        <View
+  const renderFooter = () =>{
+    return (<View
           style={{
             width: '100%',
             height: 50,
@@ -127,8 +93,45 @@ const CatalogScreen = props => {
             />
             <Text style={{marginLeft: 10}}>{t('Contacts')}</Text>
           </View>
+        </View>)
+  }
+  const renderHeader = () =>{
+    return ( <><View style={{ alignItems: 'flex-start' }}>
+      <Text style={style.header_title}>{t('New')}</Text>
+    </View><View style={style.border}></View></>)
+  }
+  return (
+    <View style={style.container}>
+      <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
+      <View style={style.CatalogScreen_Contain}>
+        <TouchableOpacity
+          style={style.EvilIcons_Icon_Contain}
+          onPress={() => {
+            navigation.navigate('SearchScreen');
+          }}>
+          <EvilIcons name="search" size={30} color={colorConstant.LIGHT_GREY} />
+        </TouchableOpacity>
+        <View style={style.searchbar_Contain}>
+          <TextInput
+            value={text}
+            onChangeText={setText}
+            placeholder={t('Search for perfume')}
+            style={style.searchtext_Contain}
+          />
+        </View>
+        <View style={style.micnoneIcon_Contain}>
+          <View style={style.micnoneIcon_Row}></View>
+          <MaterialIcons
+            name="mic-none"
+            size={25}
+            color={colorConstant.LIGHT_GREY}
+            style={style.micnoneIcon}
+          />
         </View>
       </View>
+
+      <FlatList contentContainerStyle={style.new_Contain} data={categorydata} renderItem={renderItem} ListFooterComponent={renderFooter} ListHeaderComponent={renderHeader}/>
+
     </View>
   );
 };
