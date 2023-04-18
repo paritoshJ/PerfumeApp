@@ -54,7 +54,7 @@ const ProductCard = props => {
         style={{
           height: 200,
           backgroundColor: getRandomColor(),
-          borderRadius: 20,
+          borderRadius: 12,
         }}>
         <View
           style={{

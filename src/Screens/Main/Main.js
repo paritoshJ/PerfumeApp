@@ -145,14 +145,11 @@ const MainScreen = props => {
         style={{
           width: Metrics.rfv(280),
           height: Metrics.rfv(130),
-          marginLeft: 10,
-          marginTop: '5%',
         }}>
         <ImageBackground
           source={item.image}
           style={{
-            width: '100%',
-            height: '100%',
+            flex:1,
             alignItems: 'center',
             justifyContent: 'center',
           }}
@@ -287,54 +284,41 @@ const onLayout = (e) => {
             style={style.textinputContain}
           />
         </View>
-        <View style={style.micContain}>
-          <View style={style.micIcon_Contain}></View>
+        <View style={style.micIcon_Contain}></View>
+        <TouchableOpacity style={style.micContain}>
           <MaterialIcons
             name="mic-none"
             size={25}
             color={colorConstant.LIGHT_GREY}
             style={style.micnoneicon}
           />
-        </View>
+        </TouchableOpacity>
       </View>
 
       <View style={style.container_two}>
-        <View
-          style={{
-            width: '100%',
-            alignItems: 'flex-start',
-          }}>
-          <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
-        </View>
-
-        <View style={style.perfumeData_Conatain}>
-          <FlatList
+        <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
+         <FlatList
             data={productData}
             renderItem={renderItemProduct}
             horizontal={true}
-            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
             keyExtractor={(item, index) => index.toString()}
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}
           />
-        </View>
 
         <View
           style={{
-            width: '100%',
-            alignItems: 'flex-start',
           }}>
-          <Text style={style.perfumestextcontain}>{t('Our perfumes')}</Text>
-        </View>
-        <View>
-          <FlatList
+          <Text style={style.arrivals_text}>{t('Our perfumes')}</Text>
+       <FlatList
             data={carddata}
             horizontal={true}
             keyExtractor={item => item.id}
             renderItem={cardrenderItem}
             // ListFooterComponent={renderFooterCard}
             showsHorizontalScrollIndicator={false}
-                        ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+                        ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
 
           />
         </View>
@@ -343,13 +327,14 @@ const onLayout = (e) => {
           <ImageBackground
             source={imageConstant.banner}
             style={style.imageContstant_banner_image}
+            borderRadius={16}
             resizeMode="contain">
             <Text style={style.premium_text}>{t('Premium collection')}</Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row',alignItems:'center',marginBottom:24, marginTop:16}}>
               <Text style={style.collection_text}>{t('Go to collection')}</Text>
               <AntDesign
                 name="arrowright"
-                size={25}
+                size={14}
                 color={colorConstant.WHITE}
                 style={{
                   alignSelf: 'center',
@@ -361,6 +346,7 @@ const onLayout = (e) => {
 
             <FlatList
               data={premiumdata}
+              contentContainerStyle={{paddingHorizontal:16}}
               renderItem={({item}) => {
                 return (
                     <PremiumCard item={item} offer={true} />
@@ -370,7 +356,7 @@ const onLayout = (e) => {
               keyExtractor={item => item.id}
               // ListFooterComponent={renderFooter}
               showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+              ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
 
             />
           </ImageBackground>
@@ -380,13 +366,13 @@ const onLayout = (e) => {
           <ImageBackground
             source={imageConstant.cardwomen}
             style={style.imageConstant_card}
-            borderRadius={20}>
+            borderRadius={16}>
             <Text style={style.premium_text}>{t(`Shop women's`)}</Text>
-            <View style={{flexDirection: 'row'}}>
+            <View style={{flexDirection: 'row',alignItems:'center',marginBottom:24, marginTop:16}}>
               <Text style={style.collection_text}>{t('Go to collection')}</Text>
               <AntDesign
                 name="arrowright"
-                size={25}
+                size={16}
                 color={colorConstant.WHITE}
                 style={{
                   alignSelf: 'center',
@@ -399,8 +385,7 @@ const onLayout = (e) => {
         </View>
         <View style={style.perfumeData}>
           <FlatList
-                          ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
-
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
             data={perfumedata}
             renderItem={renderItem}
             horizontal={true}
@@ -414,13 +399,14 @@ const onLayout = (e) => {
           <ImageBackground
             source={imageConstant.cardman}
             style={style.imageConstant_card}
-            borderRadius={20}>
+            borderRadius={16}>
             <Text style={style.premium_text}>{t(`Shop men's`)}</Text>
-            <View style={{flexDirection: 'row'}}>
+                        <View style={{flexDirection: 'row',alignItems:'center',marginBottom:24, marginTop:16}}>
+
               <Text style={style.collection_text}>{t('Go to collection')}</Text>
               <AntDesign
                 name="arrowright"
-                size={25}
+                size={16}
                 color={colorConstant.WHITE}
                 style={[
                   style.arrowrightIcon,
@@ -430,27 +416,26 @@ const onLayout = (e) => {
             </View>
           </ImageBackground>
         </View>
-        {/* <View style={style.perfumedata_contain}>
+        <View style={style.perfumedata_contain}>
           <FlatList
             data={perfumedata}
             renderItem={renderItem}
             horizontal={true}
             keyExtractor={item => item.id}
-            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}
           />
-        </View> */}
+        </View>
 
         {/* <View style={{marginTop: '-25%'}}>
           <Text style={style.sale_text}>{t('Sale')}</Text>
 
           <FlatList
-            style={{marginLeft: 20}}
             data={saleDataArr}
             renderItem={renderSaleItem}
             horizontal={true}
-            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
             keyExtractor={item => item.id}
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}

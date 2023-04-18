@@ -78,11 +78,13 @@ export default StyleSheet.create({
     backgroundColor: colorConstant.WHITE,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
+     paddingHorizontal:20,
     bottom: '1%',
-    marginTop: '5%',
+    marginTop: 24,
+    
   },
   arrivals_text: {
-    padding: 15,
+    marginBottom:20,
     fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_REGULAR,
     fontFamily: fontConstant.gambetta,
@@ -90,12 +92,13 @@ export default StyleSheet.create({
     color: colorConstant.TEXT_COLOR,
   },
   premium_text: {
-    fontSize: fontConstant.TEXT_32_SIZE_REGULAR,
+    fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_REGULAR,
     fontFamily: fontConstant.gambetta,
     fontStyle: 'italic',
     color: colorConstant.WHITE,
-    marginTop: '10%',
+    marginHorizontal: 24,
+    marginTop:48,
   },
   collection_text: {
     fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
@@ -103,6 +106,7 @@ export default StyleSheet.create({
     fontFamily: fontConstant.satoshi,
     fontStyle: 'normal',
     color: colorConstant.WHITE,
+    
   },
   footer: {
     width: 150,
@@ -119,7 +123,6 @@ export default StyleSheet.create({
     color: 'gray',
   },
   sale_text: {
-    padding: 15,
     fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
     fontFamily: fontConstant.gambetta,
     fontStyle: 'italic',
@@ -133,11 +136,12 @@ export default StyleSheet.create({
     width: '100%',
   },
   searchContain: {
-    width: '90%',
-    height: 48,
     alignSelf: 'center',
     justifyContent:'center',
     flexDirection: 'row',
+    paddingHorizontal:10,
+    paddingVertical:8,
+    marginHorizontal:20,
     borderWidth: 1,
     borderColor: colorConstant.LIGHT_GREY,
     borderRadius: 25,
@@ -155,7 +159,6 @@ export default StyleSheet.create({
   searchbarRow: {
     justifyContent: 'center',
     alignItems:'center',
-    width:'15%'
   },
   textinputContain: {
     fontFamily: fontConstant.satoshi,
@@ -164,13 +167,12 @@ export default StyleSheet.create({
     fontWeight: fontConstant.WEIGHT_LEIGHT,
   },
   micContain: {
-    width: '20%',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   micnoneicon: {
     alignSelf: 'center',
-    marginLeft: 10,
+    paddingHorizontal:10,
   },
   perfumestextcontain: {
     marginTop: '3%',
@@ -184,20 +186,16 @@ export default StyleSheet.create({
     marginTop: '5%',
   },
   imageContstant_banner_image: {
-    width: '100%',
-    height: '100%',
     alignItems: 'center',
+    flex:1,
   },
   Premiumcollection_Conatin: {
-    width: '95%',
     height: Metrics.rfp(40),
-    position: 'relative',
-    alignSelf: 'center',
-    marginTop: '10%',
+    flex:1,
+    marginTop: 48,
   },
   imageConstant_card: {
-    width: '100%',
-    height: '100%',
+    flex:1,
     alignItems: 'center',
   },
   perfumeData: {
@@ -205,11 +203,8 @@ export default StyleSheet.create({
     marginLeft: 20,
   },
   imageConstant_cardman_Contain: {
-    width: '95%',
     height: Metrics.rfp(40),
-    position: 'relative',
-    alignSelf: 'center',
-    marginTop: '-20%',
+    flex:1,
     // bottom: Metrics.rfv(-130),
   },
   arrowrightIcon: {
@@ -230,6 +225,7 @@ export default StyleSheet.create({
   TextInput_row_Contain: {
     justifyContent:'center',
     alignItems: 'flex-start',
+    paddingHorizontal:10,
     flex:1,
     
   },
@@ -244,9 +240,6 @@ export default StyleSheet.create({
     marginLeft: 20,
   },
   imageContstant_banner_image_Contain: {
-    width: '98%',
-    height: 450,
-    marginTop: '10%',
-    marginLeft: 5,
+    height: 500,
   },
 });
