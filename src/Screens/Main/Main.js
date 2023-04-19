@@ -35,6 +35,7 @@ import {useTranslation} from 'react-i18next';
 import {GET_PRODUCTS} from '../../api/getProduct';
 import {GET_HOME_DATA} from '../../api/getHomeData';
 import alertMsgConstant from '../../constant/alertMsgConstant';
+import Swiper from 'react-native-swiper';
 
 const MainScreen = props => {
   const [onOpenDailog, setonOpenDailog] = useState(false);
@@ -75,7 +76,15 @@ const MainScreen = props => {
   };  
 
 
-  
+  const renderBannerInnerList = (item) => {
+    return (
+      <Image
+      resizeMethod='auto'
+      resizeMode='center' 
+      style={{height:100}}
+      source={{uri:item}}/>
+    );
+  };
 
   const renderItemProduct = ({item, index}) => {
     return (
@@ -189,24 +198,17 @@ const onLayout = (e) => {
   // });
 };
   const renderBannerImage = (arr) =>{
-    console.log('renderBannerImage',arr);
     const _arr = arr.reduce((acc,d)=>{acc.push(d.image); return acc},[]);
-    <FlatList  />
-    // return   null;
-  //   _arr.map((item))
-  //    return   <SliderBox 
-  //    images={arr.reduce((acc,d)=>{acc.push(d.image); return acc},[])}
-  //   //  sliderBoxHeight={400}
-  //    autoplay={true}
-  // circleLoop={true}
-  // resizeMethod={'resize'}
-  // resizeMode={'center'}
-  
-  // autoplayInterval={1000}
-  // onCurrentImagePressed={index => console.warn(`image ${index} pressed`)}
-  //  parentWidth={stateWidth}
-  //    />
-
+  return  <Swiper 
+  autoplay
+  loop
+  showsPagination={false}
+  style={{}} 
+  showsButtons={false}>
+              {_arr.map((item)=>{
+                return renderBannerInnerList(item)
+              })}
+      </Swiper>
   }
   const closeDialog=()=>{setonOpenDailog(false)}
   return (
@@ -264,7 +266,7 @@ const onLayout = (e) => {
                 </TouchableOpacity>
               </View>
                <View onLayout={onLayout} style={style.banner_image_view}>
-                {/* {renderBannerImage(item?.items)} */}
+                {renderBannerImage(item?.items)}
                </View>
               
             </View>
