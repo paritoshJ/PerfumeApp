@@ -1,6 +1,7 @@
 import React from 'react';
 import {gql} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
+import {Alert} from 'react-native';
 
 export const client = new ApolloClient({
   uri: 'https://integration-5ojmyuq-vvqszukhxdw6q.eu-3.magentosite.cloud/graphql',
@@ -8,35 +9,54 @@ export const client = new ApolloClient({
   connectToDevTools: true,
 });
 
-export const USER_REGISTER = async (email, password, name) => {
-  console.log(email, password, name);
-  const {data, error} = await client.mutate({
-    mutation: gql`
-      mutation {
-        createCustomer(
-            input: {
-            firstname: ${name}
-            lastname: ${name}
-            email: ${email}
-            password: ${password}
-            is_subscribed: true
+export const USER_REGISTER = async (mobile, email, password, name) => {
+  console.log(mobile, email, password, name);
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {data, error} = await client.mutate({
+        mutation: gql`
+          mutation {
+            createCustomerCustom(
+              input: {
+                email: "${email}"
+                firstname: "${name}"
+                is_subscribed: true
+                lastname: " "
+                mobile: "${mobile}"
+                password: "${password}"
+              }
+            ) {
+              customer {
+                created_at
+                customer_mobile
+                email
+                firstname
+                is_subscribed
+
+              }
+            }
           }
-        ) {
-          customer {
-            firstname
-            lastname
-            email
-            is_subscribed
-          }
-        }
+        `,
+      });
+      if (data) {
+        console.warn('data', data?.createCustomerCustom);
+        // alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
+        // console.log('data', JSON.stringify(data.generateCustomerToken.token));
+        resolve(data);
       }
-    `
+    } catch (error) {
+      Alert.alert(`${JSON.stringify(error?.message)}`);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+
+    // if (error) {
+    //   alert(`error => ${JSON.stringify(error)}`);
+    //   console.log('error', JSON.stringify(error));
+    //   return;
+    // }
+    // alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
+    // console.log('data', JSON.stringify(data.generateCustomerToken.token));
   });
-  if (error) {
-    alert(`error => ${JSON.stringify(error)}`);
-    console.log('error', JSON.stringify(error));
-    return;
-  }
-  alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
-  console.log('data', JSON.stringify(data.generateCustomerToken.token));
 };

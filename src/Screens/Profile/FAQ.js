@@ -9,6 +9,7 @@ import {
   ScrollView,
   ImageBackground,
   I18nManager,
+  FlatList,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 // import {AccordionList} from 'accordion-collapse-react-native';
@@ -36,6 +37,39 @@ export default function FAQ({navigation}) {
     setOpen(!open);
   };
 
+  const faqList = [
+    {
+      id: 1,
+      title: t('ONLINE ORDERS'),
+      src: require('./../../assets/icon/Box.png'),
+    },
+    {
+      id: 2,
+      title: t('SHIPPING'),
+      src: require('./../../assets/icon/Delivery.png'),
+    },
+    {
+      id: 3,
+      title: t('CUSTOMER SERVICE'),
+      src: require('./../../assets/icon/Gear.png'),
+    },
+    {
+      id: 4,
+      title: t('RETURN'),
+      src: require('./../../assets/icon/Returns.png'),
+    },
+    {
+      id: 5,
+      title: t('PAYMENT'),
+      src: require('./../../assets/icon/Credit.png'),
+    },
+    {
+      id: 6,
+      title: '',
+      src: '',
+    },
+  ];
+
   const List = [
     {
       id: 1,
@@ -53,6 +87,31 @@ export default function FAQ({navigation}) {
       body: 'A veritable masterpiece from the W Series of our Signature Collection. The Amber Wood perfume, is imbued with deep and intricate fruity-floral and spicy notes that have been judiciously entwined with cedar, amber wood and patchouli; to give you a sense of inimitable power.',
     },
   ];
+
+  const renderItemProduct = ({ item,index }) => {
+    if (index==5) {
+      
+      return (
+        <View
+          style={styles.loginPageComponentViewBlank}>
+        </View>
+        
+      )
+    } else {
+      return <TouchableOpacity
+      style={styles.loginPageComponentView}
+      onPress={() => navigation.navigate('OnlineOrder')}>
+      <View style={styles.loginPageComponentview1}>
+        <View>
+          <Image style={styles.loginPageComponent} source={item.src} />
+        </View>
+        <Text style={styles.loginPageComponentview2}>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
+    }
+  
+  
+  };
   return (
     <View style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -133,7 +192,17 @@ export default function FAQ({navigation}) {
       <ScrollView style={styles.scrollView}>
         {/* Fist View Component */}
         <View style={styles.FirstView}>
-          <TouchableOpacity
+          <FlatList
+            data={faqList}
+            renderItem={renderItemProduct}
+            numColumns={2}
+            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
+
+          //  contentContainerStyle={{justifyContent:'space-between'}}
+            keyExtractor={(item, index) => index.toString()}
+            // ListFooterComponent={renderFooter}
+          />
+          {/* <TouchableOpacity
             style={styles.loginPageComponentView}
             onPress={() => navigation.navigate('OnlineOrder')}>
             <View style={styles.loginPageComponentview1}>
@@ -159,9 +228,9 @@ export default function FAQ({navigation}) {
                 source={require('../../../assets/arrow.png')}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.loginPageComponentView}
             onPress={() => navigation.navigate('')}>
             <View style={styles.loginPageComponentview1}>
@@ -265,10 +334,12 @@ export default function FAQ({navigation}) {
                 source={require('../../../assets/arrow.png')}
               />
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         {/* Second View */}
         <View style={{paddingHorizontal: Metrics.rfv(15)}}>
+         
+          <View style={styles.ListView}>
           <Text
             style={{
               fontSize: Metrics.rfv(18),
@@ -279,7 +350,6 @@ export default function FAQ({navigation}) {
             }}>
             {t('Popular FAQs')}
           </Text>
-          <View style={styles.ListView}>
             {List.map(item => {
               return (
                 <Collapse index={item.id} onToggle={handleClick}>
@@ -358,13 +428,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Gambetta-BoldItalic',
   },
   loginPageComponentView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginHorizontal: Metrics.rfv(15),
-    borderBottomColor: COLORS_NEW.lightGray,
-    borderBottomWidth: Metrics.rfv(1),
+    borderColor: COLORS_NEW.lightGray,
+    borderRadius: Metrics.rfv(10),
+    borderWidth: Metrics.rfv(1),
     paddingVertical: Metrics.rfv(20),
     alignItems: 'center',
+    flex: 1,
+    marginBottom: Metrics.rfv(15),
+  },
+  loginPageComponentViewBlank: {
+    marginHorizontal: Metrics.rfv(15),
+    borderColor: COLORS_NEW.lightGray,
+    borderRadius: Metrics.rfv(10),
+    // borderWidth: Metrics.rfv(1),
+    paddingVertical: Metrics.rfv(20),
+    alignItems: 'center',
+    flex: 1,
+    marginBottom: Metrics.rfv(15),
   },
   loginPageComponentText: {
     flexDirection: 'row',
@@ -372,13 +453,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loginPageComponentview1: {
-    flexDirection: 'row',
+    // flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
   },
   loginPageComponent: {
-    width: Metrics.rfv(20),
-    height: Metrics.rfv(20),
+    width: Metrics.rfv(30),
+    height: Metrics.rfv(30),
     resizeMode: 'contain',
   },
   profileInfoView: {
@@ -399,9 +480,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   loginPageComponentview2: {
-    marginLeft: Metrics.rfv(15),
-    marginTop: Metrics.rfv(1),
+    marginHorizontal: Metrics.rfv(15),
+    marginTop: Metrics.rfv(10),
     color: COLORS_NEW.black,
+    textAlign:'center'
   },
   FirstView: {
     marginTop: Metrics.rfv(10),

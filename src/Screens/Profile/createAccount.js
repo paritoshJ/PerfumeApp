@@ -8,6 +8,8 @@ import {
   Image,
   TouchableOpacity,
   I18nManager,
+  KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -18,21 +20,51 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useQuery} from '@apollo/client';
 import {USER_REGISTER} from '../../api/useCreateCustomer';
+import CheckBoxSection from '../../Component/CheckBoxSection';
+import {inValidEmail, isEmpty} from '../../Helper/helper';
+import {useTranslation} from 'react-i18next';
+import MobileInput from '../../Component/MobileInput';
+import colorConstant from '../../constant/colorConstant';
+import {inValidPhoneNumber} from '../../Helper/helper';
 
 export default function CreateAccount({navigation}) {
   const [isSelected, setSelection] = useState(false);
   const [name, setName] = useState('');
-  const [inputDetail, setInput] = useState('');
+  const [inputDetail, setinputDetail] = useState('');
+  const [mobileDetail, setMobileDetail] = useState('');
+
   const [password, setPassword] = useState('');
   const [buttonValue, setButtonValue] = useState('Next');
+  const [hidePassword, setHidePassword] = useState(false);
+  const [showMobile, setShowMobile] = useState(false);
+
+  const onSelect = country => {
+    setCountryCode(country.cca2);
+    setCountry(country);
+  };
+  const [countryCode, setCountryCode] = useState('FR');
+  const [country, setCountry] = useState(null);
+
+  const {t} = useTranslation();
 
   const showPasswordField = () => {
-    if (isNaN(inputDetail)) {
+    if (inputDetail.length > 0 && mobileDetail.length > 0) {
       return (
         <Input
           placeholder="Password"
           placeholderTextColor="gray"
           onChangeText={e => setPassword(e)}
+          showRightIcon
+          iw={24}
+          ih={24}
+          value={password}
+          hidePassword={hidePassword}
+          handleImagePress={() => setHidePassword(!hidePassword)}
+          imageSource={
+            hidePassword
+              ? require('./../../assets/icon/EyeClosed.png')
+              : require('./../../assets/icon/open-eye.png')
+          }
         />
       );
     }
@@ -46,15 +78,59 @@ export default function CreateAccount({navigation}) {
     }
   }, [inputDetail]);
 
-  
-  const handleRegister = async () => {
-    if ( buttonValue === 'Next') {
-      navigation.navigate('EnterTheCode')
+  const validateFields = () => {
+    if (isEmpty(inputDetail)) {
+      Alert.alert('Please enter email address');
+      return false;
+    } else if (inValidEmail(inputDetail)) {
+      Alert.alert('Please enter a valid email address');
+      return false;
+    } else if (isEmpty(mobileDetail)) {
+      Alert.alert('Please enter mobile number');
+      return false;
+    } else if (inValidPhoneNumber(mobileDetail)) {
+      Alert.alert('Please enter a valid mobile number');
+      return false;
+    } else if (isEmpty(password)) {
+      Alert.alert("Password can't be empty");
+      return false;
     } else {
-      const [{loading, error, data}] =  useQuery(USER_REGISTER(inputDetail, password, name));
-      console.log("adfsdgfhjhtgre",data.generateCustomerToken.token)
-      await AsyncStorage.setItem('token', data.generateCustomerToken.token);
-      navigation.navigate('Profile')
+      return true;
+    }
+  };
+
+  const handleRegister = async () => {
+    if (buttonValue === 'Next') {
+      navigation.navigate('EnterTheCode');
+    } else {
+      if (validateFields()) {
+        let res = await USER_REGISTER(
+          mobileDetail,
+          inputDetail,
+          password,
+          name,
+        );
+
+        // const [{loading, error, data}] = useQuery(
+        //   USER_REGISTER(mobileDetail, inputDetail, password, name),
+        // );
+        if (res) {
+          Alert.alert('You have successfully signed up', '', [
+            {
+              text: 'OK',
+              onPress: () => {
+                setinputDetail('');
+                setMobileDetail('');
+                setPassword('');
+                setName('');
+                setSelection(false);
+                navigation.navigate('EnterDetail');
+              },
+            },
+          ]);
+        }
+        // await AsyncStorage.setItem('token', data.generateCustomerToken.token);
+      }
     }
   };
 
@@ -67,8 +143,8 @@ export default function CreateAccount({navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -79,35 +155,104 @@ export default function CreateAccount({navigation}) {
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
       </View>
-      <KeyboardAwareScrollView style={styles.ScrollView}>
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={Platform.OS == 'ios' ? 45 : 0}
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+        style={styles.ScrollView}>
         <View style={styles.mainView}>
           <Input
             placeholder="Name"
             placeholderTextColor="gray"
             onChangeText={e => setName(e)}
+            value={name}
           />
-          <Input
-            placeholder="Email Or Number"
+          {/* <Input
+            placeholder="Email or number"
             placeholderTextColor="gray"
+            keyboardType={'email-address'}
             onChangeText={e => setInput(e)}
-          />
-          {showPasswordField()}
-          <View style={styles.checkboxContainer}>
-            <View style={styles.checkbox}>
-              <CheckBox value={isSelected} onValueChange={setSelection} />
+          /> */}
+          <View style={{flexDirection: 'row'}}>
+            <View style={{flex: 1}}>
+              <Input
+                placeholder={t('Email or number')}
+                placeholderTextColor="gray"
+                value={inputDetail}
+                onChangeText={e => setinputDetail(e)}
+                style={
+                  showMobile && {
+                    borderWidth: 1,
+                    borderTopRightRadius: 50,
+                    borderBottomRightRadius: 50,
+                    borderColor: colorConstant.LIGHT_MIDIUM_GREY,
+                    marginTop: 5,
+                    justifyContent: 'center',
+                    backgroundColor: 'transparent',
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  }
+                }
+              />
             </View>
-            <Text style={styles.label}>
-              I agree to the processing of my personal data
-            </Text>
           </View>
-
-          <AppButton
-            disabled={inputDetail === '' && name === '' ? true : false}
-            tx={buttonValue}
-            style={{marginTop: Metrics.rfv(16)}}
-            onPress={() => handleRegister()}
-          />
-          {/* <TouchableOpacity
+          <View
+            style={{
+              marginTop: Metrics.rfv(16),
+              flexDirection: 'row',
+            }}>
+            <MobileInput
+              onSelect={onSelect}
+              countryCode={countryCode}
+              placeholder={'Select mobile'}
+            />
+            <View style={{flex: 1}}>
+              <Input
+                placeholder={t('Phone number')}
+                placeholderTextColor="gray"
+                value={mobileDetail}
+                onChangeText={e => setMobileDetail(e)}
+                maxLength={10}
+                style={{
+                  borderWidth: 1,
+                  borderTopRightRadius: 50,
+                  borderBottomRightRadius: 50,
+                  borderTopLeftRadius: 0,
+                  borderBottomLeftRadius: 0,
+                  borderColor: colorConstant.LIGHT_MIDIUM_GREY,
+                  marginTop: 5,
+                  justifyContent: 'center',
+                  backgroundColor: 'transparent',
+                  paddingHorizontal: 10,
+                  paddingVertical: 10,
+                }}
+              />
+            </View>
+          </View>
+          {showPasswordField()}
+          <View style={styles.checkbox}>
+            <CheckBoxSection
+              setChecked={setSelection}
+              checked={isSelected}
+              labelStyle={styles.label}
+              label={'I agree to the processing of my personal data'}
+            />
+          </View>
+        </View>
+        <AppButton
+          disabled={
+            mobileDetail === '' ||
+            inputDetail === '' ||
+            name === '' ||
+            password === '' ||
+            !isSelected
+              ? true
+              : false
+          }
+          tx={buttonValue}
+          style={{marginVertical: Metrics.rfv(16)}}
+          onPress={() => handleRegister()}
+        />
+        {/* <TouchableOpacity
             onPress={() =>
               buttonValue === 'Next' && navigation.navigate('EnterTheCode')
             }
@@ -125,8 +270,7 @@ export default function CreateAccount({navigation}) {
             disabled={inputDetail === '' && name === '' ? true : false}>
             <Text style={styles.nextButtontext}>{buttonValue}</Text>
           </TouchableOpacity> */}
-        </View>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }
@@ -139,7 +283,7 @@ const styles = StyleSheet.create({
   },
   mainView: {
     flex: 1,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   TextInput: {
     backgroundColor: COLORS_NEW.white,
@@ -174,12 +318,14 @@ const styles = StyleSheet.create({
     marginBottom: Metrics.rfv(20),
     marginTop: Metrics.rfv(10),
     resizeMode: 'contain',
+    alignItems: 'center',
   },
   checkbox: {
-    alignSelf: 'center',
+    // alignSelf: 'center',
+    marginTop: Metrics.rfv(8),
   },
   label: {
-    margin: Metrics.rfv(8),
+    // margin: Metrics.rfv(8),
     fontSize: Metrics.rfv(12),
     color: COLORS_NEW.black,
   },

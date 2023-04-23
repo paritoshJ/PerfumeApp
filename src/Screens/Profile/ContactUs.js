@@ -219,6 +219,7 @@ const styles = StyleSheet.create({
     color: COLORS_NEW.black,
     fontFamily: fontConstant.satoshi,
     fontStyle: 'normal',
+    paddingVertical: Metrics.rfv(10),
   },
   termView: {
     marginTop: Metrics.rfv(20),
@@ -227,6 +228,7 @@ const styles = StyleSheet.create({
     marginTop: Metrics.rfv(20),
     borderBottomColor: COLORS_NEW.borderBottomColor,
     borderBottomWidth: 1,
+    paddingBottom: Metrics.rfv(10),
   },
   termText: {
     fontSize: Metrics.rfv(15),
