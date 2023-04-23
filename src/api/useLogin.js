@@ -72,11 +72,11 @@ export const USER_LOGIN_MOBILE = async (mobile, password, websiteId) => {
         console.log('data', JSON.stringify(data));
         resolve(data?.createCustomerTokenWithOtpPassword);
       } else {
-        Alert.alert(`${JSON.stringify(error?.message)}`);
+        Alert.alert(error?.message);
         console.log('error', JSON.stringify(error));
       }
     } catch (error) {
-      Alert.alert(`${JSON.stringify(error?.message)}`);
+      Alert.alert(error?.message);
       console.log('error', JSON.stringify(error));
       reject(error);
     }

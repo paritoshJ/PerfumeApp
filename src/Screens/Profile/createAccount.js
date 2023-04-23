@@ -175,7 +175,7 @@ export default function CreateAccount({navigation}) {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1}}>
               <Input
-                placeholder={t('Email or number')}
+                placeholder={t('Email')}
                 placeholderTextColor="gray"
                 value={inputDetail}
                 onChangeText={e => setinputDetail(e)}
