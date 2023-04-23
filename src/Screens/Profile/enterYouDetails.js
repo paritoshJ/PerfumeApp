@@ -29,6 +29,8 @@ import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
 import CheckBoxSection from '../../Component/CheckBoxSection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loader from '../../Component/Loader';
+import {TapGestureHandler} from 'react-native-gesture-handler';
 
 export default function EnterYourDetails({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
@@ -37,6 +39,7 @@ export default function EnterYourDetails({navigation}) {
   const [isSelected, setSelection] = useState(false);
   const [hidePassword, setHidePassword] = useState(false);
   const [showCountryModal, setShowCountryModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const onSelect = country => {
     setCountryCode(country.cca2);
@@ -126,6 +129,7 @@ export default function EnterYourDetails({navigation}) {
   };
   const handleLoginFlow = async fromMobile => {
     console.log('login called ...');
+    setLoading(true);
     let res = '';
     if (fromMobile) {
       res = await USER_LOGIN_MOBILE(inputDetail, password, 1);
@@ -134,6 +138,8 @@ export default function EnterYourDetails({navigation}) {
     }
 
     console.log(res, ':::: Final res :::::');
+    setLoading(false);
+
     if (res) {
       await AsyncStorage.setItem('token', res?.token);
 
@@ -371,6 +377,7 @@ export default function EnterYourDetails({navigation}) {
           onPress={() => handleLogin()}
         />
       </KeyboardAvoidingView>
+      <Loader loading={loading} />
 
       {/* <StatusBar barStyle="dark-content" />
       <View style={styles.navBarView}>

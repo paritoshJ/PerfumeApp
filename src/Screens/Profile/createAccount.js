@@ -26,9 +26,11 @@ import {useTranslation} from 'react-i18next';
 import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
 import {inValidPhoneNumber} from '../../Helper/helper';
+import Loader from '../../Component/Loader';
 
 export default function CreateAccount({navigation}) {
   const [isSelected, setSelection] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [name, setName] = useState('');
   const [inputDetail, setinputDetail] = useState('');
   const [mobileDetail, setMobileDetail] = useState('');
@@ -104,6 +106,7 @@ export default function CreateAccount({navigation}) {
       navigation.navigate('EnterTheCode');
     } else {
       if (validateFields()) {
+        setLoading(true);
         let res = await USER_REGISTER(
           mobileDetail,
           inputDetail,
@@ -114,6 +117,8 @@ export default function CreateAccount({navigation}) {
         // const [{loading, error, data}] = useQuery(
         //   USER_REGISTER(mobileDetail, inputDetail, password, name),
         // );
+        setLoading(false);
+
         if (res) {
           Alert.alert('You have successfully signed up', '', [
             {
@@ -271,6 +276,7 @@ export default function CreateAccount({navigation}) {
             <Text style={styles.nextButtontext}>{buttonValue}</Text>
           </TouchableOpacity> */}
       </KeyboardAvoidingView>
+      <Loader loading={loading} />
     </>
   );
 }
