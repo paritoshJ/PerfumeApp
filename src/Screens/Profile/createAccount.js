@@ -21,7 +21,7 @@ import MyStatusBar from '../../Component/MyStatusBar';
 import {useQuery} from '@apollo/client';
 import {USER_REGISTER} from '../../api/useCreateCustomer';
 import CheckBoxSection from '../../Component/CheckBoxSection';
-import {inValidEmail, isEmpty} from '../../Helper/helper';
+import {inValidEmail, isEmpty, showDefaultAlert} from '../../Helper/helper';
 import {useTranslation} from 'react-i18next';
 import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
@@ -82,19 +82,19 @@ export default function CreateAccount({navigation}) {
 
   const validateFields = () => {
     if (isEmpty(inputDetail)) {
-      Alert.alert('Please enter email address');
+      showDefaultAlert('Please enter email address');
       return false;
     } else if (inValidEmail(inputDetail)) {
-      Alert.alert('Please enter a valid email address');
+      showDefaultAlert('Please enter a valid email address');
       return false;
     } else if (isEmpty(mobileDetail)) {
-      Alert.alert('Please enter mobile number');
+      showDefaultAlert('Please enter mobile number');
       return false;
     } else if (inValidPhoneNumber(mobileDetail)) {
-      Alert.alert('Please enter a valid mobile number');
+      showDefaultAlert('Please enter a valid mobile number');
       return false;
     } else if (isEmpty(password)) {
-      Alert.alert("Password can't be empty");
+      showDefaultAlert("Password can't be empty");
       return false;
     } else {
       return true;
@@ -107,33 +107,33 @@ export default function CreateAccount({navigation}) {
     } else {
       if (validateFields()) {
         setLoading(true);
-        let res = await USER_REGISTER(
-          mobileDetail,
-          inputDetail,
-          password,
-          name,
-        );
+        await USER_REGISTER(mobileDetail, inputDetail, password, name)
+          .then(res => {
+            setLoading(false);
+
+            showDefaultAlert('You have successfully signed up', '', [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setinputDetail('');
+                  setMobileDetail('');
+                  setPassword('');
+                  setName('');
+                  setSelection(false);
+                  navigation.navigate('EnterDetail');
+                },
+              },
+            ]);
+          })
+          .catch(err => {
+            showDefaultAlert(err?.message);
+            setLoading(false);
+          });
 
         // const [{loading, error, data}] = useQuery(
         //   USER_REGISTER(mobileDetail, inputDetail, password, name),
         // );
-        setLoading(false);
 
-        if (res) {
-          Alert.alert('You have successfully signed up', '', [
-            {
-              text: 'OK',
-              onPress: () => {
-                setinputDetail('');
-                setMobileDetail('');
-                setPassword('');
-                setName('');
-                setSelection(false);
-                navigation.navigate('EnterDetail');
-              },
-            },
-          ]);
-        }
         // await AsyncStorage.setItem('token', data.generateCustomerToken.token);
       }
     }

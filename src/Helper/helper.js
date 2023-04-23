@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
 
 export const isEmpty = str => {
   if (str == null || str.trim() == '') {
@@ -46,4 +47,8 @@ export const inValidPhoneNumber = str => {
   } else {
     return false;
   }
+};
+
+export const showDefaultAlert = (message, title = '', action = null) => {
+  Alert.alert(title, message, action);
 };

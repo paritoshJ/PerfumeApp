@@ -24,7 +24,12 @@ import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
 import {useQuery} from '@apollo/client';
 import {USER_LOGIN, USER_LOGIN_MOBILE} from '../../api/useLogin';
-import {inValidEmail, inValidPhoneNumber, isEmpty} from '../../Helper/helper';
+import {
+  inValidEmail,
+  inValidPhoneNumber,
+  isEmpty,
+  showDefaultAlert,
+} from '../../Helper/helper';
 import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
 import CheckBoxSection from '../../Component/CheckBoxSection';
@@ -132,27 +137,31 @@ export default function EnterYourDetails({navigation}) {
     setLoading(true);
     let res = '';
     if (fromMobile) {
-      res = await USER_LOGIN_MOBILE(inputDetail, password, 1);
+      await USER_LOGIN_MOBILE(inputDetail, password, 1)
+        .then(async res => {
+          setLoading(false);
+          await AsyncStorage.setItem('token', res?.token);
+
+          navigation.navigate('Profile');
+        })
+        .catch(async err => {
+          showDefaultAlert(err?.message);
+
+          setLoading(false);
+        });
     } else {
-      res = await USER_LOGIN(inputDetail, password);
+      await USER_LOGIN(inputDetail, password)
+        .then(res => {
+          setLoading(false);
+          navigation.navigate('Profile');
+        })
+        .catch(err => {
+          showDefaultAlert(err?.message);
+          setLoading(false);
+        });
     }
 
     console.log(res, ':::: Final res :::::');
-    setLoading(false);
-
-    if (res) {
-      await AsyncStorage.setItem('token', res?.token);
-
-      Alert.alert('You have logged in successfully', '', [
-        {
-          text: 'OK',
-          onPress: () => {
-            navigation.navigate('Profile');
-          },
-        },
-      ]);
-      // navigation.navigate('Profile');
-    }
   };
   const handleLogin = () => {
     if (showMobile) {
@@ -184,13 +193,13 @@ export default function EnterYourDetails({navigation}) {
 
   const validateFields = () => {
     if (isEmpty(inputDetail)) {
-      Alert.alert('Please enter email address');
+      showDefaultAlert('Please enter email address');
       return false;
     } else if (inValidEmail(inputDetail)) {
-      Alert.alert('Please enter a valid email address');
+      showDefaultAlert('Please enter a valid email address');
       return false;
     } else if (isEmpty(password)) {
-      Alert.alert("Password can't be empty");
+      showDefaultAlert("Password can't be empty");
       return false;
     } else {
       return true;
@@ -199,13 +208,13 @@ export default function EnterYourDetails({navigation}) {
 
   const validateMobileFields = () => {
     if (isEmpty(inputDetail)) {
-      Alert.alert('Please enter mobile number');
+      showDefaultAlert('Please enter mobile number');
       return false;
     } else if (inValidPhoneNumber(inputDetail)) {
-      Alert.alert('Please enter a valid mobile number');
+      showDefaultAlert('Please enter a valid mobile number');
       return false;
     } else if (isEmpty(password)) {
-      Alert.alert("Password can't be empty");
+      showDefaultAlert("Password can't be empty");
       return false;
     } else {
       return true;

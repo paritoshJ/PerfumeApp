@@ -46,8 +46,9 @@ export const USER_REGISTER = async (mobile, email, password, name) => {
         resolve(data);
       }
     } catch (error) {
-      Alert.alert(error?.message);
+      // Alert.alert(error?.message);
       console.log('error', JSON.stringify(error));
+      // resolve(null);
       reject(error);
     }
 

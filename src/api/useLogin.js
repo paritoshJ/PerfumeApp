@@ -32,7 +32,6 @@ export const USER_LOGIN = async (email, password) => {
         resolve(data?.generateCustomerToken?.token);
       }
     } catch (error) {
-      Alert.alert(`${JSON.stringify(error?.message)}`);
       console.log('error', JSON.stringify(error));
       reject(error);
     }
