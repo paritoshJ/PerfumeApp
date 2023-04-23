@@ -37,7 +37,7 @@ export default function EnterTheCode({navigation}) {
       </View>
       <View style={styles.ScrollView}>
         <OTPInputView
-          style={{width: '80%', height: 200}}
+          style={{width: '80%', height: 250}}
           pinCount={4}
           codeInputFieldStyle={styles.underlineStyleBase}
           codeInputHighlightStyle={styles.underlineStyleHighLighted}

@@ -42,6 +42,7 @@ const CustomSwitch = ({onSelectSwitch, selectionColor}) => {
             onPress={() => alert('onPress')}
             onChangeText={text => console.log(text)}
             clearIconImageSource=""
+            style={{backgroundColor:'transparent'}}
           />
         </TouchableOpacity>
         <TouchableOpacity

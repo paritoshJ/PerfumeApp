@@ -69,6 +69,8 @@ export default function WriteUs({navigation}) {
               placeholder={t('Fill in your query')}
               placeholderTextColor="gray"
               value={inputDetail}
+              multiline={true}
+              numberOfLines={15}
               onChangeText={e => setinputDetail(e)}
             />
             <AppButton
@@ -132,9 +134,10 @@ const styles = StyleSheet.create({
     borderColor: COLORS_NEW.lightGray,
     borderWidth: 1,
     marginTop: Metrics.rfv(16),
-    alignSelf: 'center',
+    // alignSelf: 'center',
     color: COLORS_NEW.black,
-    paddingLeft: Metrics.rfv(15),
+    paddingHorizontal: Metrics.rfv(15),
+    paddingTop: Metrics.rfv(15),
   },
   nextButtontext: {
     flex: 1,
