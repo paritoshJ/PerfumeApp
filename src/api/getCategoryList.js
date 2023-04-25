@@ -2,9 +2,11 @@ import React from 'react';
 import {gql} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
 
+import Constants from '../Comman/Constants';
+
 
 export const client = new ApolloClient({
-    uri: "https://integration-5ojmyuq-vvqszukhxdw6q.eu-3.magentosite.cloud/graphql",
+    uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
@@ -96,13 +98,13 @@ export const GET_CATEGORY_LIST = async () => {
           }
         }`});
       if (data) {
-        alert(`Response: ${JSON.stringify(data)}`);
+        // alert(`Response: ${JSON.stringify(data)}`);
         // console.log('data', JSON.stringify(data));
         resolve(data);
       }
     } catch (error) {
-      alert(`error => ${JSON.stringify(error)}`);
-      console.log('error', JSON.stringify(error));
+      // alert(`error => ${JSON.stringify(error)}`);
+      // console.log('error', JSON.stringify(error));
       reject(error);
     }
   });

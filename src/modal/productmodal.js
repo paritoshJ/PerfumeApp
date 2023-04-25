@@ -19,11 +19,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {navigationRef} from '../Navigator/utils';
 import {useTranslation} from 'react-i18next';
 import { useNavigation } from '@react-navigation/native';
+import { isStringNotNull } from '../Helper/helper';
 
 const ProductModal = props => {
   const navigation = useNavigation();
   const {t, i18n} = useTranslation();
-  const {onOpenDailog, setOnOpenDailog, image, title, price, cat, offer, displaySize1, sku} = props;
+  const {onOpenDailog, setOnOpenDailog, image, title, price, cat, offer, displaySize1, sku,finalPrice,regularPrice} = props;
   const [selected, setSelected] = useState('50 ml');
 
   const closeDailog = () => {
@@ -76,6 +77,29 @@ const ProductModal = props => {
                   onPress={() => {props.setOnOpenDailog(false)}}
                   style={{position:'absolute' ,right:10, top:10, transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
                 />
+                {!isStringNotNull(offer) && (
+            <View
+              style={{
+                width: 35,
+                height: 20,
+                backgroundColor: colorConstant.BLACK,
+                borderTopLeftRadius: 10,
+                borderBottomRightRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+                position:'absolute' ,left:0, top:0, transform:[{scaleX:I18nManager.isRTL? -1 : 1}]
+              }}>
+              <Text
+                style={{
+                  color: colorConstant.WHITE,
+                  fontSize: fontConstant.TEXT_10_SIZE_REGULAR,
+                  fontStyle: 'normal',
+                  fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+                }}>
+                {'20%'}
+              </Text>
+            </View>
+          )}
           </View>
           <View style={{marginTop:14}}>
             <View
@@ -145,8 +169,8 @@ const ProductModal = props => {
               </TouchableOpacity>
             </View>
             <View style={style.price_view}>
-              <Text style={style.offer_price}>{offer} AED</Text>
-              <Text
+              <Text style={style.offer_price}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+             {finalPrice?.value < regularPrice?.value &&  <Text
                 style={[
                   style.offer_price,
                   {
@@ -155,8 +179,8 @@ const ProductModal = props => {
                     textDecorationLine: 'line-through',
                   },
                 ]}>
-                {price} AED
-              </Text>
+               {`${regularPrice?.value} ${regularPrice?.currency}`}
+              </Text>}
             </View>
             <View style={style.add_card_view}>
               <View
