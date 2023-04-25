@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
+import colorConstant from '../constant/colorConstant';
+const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
 
 export const isEmpty = str => {
   if (str == null || str.trim() == '') {
@@ -52,3 +54,27 @@ export const inValidPhoneNumber = str => {
 export const showDefaultAlert = (message, title = '', action = null) => {
   Alert.alert(title, message, action);
 };
+export const  getRandomColor = () => {
+    const colorIndex = Math.floor(Math.random() * COLORS.length);
+    return COLORS[colorIndex];
+  }
+export const openURLs = Url => {
+  Linking.openURL(Url).catch(err => console.error('Error', err));
+};
+
+export function isStringNotNull(key) {
+  return key !== undefined && key != null && key !== '';
+}
+
+export function isArrayNullOrEmpty(array) {
+  return array == null || array === undefined || array.length === 0;
+}
+
+export function isObjectNullOrUndefined(obj) {
+  return (
+    obj == null ||
+    obj === undefined ||
+    obj === 'null' ||
+    Object.keys(obj).length === 0
+  );
+}

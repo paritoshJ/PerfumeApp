@@ -10,8 +10,8 @@ export default StyleSheet.create({
     flex: 1,
   },
   header_view: {
-    width: '100%',
     height: 350,
+    flex:1,
     // backgroundColor: colorConstant.PRIMARY,
     flexDirection: 'row',
     alignItems:'center',
@@ -199,8 +199,8 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   perfumeData: {
-    bottom: '5%',
     marginLeft: 20,
+    top:'-8%'
   },
   imageConstant_cardman_Contain: {
     height: Metrics.rfp(40),

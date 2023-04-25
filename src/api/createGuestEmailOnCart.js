@@ -1,10 +1,11 @@
 import React from 'react';
 import {gql} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
+import Constants from '../Comman/Constants';
 
 
 export const client = new ApolloClient({
-    uri: "https://integration-5ojmyuq-vvqszukhxdw6q.eu-3.magentosite.cloud/graphql/graphql",
+    uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
     connectToDevTools: true
   });

@@ -5,9 +5,10 @@ import fontConstant from '../constant/fontConstant';
 import imageConstant from '../constant/imageConstant';
 import {navigationRef} from '../Navigator/utils';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { isStringNotNull } from '../Helper/helper';
 
 const PremiumCard = props => {
-  const {item, offer} = props;
+  const {item} = props;
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
 
@@ -15,6 +16,8 @@ const PremiumCard = props => {
     const colorIndex = Math.floor(Math.random() * COLORS.length);
     return COLORS[colorIndex];
   }
+  let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+  let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
 
   return (
     <TouchableOpacity
@@ -31,10 +34,10 @@ const PremiumCard = props => {
       <View
         style={{
           width: '100%',
-          justifyContent: offer ? 'space-between' : 'flex-end',
+          justifyContent: isStringNotNull(item?.discount_percent) ? 'space-between' : 'flex-end',
           flexDirection: 'row',
         }}>
-        {offer && (
+        {isStringNotNull(item?.discount_percent)  && (
           <View
             style={{
               width: 35,
@@ -52,7 +55,7 @@ const PremiumCard = props => {
                 fontStyle: 'normal',
                 fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
               }}>
-              50%
+              {item?.discount_percent}
             </Text>
           </View>
         )}
@@ -62,14 +65,14 @@ const PremiumCard = props => {
             size={22}
             color={colorConstant.BLACK}
             onPress={() => {
-              props.navigation.goBack();
+              // props.navigation.goBack();
             }}
           />
         </View>
       </View>
 
       <Image
-        source={item.image}
+        source={{uri: item.image}}
         style={{width: '50%', height: 150, alignSelf: 'center'}}
         resizeMode="contain"
       />
@@ -78,7 +81,6 @@ const PremiumCard = props => {
           width: '100%',
           alignItems: 'center',
           justifyContent: 'center',
-          marginTop: '3%',
         }}>
         <Text
           style={{
@@ -87,21 +89,23 @@ const PremiumCard = props => {
             fontStyle: 'italic',
             fontFamily: fontConstant.gambetta,
             fontWeight: fontConstant.WEIGHT_REGULAR,
+            paddingHorizontal: 10,
           }}>
           {item.name}
         </Text>
         <View style={styles.price_view}>
-          <Text style={styles.offer_price}>12 AED</Text>
-          <Text
+          <Text style={styles.offer_price}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+          {finalPrice?.value < regularPrice?.value && <Text
             style={[
               styles.offer_price,
               {
                 marginLeft: 10,
                 color: colorConstant.LIGHT_GREY,
+                textDecorationLine: 'line-through',
               },
             ]}>
-            24 AED
-          </Text>
+            {`${regularPrice?.value} ${regularPrice?.currency}`}
+          </Text>}
         </View>
       </View>
     </TouchableOpacity>

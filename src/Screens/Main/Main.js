@@ -33,9 +33,14 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import ProductModal from '../../modal/productmodal';
 import {useTranslation} from 'react-i18next';
 import {GET_PRODUCTS} from '../../api/getProduct';
+import {GET_SLIDER_PRODUCTS} from '../../api/getHomeSliderProduct';
 import {GET_HOME_DATA} from '../../api/getHomeData';
 import alertMsgConstant from '../../constant/alertMsgConstant';
 import Swiper from 'react-native-swiper';
+import { GET_CATEGORY_LIST } from '../../api/getCategoryList';
+import { getRandomColor, isObjectNullOrUndefined } from '../../Helper/helper';
+import { GET_HOME_CONFIG_DATA } from '../../api/getHomeConfigData';
+import { isNonNullObject } from '@apollo/client/utilities';
 
 const MainScreen = props => {
   const [onOpenDailog, setonOpenDailog] = useState(false);
@@ -45,6 +50,13 @@ const MainScreen = props => {
   
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [bannerData, setBannerData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
+  const [newArrivals, setNewArrivals] = useState({});
+  const [ourPerfumes, setOurPerfumes] = useState({});
+  const [premiumCollection, setPremiumCollection] = useState({});
+  const [shopWomens, setShopWomans] = useState({});
+  const [shopMans, setShopMans] = useState({});
+  const [sales, setSales] = useState({});
   // const data = [
   //   {id: 1, name: 'abc'},
   //   {id: 2, name: 'text'},
@@ -54,34 +66,70 @@ const MainScreen = props => {
   const {t, i18n} = useTranslation();
   
   useEffect(() => {
+    // getCategory();
     getCategory();
-    getHomeData();
+    getConfigData();
+    // getHomeData();
   }, []);
 
-  const getCategory = async () => {
-    let res = await GET_PRODUCTS();
-    setProductData(res.products.items);
-    console.log("res.products.items",res.products.items);
+  const getConfigData = async () => {
+    let res = await GET_HOME_CONFIG_DATA();
+    // setProductData(res.products.items);
+    // setCategoryData(res?.categoryList[0]?.products?.items)
+    console.log("GET_HOME_CONFIG_DATA",res);
+    if(res){
+     let arr = res?.storeConfig?.AppConfiguration
+            ?.AppData?.map(async(item)=>{
+              console.log(item?.value)
+              if(item?.name === 'app_slider' && item?.value){
+                 let res = await GET_HOME_DATA(item?.value);
+                 setBannerData(res?.homeBannerSlider?.banners);
+              }
+              else if(item?.value){
+                let data = await GET_SLIDER_PRODUCTS(item?.value);
+                if(item?.name === 'new_arrivals') {
+                  setNewArrivals(data.getSliderProducts)
+                }
+                else if(item?.name === 'our_perfumes'){
+                  setOurPerfumes(data.getSliderProducts)
+                }
+                else if(item?.name === 'premium_collection'){
+                  setPremiumCollection(data.getSliderProducts)
+                }
+                else if(item?.name === 'shop_womans'){
+                  setShopWomans(data.getSliderProducts)
+                }
+                else if(item?.name === 'shop_mans'){
+                  setShopMans(data.getSliderProducts)
+                }
+                else if(item?.name === 'sale'){
+                  setSales(data.getSliderProducts)
+                }
+                // item.data=data.getSliderProducts;
+              }
+            })       
+    }
   };
 
-  const getHomeData = async () => {
-    let res = await GET_HOME_DATA();
-    console.log("HOME_DATA", res)
-    if(res){
-      setBannerData(res?.homeBannerSlider?.banners)
-    }
-    // const saleData = res.category.children.filter((t) => t.name === "SALE");
-    // const saleDataChild = (saleData[0]);
-    // setSaleDataArr(JSON.stringify(saleDataChild));
-  };  
+  const getCategory = async () => {
+    let res = await GET_CATEGORY_LIST();
+    // setProductData(res.products.items);
+    setCategoryData(res?.categoryList[0]?.products?.items)
+    console.log("GET_CATEGORY_LIST",res);
+  };
+  // const getPro = async () => {
+  //   let res = await GET_PRODUCTS();
+  //   setProductData(res.products.items);
+  //   console.log("res.products.items",res.products.items);
+  // };
+ 
 
 
   const renderBannerInnerList = (item) => {
     return (
       <Image
-      resizeMethod='auto'
-      resizeMode='center' 
-      style={{height:100}}
+      resizeMode='contain' 
+      style={{flex:1}}
       source={{uri:item}}/>
     );
   };
@@ -89,6 +137,7 @@ const MainScreen = props => {
   const renderItemProduct = ({item, index}) => {
     return (
       <ProductCard 
+      isHome = {true}
       item={item} 
       offer={false}
       onSizeSelect={(data)=>{}} 
@@ -100,10 +149,10 @@ const MainScreen = props => {
   };
   const renderItem = ({item, index}) => {
     return (
-       <ProductCard item={item} offer={false} onSizeSelect={(data)=>{}} 
+       <ProductCard isHome = {true} item={item} offer={false} onSizeSelect={(data)=>{}} 
       onFullItemPress ={() => {
-          // setSelectedProduct(item);
-          // setonOpenDailog(true);
+          setSelectedProduct(item);
+          setonOpenDailog(true);
         }} />
     );
   };
@@ -111,7 +160,9 @@ const MainScreen = props => {
   const renderSaleItem = ({item}) => {
     return (
       <View key={item}>
-        <ProductCard item={item} offer={true} onSizeSelect={(data)=>{}} 
+        <ProductCard 
+        isHome = {true}
+        item={item} offer={true} onSizeSelect={(data)=>{}} 
       onFullItemPress ={() => {
           // setSelectedProduct(item);
           // setonOpenDailog(true);
@@ -149,34 +200,33 @@ const MainScreen = props => {
 
   const cardrenderItem = ({item}) => {
     return (
-      <View
-        key={item}
-        style={{
-          width: Metrics.rfv(280),
-          height: Metrics.rfv(130),
-        }}>
         <ImageBackground
-          source={item.image}
+          source={{uri: item?.image?.url}}
+          key={item}
+          resizeMode='center'
           style={{
             flex:1,
             alignItems: 'center',
             justifyContent: 'center',
+            width: Metrics.rfv(280),
+            height: Metrics.rfv(130),
+            backgroundColor: getRandomColor(),
+            borderRadius:15,
           }}
-          borderRadius={15}
-          // resizeMode="contain"
         >
           <Text
             style={{
               fontFamily: fontConstant.gambetta,
               fontStyle: 'italic',
-              fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
+              fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
               fontWeight: fontConstant.WEIGHT_REGULAR,
-              color: colorConstant.WHITE,
+              color: colorConstant.BLACK,
+              paddingHorizontal:16,
+              textAlign:'center',
             }}>
-            {item.name}
+            {item?.image?.label}
           </Text>
         </ImageBackground>
-      </View>
     );
   };
 
@@ -228,22 +278,26 @@ const onLayout = (e) => {
           item={selectedProduct}
           onOpenDailog={onOpenDailog}
           setOnOpenDailog={closeDialog}
-          image={selectedProduct?.image.url}
+          // image={selectedProduct?.image.url}
+          image={selectedProduct?.image}
           title={selectedProduct?.name}
           sku={selectedProduct.sku}
           cat={selectedProduct?.customAttributesAjmalData[0]?.display_category}
           price={
-            selectedProduct?.price_range?.minimum_price?.regular_price?.value
+            selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0].value
           }
           offer={
-            selectedProduct?.price_range?.minimum_price?.discount?.amount_off
+            // selectedProduct?.price_range?.minimum_price?.discount?.amount_off
+            selectedProduct?.discount_percent
           }
           displaySize1={
             selectedProduct?.customAttributesAjmalData[0]?.display_size
           }
+          finalPrice={selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]}
+          regularPrice={selectedProduct?.price_range[0]?.minimum_price[0]?.regular_price[0]}
         />
       )}
-      <ImageBackground
+     {bannerData && <ImageBackground
         source={imageConstant.main_header}
         borderBottomRightRadius={25}
         style={style.header_view}>
@@ -272,7 +326,7 @@ const onLayout = (e) => {
             </View>
           )}
         />
-      </ImageBackground>
+      </ImageBackground>}
 
       <View style={style.searchContain}>
         <View style={style.searchbarRow}>
@@ -298,9 +352,11 @@ const onLayout = (e) => {
       </View>
 
       <View style={style.container_two}>
+       {!isObjectNullOrUndefined(newArrivals) && <>
         <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
          <FlatList
-            data={productData}
+            data={newArrivals?.items}
+            extraData={newArrivals?.items}
             renderItem={renderItemProduct}
             horizontal={true}
             ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
@@ -308,13 +364,15 @@ const onLayout = (e) => {
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}
           />
+        </>}
 
-        <View
+        {!isObjectNullOrUndefined(ourPerfumes) &&  <View
           style={{
           }}>
           <Text style={style.arrivals_text}>{t('Our perfumes')}</Text>
        <FlatList
-            data={carddata}
+            data={ourPerfumes?.items}
+            extraData={ourPerfumes?.items}
             horizontal={true}
             keyExtractor={item => item.id}
             renderItem={cardrenderItem}
@@ -323,9 +381,9 @@ const onLayout = (e) => {
                         ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
 
           />
-        </View>
+        </View>}
 
-        <View style={style.imageContstant_banner_image_Contain}>
+        {!isObjectNullOrUndefined(premiumCollection) &&  <View style={style.imageContstant_banner_image_Contain}>
           <ImageBackground
             source={imageConstant.banner}
             style={style.imageContstant_banner_image}
@@ -347,9 +405,10 @@ const onLayout = (e) => {
             </View>
 
             <FlatList
-              data={premiumdata}
+              data={premiumCollection?.items}
               contentContainerStyle={{paddingHorizontal:16}}
               renderItem={({item}) => {
+                console.log(item);
                 return (
                     <PremiumCard item={item} offer={true} />
                 );
@@ -362,9 +421,9 @@ const onLayout = (e) => {
 
             />
           </ImageBackground>
-        </View>
+        </View> }
 
-        <View style={style.Premiumcollection_Conatin}>
+        {!isObjectNullOrUndefined(shopWomens) && <><View style={style.Premiumcollection_Conatin}>
           <ImageBackground
             source={imageConstant.cardwomen}
             style={style.imageConstant_card}
@@ -388,7 +447,7 @@ const onLayout = (e) => {
         <View style={style.perfumeData}>
           <FlatList
             ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
-            data={perfumedata}
+            data={shopWomens?.items}
             renderItem={renderItem}
             horizontal={true}
             keyExtractor={item => item.id}
@@ -396,8 +455,9 @@ const onLayout = (e) => {
             showsHorizontalScrollIndicator={false}
           />
         </View>
+        </>}
 
-        <View style={style.imageConstant_cardman_Contain}>
+       {!isObjectNullOrUndefined(shopMans) && <><View style={style.imageConstant_cardman_Contain}>
           <ImageBackground
             source={imageConstant.cardman}
             style={style.imageConstant_card}
@@ -429,12 +489,13 @@ const onLayout = (e) => {
             showsHorizontalScrollIndicator={false}
           />
         </View>
+        </>}
 
-        {/* <View style={{marginTop: '-25%'}}>
+       {!isObjectNullOrUndefined(sales) && <View style={{marginTop: '-25%'}}>
           <Text style={style.sale_text}>{t('Sale')}</Text>
 
           <FlatList
-            data={saleDataArr}
+            data={sales.items}
             renderItem={renderSaleItem}
             horizontal={true}
             ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
@@ -442,7 +503,7 @@ const onLayout = (e) => {
             ListFooterComponent={renderFooter}
             showsHorizontalScrollIndicator={false}
           />
-        </View> */}
+        </View>}
       </View>
     </ScrollView>
   );

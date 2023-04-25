@@ -13,17 +13,30 @@ import imageConstant from '../constant/imageConstant';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Swiper from 'react-native-swiper';
 import {navigationRef} from '../Navigator/utils';
+import { isStringNotNull } from '../Helper/helper';
 
 const ProductCard = props => {
-  const {item, offer, wishlist} = props;
+  const {item, offer, wishlist, isHome = false} = props;
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
 
   let name = item?.name;
-  let price = item?.price_range?.minimum_price?.regular_price?.value;
-  let fav = item?.name;
-  let offers = item?.price_range?.minimum_price?.discount?.amount_off;
-  let finalPrice = item?.price_range?.minimum_price?.final_price
-?.value;
+  let finalPrice = {};
+  let regularPrice = {};
+  let image = '';
+  // let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+  // let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+
+  if(isHome){
+     finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+     regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+     image = item?.image;
+  }else{
+     finalPrice = item?.price_range?.minimum_price?.final_price;
+     regularPrice = item?.price_range?.minimum_price?.regular_price;
+     image = item?.image[0]?.url
+
+  }
+  // let offers = item?.price_range?.minimum_price?.discount?.amount_off;
   let size =
     item?.customAttributesAjmalData !== undefined
       ? item?.customAttributesAjmalData[0]?.display_size
@@ -33,11 +46,11 @@ const ProductCard = props => {
       ? item?.customAttributesAjmalData[0]?.display_category
       : '';
   // let image = item?.media_gallery[0]?.url
-  let image = item?.image.url;
-  let imagetwo =
-    item?.customAttributesAjmalData !== undefined
-      ? item?.customAttributesAjmalData[0]?.rtop_note_image
-      : '';
+  
+  // let imagetwo =
+  //   item?.customAttributesAjmalData !== undefined
+  //     ? item?.customAttributesAjmalData[0]?.rtop_note_image
+  //     : '';
   let sku = item.sku;
 
   function getRandomColor() {
@@ -61,7 +74,7 @@ const ProductCard = props => {
             justifyContent: offer ? 'space-between' : 'flex-end',
             flexDirection: 'row',
           }}>
-          {offer && (
+          {isStringNotNull(item?.discount_percent) && (
             <View
               style={{
                 width: 35,
@@ -79,7 +92,7 @@ const ProductCard = props => {
                   fontStyle: 'normal',
                   fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
                 }}>
-                50%
+                {item?.discount_percent}
               </Text>
             </View>
           )}
@@ -93,13 +106,11 @@ const ProductCard = props => {
           </View>
         </View>
 
-        {String(imagetwo).length > 5 && (
-          <Image
-            source={{uri: offer ? imagetwo : image}}
+        <Image
+            source={{uri: image}}
             style={{width: '50%', height: 120, alignSelf: 'center'}}
             resizeMode="contain"
           />
-        )}
       </View>
 
      <View style={{flexDirection: 'row', marginVertical: 12,}}>
@@ -153,10 +164,8 @@ const ProductCard = props => {
             {name}
           </Text>
         <View style={styles.price_view}>
-          <Text style={styles.offer_price}>{item?.price_range?.minimum_price?.final_price
-?.value} {item?.price_range?.minimum_price?.final_price
-?.currency}</Text>
-          {/* <Text
+          <Text style={styles.offer_price}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+          {finalPrice?.value < regularPrice?.value && <Text
             style={[
               styles.offer_price,
               {
@@ -165,10 +174,8 @@ const ProductCard = props => {
                 textDecorationLine: 'line-through',
               },
             ]}>
-            `{item?.price_range?.minimum_price?.regular_price
-?.value} {item?.price_range?.minimum_price?.regular_price
-?.currency}
-          </Text> */}
+            {`${regularPrice?.value} ${regularPrice?.currency}`}
+          </Text>}
         </View>
     </TouchableOpacity>
   );
