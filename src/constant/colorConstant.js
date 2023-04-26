@@ -10,6 +10,7 @@ export default {
   RED: '#C32130',
   GREEN: '#40C321',
   BLUE_DARK: '#014E89',
+  BLUE_LIGHT: '#007AFF',
   GRAY_LIGHT: '#ACA5A1',
   LIGH_ORANGE: '#F3F9FF',
   GRAY_MIDIUM: '#7f7f7f',

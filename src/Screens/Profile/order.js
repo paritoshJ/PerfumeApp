@@ -14,7 +14,7 @@ import Metrics from '../../Helper/metrics';
 import {Badge} from 'react-native-paper';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
 
 const ImageData = [
   {
@@ -35,7 +35,7 @@ const ImageData = [
 ];
 export default function Order({navigation}) {
   const [orderClick, setOrderClick] = useState(false);
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -45,8 +45,8 @@ export default function Order({navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -69,7 +69,9 @@ export default function Order({navigation}) {
               <TouchableOpacity
                 style={styles.orderView}
                 onPress={() => setOrderClick(!orderClick)}>
-                <Text style={styles.orderNumberText}>{t('orders')} #4562378</Text>
+                <Text style={styles.orderNumberText}>
+                  {t('orders')} #4562378
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.orderView}
@@ -79,7 +81,6 @@ export default function Order({navigation}) {
                 <Image
                   style={{resizeMode: 'contain'}}
                   source={require('../../../assets/More-button.png')}
-                  onPress={() => navigation.navigate(-1)}
                 />
               </TouchableOpacity>
             </View>
@@ -145,13 +146,13 @@ const styles = StyleSheet.create({
   },
   // Main Style
   orderView: {
-    marginTop: Metrics.rfv(15),
+    paddingVertical: Metrics.rfv(8),
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   orderNumberText: {
     fontSize: Metrics.rfv(20),
-    fontWeight: 500,
+    fontWeight: '500',
     color: COLORS_NEW.black,
   },
   badge: {
