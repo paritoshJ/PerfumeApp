@@ -2,70 +2,48 @@ import React from 'react';
 import {gql} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
 import Constants from '../Comman/Constants';
-
-
 export const client = new ApolloClient({
     uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
     connectToDevTools: true
   });
 
-export const GET_HOME_DATA = async (actionName='2') => {
+export const GET_SLIDER_PRODUCTS = async (slider_name) => {
 
   return new Promise(async (resolve, reject) => {
     try {
       let {data} = await client.mutate({
         mutation: gql`
-       query {
-	homeBannerSlider(action_name: ${actionName}) {
-		slider {
+        query {
+   getSliderProducts(
+        slider_name: "${slider_name}"
+    ){
             slider_id
-            name
-            status
-            location
-            store_ids
-            customer_group_ids
-            priority
-            effect
-            autoWidth
-            autoHeight
-            design
-            loop
-            lazyLoad
-            autoplay
-            autoplayTimeout
-            nav
-            dots
-            is_responsive
-            responsive_items
-            from_date
-            to_date
-            created_at
-            updated_at     
-        },
-        banners {
-			banner_id
-            name
-            status
-            type
-            content
-            banner_subtitle
-          home_slider_video
-            image
-            url_banner
             title
-            newtab
-            product_skus
-            updated_at
-            created_at
+            slider_name
+            display_title
+            discover_all
+            status
+            description
+            type
+            infinite
+            speed
+            autoplay
+            autoplay_speed
+            rtl
+            display_price
+            display_cart
+            display_wishlist
+            display_compare
+            products_number
             items {
                 id
                 sku
                 name
                 qty
-                stock_status
                 type_id
-                discount_percent            
+                stock_status
+                discount_percent
                 attribute_set_id
                 has_options
                 required_options
@@ -94,6 +72,7 @@ export const GET_HOME_DATA = async (actionName='2') => {
                 is_returnable
                 weight
                 is_salable
+                rating_count
                 customAttributesAjmalData {
                     top_note_name
                     top_note_image
@@ -102,18 +81,19 @@ export const GET_HOME_DATA = async (actionName='2') => {
                     base_note_name
                     base_note_image
                     display_category
+                    product_video_url
                     display_size
                     gender
                     product_lasting_hours
                     ingredient
                     product_color
                 }
-                rating_count
-                 rating {
+                rating {
                     vote_id
                     value
                     percent
                 }
+                price
                 price_range {
                     minimum_price {
                         regular_price {
@@ -139,13 +119,12 @@ export const GET_HOME_DATA = async (actionName='2') => {
                 price_tiers {
                     quantity
                     final_price {
-                    value
-                    currency
+                        value
+                        currency
                     }
-                }  
+                }
             }
-		}        	
-	}
+        }
 }`});
       if (data) {
         // alert(`Response: ${JSON.stringify(data)}`);
