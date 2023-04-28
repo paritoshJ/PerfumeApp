@@ -10,6 +10,7 @@ import {
   ImageBackground,
   I18nManager,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import style from './style';
@@ -41,8 +42,10 @@ import { GET_CATEGORY_LIST } from '../../api/getCategoryList';
 import { getRandomColor, isObjectNullOrUndefined } from '../../Helper/helper';
 import { GET_HOME_CONFIG_DATA } from '../../api/getHomeConfigData';
 import { isNonNullObject } from '@apollo/client/utilities';
+import Loader from '../../Component/Loader';
 
 const MainScreen = props => {
+    const [loading, setLoading] = useState(false);
   const [onOpenDailog, setonOpenDailog] = useState(false);
   const [stateWidth, setStateWidth] = useState(300);
   const [productData, setProductData] = useState('');
@@ -262,6 +265,7 @@ const onLayout = (e) => {
   }
   const closeDialog=()=>{setonOpenDailog(false)}
   return (
+    <SafeAreaView style={{flex:1}}>
     <ScrollView style={style.container}>
       {/* <StatusBar
         backgroundColor={colorConstant.PRIMARY}
@@ -506,6 +510,8 @@ const onLayout = (e) => {
         </View>}
       </View>
     </ScrollView>
+    <Loader loading={loading} />
+    </SafeAreaView>
   );
 };
 

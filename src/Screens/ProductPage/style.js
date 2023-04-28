@@ -5,7 +5,7 @@ import fontConstant from '../../constant/fontConstant';
 const { width } = Dimensions.get('window');
 export default StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
   child: { width, justifyContent: 'center',flexDirection:"row" },
   share_view: {
@@ -52,7 +52,6 @@ export default StyleSheet.create({
     // justifyContent: 'center',
   },
   header_container: {
-    width: '100%',
     height: 400,
     // backgroundColor: colorConstant.PRIMARY,
     borderBottomLeftRadius: 20,
@@ -152,10 +151,9 @@ export default StyleSheet.create({
     paddingTop:10
   },
   border:{
-    width:"100%",
     height:0.5,
     backgroundColor:colorConstant.LIGHT_GREY,
-    marginTop:"10%",marginBottom:"10%"
+    marginVertical:10,
   },
   review_user_name:{
     color: colorConstant.BLACK,

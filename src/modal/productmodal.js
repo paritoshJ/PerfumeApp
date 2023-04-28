@@ -118,7 +118,9 @@ const ProductModal = props => {
                 onPress={() => {
                   props.setOnOpenDailog(false)
                   setTimeout(() => {
-                    navigationRef.navigate('ProductPage');
+                    // navigationRef.navigate('ProductPage',{});
+                    //  console.log('item?.sku',item?.sku);
+        navigationRef.navigate('ProductPage',{skuID:props.item?.sku});
                   }, 500);
                   
                   

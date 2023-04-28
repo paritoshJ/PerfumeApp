@@ -8,8 +8,9 @@ import {
   FlatList,
   ImageBackground,
   I18nManager,
+  SafeAreaView,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import style from './style';
 import colorConstant from '../../constant/colorConstant';
 import imageConstant from '../../constant/imageConstant';
@@ -29,19 +30,83 @@ import LinearGradient from 'react-native-linear-gradient';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import AddReviewModal from '../../modal/Addreviewmodal';
 import {useTranslation} from 'react-i18next';
+import { GET_PRODUCT_DETAILS } from '../../api/getProductDetails';
+import Loader from '../../Component/Loader';
+import { isObjectNullOrUndefined, removeHtmlTags } from '../../Helper/helper';
 
 const ProductPage = props => {
   const [selected, setSelected] = useState('50 ml');
   const [decription, setdecription] = useState(true);
   const [reviewshow, setreviewshow] = useState(true);
   const [visibale, setvisibale] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [productDetail, setProductDetail] = useState({});
+    const [productType, setProductType] = useState(null);
+
   const {t, i18n} = useTranslation();
   const data = [
     {id: 1, name: 'abc'},
     {id: 2, name: 'text'},
     {id: 3, name: 'xyz'},
   ];
+  useEffect(() => {
+   
+    if(props?.route.params.skuID){
+       console.log(props?.route.params.skuID)
+        callProductDetailApi();
+    }
+   
+  
+  }, [])
+  
+  const callProductDetailApi = async() =>{
+    setLoading(true);
+    // const obj = {sku:{eq: props?.route.params.skuID}};
+    const obj = {sku:{eq: 'ETIQUETTE-config'}};
+    await GET_PRODUCT_DETAILS(obj).then((res)=>{
+       console.log('callProductDetailApi',res);
+       let deatil = res?.products?.items[0];
+       chanageProductType(deatil);
+       setProductDetail(deatil);
+       setLoading(false);
+    }).catch((error)=>{
+      setLoading(false);
+      console.log('error',error);
+    });
+   
+  }
 
+  const chanageProductType = (productDetail) =>{
+    let productType = {}
+        if(productDetail?.__typename === 'SimpleProduct'){
+        productType = {
+          image:productDetail?.image?.url,
+          discount_percent:productDetail?.discount_percent,
+          media_gallery:productDetail?.media_gallery,
+          product_lasting_hours:productDetail?.customAttributesAjmalData[0]?.product_lasting_hours,
+          gender:productDetail?.customAttributesAjmalData[0]?.gender,
+          display_size:productDetail?.customAttributesAjmalData[0]?.display_size,
+          display_category:productDetail?.customAttributesAjmalData[0]?.display_category,
+
+        }
+    }
+    else if (productDetail?.__typename === 'ConfigurableProduct'){
+     
+       productType = {
+          image:productDetail?.image?.url,
+          discount_percent:productDetail?.discount_percent,
+          media_gallery:productDetail?.media_gallery,
+          product_lasting_hours:productDetail?.customAttributesAjmalData[0]?.product_lasting_hours,
+          gender:productDetail?.customAttributesAjmalData[0]?.gender,
+          display_size:productDetail?.customAttributesAjmalData[0]?.display_size,
+          display_category:productDetail?.customAttributesAjmalData[0]?.display_category,
+        }
+    }
+    if(!isObjectNullOrUndefined(productType)){
+       setProductType(productType);
+    }
+   
+  }
   const body = item => {
     return (
       <View style={{padding: 10}}>
@@ -140,17 +205,14 @@ const ProductPage = props => {
     );
   }
   const ratingCompleted = rating => {};
-  return (
-    <ScrollView style={style.container}>
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-      <ImageBackground
+  const renderHearderImageView = () =>{
+    console.log('productDetail',productType);
+    let item = {};
+   
+    return <ImageBackground
         style={style.header_container}
-        source={imageConstant.product_bg}
-        resizeMode="stretch">
+        // source={{uri:productDetail?.image?.url}}
+        resizeMode="center">
         <View style={style.share_view}>
           <AntDesign
             name="left"
@@ -169,9 +231,9 @@ const ProductPage = props => {
             style={{marginRight: 15}}
           />
         </View>
-        <SwiperFlatList
+       {productType?.media_gallery?.length>0 && <SwiperFlatList
           showPagination
-          data={data}
+          data={productType?.media_gallery}
           paginationDefaultColor={colorConstant.WHITE}
           paginationActiveColor={colorConstant.DARK_PRIMARY}
           paginationStyleItemActive={{width: 5, height: 5}}
@@ -202,22 +264,54 @@ const ProductPage = props => {
                     height: 250,
                   }}>
                   <Image
-                    source={imageConstant.perfume_one}
+                    source={{uri:item?.url}}
                     style={{width: '100%', height: '100%'}}
                     resizeMode="contain"
                   />
                 </View>
-                <View style={style.offer}>
+                {productType?.discount_percent && <View style={style.offer}>
                   <View style={style.offer_view}>
-                    <Text style={style.offer_text}>50%</Text>
+                    <Text style={style.offer_text}>{productType?.discount_percent}</Text>
                   </View>
-                </View>
+                </View>}
               </View>
             </View>
           )}
-        />
+        />}
       </ImageBackground>
 
+  }
+  const renderPriceView = () =>{
+    let finalPrice = productDetail?.price_range?.minimum_price?.final_price;
+  let regularPrice = productDetail?.price_range?.minimum_price?.regular_price;
+  return  <View style={style.price_view}>
+          <Text style={style.offer_price}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+         {finalPrice?.value < regularPrice?.value && <Text
+            style={[
+              style.offer_price,
+              {
+                marginLeft: 10,
+                color: colorConstant.LIGHT_GREY,
+                textDecorationLine: 'line-through',
+              },
+            ]}>
+            {`${regularPrice?.value} ${regularPrice?.currency}`}
+          </Text> }
+        </View>
+
+
+  }
+  return (
+    <SafeAreaView style={{flex:1}}>
+    <ScrollView style={style.container}>
+      
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle="dark-content"
+      />
+     { !loading && <>
+      {renderHearderImageView()}
       <View
         style={{
           width: '90%',
@@ -228,7 +322,7 @@ const ProductPage = props => {
           bottom: '2%',
         }}>
         <View style={{alignItems: 'flex-start'}}>
-          <Text style={style.product_name}>{t('Amber Wood Noir')}</Text>
+          <Text style={style.product_name}>{productDetail?.name}</Text>
         </View>
         <View style={{flexDirection: 'row', marginTop: 10, marginLeft: 5}}>
           <Image
@@ -237,12 +331,12 @@ const ProductPage = props => {
             resizeMode="contain"
           />
           <Text style={style.last_time_offer_text}>
-            Lasting hours: 5-8 hours
+            {`Lasting hours: ${productType?.product_lasting_hours}`}
           </Text>
         </View>
 
         <View style={{flexDirection: 'row', marginTop: 20, marginLeft: 5}}>
-          <TouchableOpacity
+          {productDetail?.__typename === 'SimpleProduct' ? <TouchableOpacity
             style={[
               style.product_size,
               {
@@ -255,41 +349,12 @@ const ProductPage = props => {
             onPress={() => {
               setSelected('50 ml');
             }}>
-            <Text style={style.product_size_text}>50 ml</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              style.product_size,
-              {
-                borderColor:
-                  selected == '100 ml'
-                    ? 'rgba(188, 139, 87, 0.9)'
-                    : 'rgba(43, 40, 38, 0.1)',
-                marginLeft: 10,
-              },
-            ]}
-            onPress={() => {
-              setSelected('100 ml');
-            }}>
-            <Text style={style.product_size_text}>100 ml</Text>
-          </TouchableOpacity>
+            <Text style={style.product_size_text}>{productType?.display_size}</Text>
+          </TouchableOpacity> : null}
         </View>
 
-        <View style={style.price_view}>
-          <Text style={style.offer_price}>12 AED</Text>
-          <Text
-            style={[
-              style.offer_price,
-              {
-                marginLeft: 10,
-                color: colorConstant.LIGHT_GREY,
-              },
-            ]}>
-            24 AED
-          </Text>
-        </View>
-
-        <View style={style.free_offer_view}>
+       {renderPriceView()}
+        {/* <View style={style.free_offer_view}>
           <Text style={style.free_offer_text}>
             {'Or 3 interest free payments \n of AED 4'}
           </Text>
@@ -298,7 +363,7 @@ const ProductPage = props => {
             style={{width: 100, height: 30, marginLeft: 10}}
             resizeMode="contain"
           />
-        </View>
+        </View> */}
       </View>
 
       <View
@@ -324,18 +389,19 @@ const ProductPage = props => {
           </View>
 
           {decription && (
-            <Text style={style.des_text}>{stringConstant.des_text}</Text>
+            <Text style={style.des_text}>{removeHtmlTags(productDetail?.description?.html ? productDetail?.description?.html :
+ productDetail?.short_description?.html)}</Text>
           )}
         </View>
 
         <View style={style.border}></View>
 
-        <View style={style.des_title_text}>
+        {/* <View style={style.des_title_text}>
           <Text style={[style.des_titile, {color: colorConstant.BLACK}]}>
             {t('fragrance details')}
           </Text>
           <AntDesign name="plus" size={20} color={colorConstant.BLACK} />
-        </View>
+        </View> */}
         <View style={[style.des_title_text, {marginTop: '8%'}]}>
           <Text style={[style.des_titile]}>{t('reviews')}</Text>
           <View
@@ -348,7 +414,7 @@ const ProductPage = props => {
               type="custom"
               ratingBackgroundColor={colorConstant.DARK_PRIMARY}
               ratingColor={colorConstant.DARK_PRIMARY}
-              ratingCount={5}
+              ratingCount={productDetail?.review_count}
               imageSize={20}
               onFinishRating={ratingCompleted}
               style={{paddingVertical: 10, marginRight: 10}}
@@ -365,7 +431,7 @@ const ProductPage = props => {
               }}>
               <Text
                 style={[style.des_titile, {color: colorConstant.DARK_PRIMARY}]}>
-                32
+                {productDetail?.reviews?.items?.length}
               </Text>
             </View>
 
@@ -380,11 +446,11 @@ const ProductPage = props => {
           </View>
         </View>
 
-        {reviewshow && (
+        {reviewshow && productDetail?.reviews?.items?.length > 0 && (
           <>
             <FlatList data={review} renderItem={reviewItem} />
 
-            <View
+            {productDetail?.reviews?.items?.length > 3 && <View
               style={{
                 width: '100%',
                 flexDirection: 'row',
@@ -415,7 +481,7 @@ const ProductPage = props => {
                   {t('Add review')}
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View>}
           </>
         )}
 
@@ -502,7 +568,8 @@ const ProductPage = props => {
         </View>
       </View>
 
-      <View style={{alignItems: 'flex-start'}}>
+       {productDetail?.related_products?.length > 0 && <>
+       <View style={{alignItems: 'flex-start'}}>
         <Text
           style={[
             style.product_name,
@@ -517,14 +584,17 @@ const ProductPage = props => {
       </View>
       <View style={{width: '100%', marginTop: '5%', marginLeft: '5%'}}>
         <FlatList
-          data={perfumedata}
+          data={productDetail?.related_products}
           renderItem={renderItem}
           horizontal={true}
           keyExtractor={item => item.id}
           ListFooterComponent={renderFooter}
+          ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
           showsHorizontalScrollIndicator={false}
         />
       </View>
+       </>}   
+      
 
       <View style={style.add_card_view}>
         <View
@@ -610,10 +680,16 @@ const ProductPage = props => {
           </View>
         </View>
       </View>
-      {visibale && (
+      
+      </> }
+      
+       {visibale && (
         <AddReviewModal onOpenDailog={visibale} setOnOpenDailog={setvisibale} />
       )}
+      
     </ScrollView>
+     <Loader loading={loading} />
+    </SafeAreaView>
   );
 };
 
