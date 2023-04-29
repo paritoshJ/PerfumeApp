@@ -18,68 +18,6 @@ import Modal from 'react-native-modal';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
 
-const DATA = [
-  {
-    id: 1,
-    name: 'orders',
-    image: require('../../../assets/Cart.png'),
-    navigation: 'Order',
-  },
-  {
-    id: 2,
-    name: 'Credit cards',
-    image: require('../../../assets/Credit-card.png'),
-    navigation: 'NoCreditCard',
-  },
-  {
-    id: 3,
-    name: 'ADDRESS BOOK',
-    image: require('../../../assets/Address-book.png'),
-    navigation: 'AddressBook',
-  },
-  {
-    id: 4,
-    name: 'CHANGE PASSWORD',
-    image: require('../../../assets/Password.png'),
-    navigation: 'Changepassword',
-  },
-  {
-    id: 5,
-    name: 'Wallet',
-    image: require('../../../assets/Wallet.png'),
-    navigation: 'Wallet',
-  },
-  {
-    id: 6,
-    name: 'Loyalty points',
-    image: require('../../../assets/Loyalty-point.png'),
-    navigation: 'LoyaltyPoint',
-  },
-  {
-    id: 7,
-    name: 'Gift card',
-    image: require('../../../assets/Gift-card.png'),
-    navigation: 'GiftCard',
-  },
-  {
-    id: 8,
-    name: 'WISHLIST',
-    image: require('../../../assets/Wishlist.png'),
-    navigation: 'WishList',
-  },
-  {
-    id: 9,
-    name: 'Returns',
-    image: require('../../../assets/Return.png'),
-    navigation: 'Returns',
-  },
-  {
-    id: 10,
-    name: 'REFER A FRIEND',
-    image: require('../../../assets/Refer.png'),
-    navigation: 'ReferFriend',
-  },
-];
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
@@ -88,6 +26,68 @@ export default function ProfilePage({navigation}) {
 
   const {t} = useTranslation();
 
+  const DATA = [
+    {
+      id: 1,
+      name: t('Orders'),
+      image: require('../../../assets/Cart.png'),
+      navigation: 'Order',
+    },
+    {
+      id: 2,
+      name: t('credit-cards'),
+      image: require('../../../assets/Credit-card.png'),
+      navigation: 'NoCreditCard',
+    },
+    {
+      id: 3,
+      name: t('address-book'),
+      image: require('../../../assets/Address-book.png'),
+      navigation: 'AddressBook',
+    },
+    {
+      id: 4,
+      name: t('change-password'),
+      image: require('../../../assets/Password.png'),
+      navigation: 'Changepassword',
+    },
+    {
+      id: 5,
+      name: t('wallet'),
+      image: require('../../../assets/Wallet.png'),
+      navigation: 'Wallet',
+    },
+    {
+      id: 6,
+      name: t('loyalty-points'),
+      image: require('../../../assets/Loyalty-point.png'),
+      navigation: 'LoyaltyPoint',
+    },
+    {
+      id: 7,
+      name: t('gift-cards'),
+      image: require('../../../assets/Gift-card.png'),
+      navigation: 'GiftCard',
+    },
+    {
+      id: 8,
+      name: t('WISHLIST'),
+      image: require('../../../assets/Wishlist.png'),
+      navigation: 'WishList',
+    },
+    {
+      id: 9,
+      name: t('returns'),
+      image: require('../../../assets/Return.png'),
+      navigation: 'Returns',
+    },
+    {
+      id: 10,
+      name: t('refer-a-friend'),
+      image: require('../../../assets/Refer.png'),
+      navigation: 'ReferFriend',
+    },
+  ];
   const changeLanguage = value => {
     i18n
       .changeLanguage(value)
@@ -122,7 +122,7 @@ export default function ProfilePage({navigation}) {
             <TouchableOpacity>
               <Image style={styles.navBarImage1} source={''} />
             </TouchableOpacity>
-            <Text style={styles.navBarText}>{t('text-profile')}</Text>
+            <Text style={styles.navBarText}>{t('text-profile-caps')}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity onPress={() => navigation.navigate('Feed')}>
                 <Image
@@ -359,13 +359,11 @@ export default function ProfilePage({navigation}) {
             <View>
               <Image
                 style={styles.ModalImage}
-                source={require('../../../assets/Logout.png')}
+                source={require('../../assets/icon/logout.png')}
               />
             </View>
-            <Text style={styles.text1}>{t('Delete account')}</Text>
-            <Text style={styles.text2}>
-              {t('Once deleted, the account cannot be recovered')}
-            </Text>
+            <Text style={styles.text1}>{t('logout')}</Text>
+            <Text style={styles.text2}>{t('are_you_sure_logout')}</Text>
           </View>
           <View
             style={{
@@ -380,12 +378,14 @@ export default function ProfilePage({navigation}) {
                 backgroundColor: COLORS_NEW.white,
                 width: '45%',
                 height: Metrics.rfv(45),
-                borderRadius: Metrics.rfv(20),
-                marginTop: Metrics.rfv(16),
+                borderRadius: Metrics.rfv(25),
+                marginTop: Metrics.rfv(10),
                 alignSelf: 'center',
                 marginBottom: Metrics.rfv(15),
                 borderColor: '#BC8B57',
                 borderWidth: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
               <Text style={styles.cancelButton}>{t('Cancel')}</Text>
             </TouchableOpacity>
@@ -396,9 +396,12 @@ export default function ProfilePage({navigation}) {
                 width: '45%',
                 height: Metrics.rfv(45),
                 borderRadius: Metrics.rfv(200),
-                marginTop: Metrics.rfv(16),
+                marginTop: Metrics.rfv(10),
                 alignSelf: 'center',
                 marginBottom: Metrics.rfv(15),
+
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
               <Text style={styles.nextButtontext}>{t('Log out?')}</Text>
             </TouchableOpacity>
@@ -437,6 +440,11 @@ const styles = StyleSheet.create({
   navBarText: {
     fontSize: Metrics.rfv(15),
     color: COLORS_NEW.black,
+    textAlign: 'center',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 8,
   },
   avatar: {
     height: Metrics.rfv(70),
@@ -513,25 +521,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   nextButtontext: {
-    flex: 1,
-    padding: Metrics.rfv(12),
+    // flex: 1,
+    // padding: Metrics.rfv(12),
     textAlign: 'center',
     color: COLORS_NEW.white,
   },
   cancelButton: {
-    flex: 1,
-    padding: Metrics.rfv(12),
+    // flex: 1,
+    // padding: Metrics.rfv(12),
     textAlign: 'center',
     color: '#BC8B57',
   },
   text1: {
-    fontSize: Metrics.rfv(20),
+    fontSize: Metrics.rfv(24),
     marginTop: Metrics.rfv(10),
     color: COLORS_NEW.black,
   },
   text2: {
-    fontSize: Metrics.rfv(12),
+    fontSize: Metrics.rfv(14),
     marginTop: Metrics.rfv(10),
+    textAlign: 'center',
     color: COLORS_NEW.black,
   },
 });

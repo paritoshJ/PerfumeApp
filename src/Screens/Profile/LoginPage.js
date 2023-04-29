@@ -214,7 +214,7 @@ export default function LoginPage({navigation}) {
               </Text>
             </View>
             <View style={styles.loginPageComponentText}>
-              <Text>English</Text>
+              <Text style={{paddingEnd: Metrics.rfv(8)}}>English</Text>
               <Switch
                 trackColor={{false: '#767577', true: '#DFC8AF'}}
                 thumbColor="white"
@@ -222,7 +222,7 @@ export default function LoginPage({navigation}) {
                 onValueChange={toggleSwitch}
                 value={isEnabled}
               />
-              <Text>العربية</Text>
+              <Text style={{paddingStart: Metrics.rfv(8)}}>العربية</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -322,6 +322,7 @@ const styles = StyleSheet.create({
   loginPageComponentText: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   loginPageComponentview1: {
     flexDirection: 'row',

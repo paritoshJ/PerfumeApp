@@ -1,22 +1,72 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, Image, TouchableOpacity, I18nManager,} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  I18nManager,
+} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Metrics from '../../Helper/metrics';
 import {AppButton} from '../../Component/button/app-button';
 import Input from '../../Component/Input';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
+import {
+  isEmpty,
+  isNotPasswordSame,
+  showDefaultAlert,
+} from '../../Helper/helper';
 
 export default function ChnagePassword({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
-  const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [buttonValue, setButtonValue] = useState('Next');
   const [isSelected, setSelection] = useState(false);
-  const { t } = useTranslation()
+  const [hideCurrentPassword, setHideCurrentPassword] = useState(true);
+  const [hideNewPassword, setHideNewPassword] = useState(true);
+  const [hideRepeatPassword, setHideRepeatPassword] = useState(true);
 
+  const {t} = useTranslation();
 
+  const validateFields = () => {
+    if (isEmpty(currentPassword)) {
+      showDefaultAlert('Please enter old password');
+      return false;
+    } else if (isEmpty(newPassword)) {
+      showDefaultAlert('Please enter new password');
+      return false;
+    }
+    // else if (inValidPassword(newPass)) {
+    //   showDefaultAlert('Please enter a valid new password');
+    //   return false;
+    // }
+    else if (isEmpty(repeatPassword)) {
+      showDefaultAlert('Please re-enter password');
+      return false;
+    }
+    // else if (inValidPassword(newPass)) {
+    //   showDefaultAlert('Please enter a valid new password');
+    //   return false;
+    // }
+    else if (isNotPasswordSame(newPassword, repeatPassword)) {
+      showDefaultAlert("Passwords doesn't match");
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const handleSave = () => {
+    if (validateFields()) {
+      //password change request
+    }
+  };
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -26,8 +76,8 @@ export default function ChnagePassword({navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -43,29 +93,69 @@ export default function ChnagePassword({navigation}) {
           <Input
             placeholder="Current Password"
             placeholderTextColor={COLORS_NEW.gray}
-            onChangeText={e => setinputDetail(e)}
+            onChangeText={e => setCurrentPassword(e)}
+            value={currentPassword}
+            hidePassword={hideCurrentPassword}
+            handleImagePress={() =>
+              setHideCurrentPassword(!hideCurrentPassword)
+            }
+            imageSource={
+              hideCurrentPassword
+                ? require('./../../assets/icon/EyeClosed.png')
+                : require('./../../assets/icon/open-eye.png')
+            }
+            showRightIcon
+            iw={24}
+            ih={24}
           />
           <TouchableOpacity
             style={styles.forgotPasswordField}
             onPress={() => navigation.navigate('Resetpassword')}>
-            <Text style={{color: COLORS_NEW.black}}>{t('Forgot password?')}</Text>
+            <Text style={{color: COLORS_NEW.black}}>
+              {t('Forgot password?')}
+            </Text>
           </TouchableOpacity>
           <View style={{marginTop: Metrics.rfv(15)}}>
             <Input
-              placeholder={t("New password")}
+              placeholder={t('New password')}
               placeholderTextColor={COLORS_NEW.gray}
-              onChangeText={e => setinputDetail(e)}
+              onChangeText={e => setNewPassword(e)}
+              value={newPassword}
+              hidePassword={hideNewPassword}
+              handleImagePress={() => setHideNewPassword(!hideNewPassword)}
+              imageSource={
+                hideNewPassword
+                  ? require('./../../assets/icon/EyeClosed.png')
+                  : require('./../../assets/icon/open-eye.png')
+              }
+              showRightIcon
+              iw={24}
+              ih={24}
             />
             <Input
-              placeholder={t("Repeat new password")}
+              placeholder={t('Repeat new password')}
               placeholderTextColor={COLORS_NEW.gray}
-              onChangeText={e => setinputDetail(e)}
+              onChangeText={e => setRepeatPassword(e)}
+              value={repeatPassword}
+              hidePassword={hideRepeatPassword}
+              handleImagePress={() =>
+                setHideRepeatPassword(!hideRepeatPassword)
+              }
+              imageSource={
+                hideRepeatPassword
+                  ? require('./../../assets/icon/EyeClosed.png')
+                  : require('./../../assets/icon/open-eye.png')
+              }
+              showRightIcon
+              iw={24}
+              ih={24}
             />
           </View>
         </View>
         <AppButton
           preset="primary"
-          text={t("Save")}
+          text={t('Save')}
+          onPress={handleSave}
           style={{marginTop: Metrics.rfv(20)}}
           textStyle={{fontSize: Metrics.rfv(15), fontWeight: '400'}}
         />

@@ -19,8 +19,7 @@ import CustomSwitch from '../../Component/toggleFilter';
 import MyStatusBar from '../../Component/MyStatusBar';
 export default function Feed({navigation}) {
   const [feed, setFeed] = useState(true);
-  const onSelectSwitch = index => {
-  };
+  const onSelectSwitch = index => {};
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -35,8 +34,8 @@ export default function Feed({navigation}) {
                 style={{
                   width: Metrics.rfv(15),
                   height: Metrics.rfv(15),
-                   resizeMode: 'contain',
-                  transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+                  resizeMode: 'contain',
+                  transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
                 }}
                 source={require('../../../assets/Back-Arrow.png')}
               />
@@ -213,7 +212,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     backgroundColor: COLORS_NEW.white,
-    paddingHorizontal: 20,
+    paddingHorizontal: Metrics.rfv(8),
     marginTop: Metrics.rfv(20),
   },
   navBarView: {
