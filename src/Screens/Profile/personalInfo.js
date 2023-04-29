@@ -13,6 +13,8 @@ import {
   ActivityIndicator,
   TextInput,
   I18nManager,
+  PermissionsAndroid,
+  Pressable,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import PhoneInput from 'react-native-phone-number-input';
@@ -20,14 +22,82 @@ import Modal from 'react-native-modal';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import {AppButton} from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {showDefaultAlert} from '../../Helper/helper';
+import {chooseFromCamera, openImagePicker} from '../../Helper/ImageHelper';
+import ImageModal from '../../modal/ImageModal/ImageModal';
+import fontConstant from '../../constant/fontConstant';
 
 export default function PersonalInfo({navigation}) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   const [formattedValue, setFormattedValue] = useState('');
   const [value, setValue] = useState('');
-  const { t } = useTranslation();
+  const [image, setImage] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
+  const {t} = useTranslation();
+
+  const openCamera = () => {
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ])
+        .then(result => {
+          if (
+            result['android.permission.CAMERA'] &&
+            result['android.permission.WRITE_EXTERNAL_STORAGE'] === 'granted'
+          ) {
+            chooseFromCamera('photo').then(({isPicked, data}) => {
+              if (isPicked) {
+                console.log(data, '--dat');
+                setImage(data);
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err, '----err');
+        });
+    } else {
+      chooseFromCamera('photo').then(({isPicked, data}) => {
+        if (isPicked) {
+          console.log(data, '--data');
+          setImage(data);
+        }
+      });
+    }
+  };
+
+  const openGallery = () => {
+    if (Platform.OS === 'android') {
+      PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ])
+        .then(result => {
+          if (
+            result['android.permission.READ_EXTERNAL_STORAGE'] &&
+            result['android.permission.WRITE_EXTERNAL_STORAGE'] === 'granted'
+          ) {
+            openImagePicker('photo').then(({isPicked, data}) => {
+              if (isPicked) {
+                setImage(data);
+              }
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err, '----err');
+        });
+    } else {
+      openImagePicker('photo').then(({isPicked, data}) => {
+        if (isPicked) {
+          setImage(data);
+        }
+      });
+    }
+  };
 
   return (
     <>
@@ -38,8 +108,8 @@ export default function PersonalInfo({navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -57,10 +127,21 @@ export default function PersonalInfo({navigation}) {
         {/* Profile Information */}
         <View style={styles.profileInfoView}>
           <View style={styles.loginPageComponentview1}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setShowMenu(true)}>
               <Image
                 style={styles.avatar}
-                source={require('../../../assets/Avatar.png')}
+                source={image ? image : require('../../../assets/Avatar.png')}
+                PlaceholderContent={<ActivityIndicator />}
+              />
+              <Image
+                style={{
+                  width: 32,
+                  height: 32,
+                  position: 'absolute',
+                  bottom: 0,
+                  right: 0,
+                }}
+                source={require('./../../assets/icon/camera_btn.png')}
                 PlaceholderContent={<ActivityIndicator />}
               />
             </TouchableOpacity>
@@ -97,12 +178,20 @@ export default function PersonalInfo({navigation}) {
             </View>
           </View>
         </View>
-        <AppButton
-          preset="primary"
-          text={t('Save changes')}
-          style={{marginTop: Metrics.rfv(16)}}
-        />
       </ScrollView>
+      <View style={{marginHorizontal: Metrics.rfv(16)}}>
+        <AppButton
+          disabled={false}
+          tx={t('Save changes')}
+          style={{
+            marginTop: Metrics.rfv(16),
+            marginBottom: Metrics.rfv(10),
+            // margin: Metrics.rfv(16),
+          }}
+          onPress={() => handleLogin()}
+        />
+      </View>
+
       {/* Modal */}
       <Modal isVisible={isModalVisible}>
         <View style={styles.ModalView}>
@@ -110,7 +199,7 @@ export default function PersonalInfo({navigation}) {
             <View>
               <Image
                 style={styles.ModalImage}
-                source={require('../../../assets/Delete-icon.png')}
+                source={require('./../../assets/icon/del.png')}
               />
             </View>
             <Text style={styles.text1}>{t('Delete account')}</Text>
@@ -131,12 +220,14 @@ export default function PersonalInfo({navigation}) {
                 backgroundColor: COLORS_NEW.white,
                 width: '45%',
                 height: Metrics.rfv(45),
-                borderRadius: Metrics.rfv(20),
+                borderRadius: Metrics.rfv(25),
                 marginTop: Metrics.rfv(16),
                 alignSelf: 'center',
                 marginBottom: Metrics.rfv(15),
                 borderColor: COLORS_NEW.blue,
                 borderWidth: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
               <Text style={styles.cancelButton}>{t('Cancel')}</Text>
             </TouchableOpacity>
@@ -146,16 +237,47 @@ export default function PersonalInfo({navigation}) {
                 backgroundColor: COLORS_NEW.blue,
                 width: '45%',
                 height: Metrics.rfv(45),
-                borderRadius: Metrics.rfv(200),
+                borderRadius: Metrics.rfv(25),
                 marginTop: Metrics.rfv(16),
                 alignSelf: 'center',
                 marginBottom: Metrics.rfv(15),
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
               <Text style={styles.nextButtontext}>{t('Delete')}</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+      {showMenu && (
+        <Pressable
+          onPressIn={() => {
+            setShowMenu(!showMenu);
+          }}
+          onPress={() => {
+            console.warn('09');
+            setShowMenu(!showMenu);
+          }}
+          style={styles.modalStyle}>
+          <ImageModal
+            modalVisible={showMenu}
+            setModalVisibility={() => {
+              setShowMenu(!showMenu);
+            }}
+            cancelAction={() => {
+              setShowMenu(!showMenu);
+            }}
+            openCamera={() => {
+              setShowMenu(!showMenu);
+              openCamera();
+            }}
+            openGallery={() => {
+              setShowMenu(!showMenu);
+              openGallery();
+            }}
+          />
+        </Pressable>
+      )}
     </>
   );
 }
@@ -196,6 +318,7 @@ const styles = StyleSheet.create({
   avatar: {
     height: Metrics.rfv(100),
     width: Metrics.rfv(100),
+    borderRadius: Metrics.rfv(50),
   },
   pencilIcon: {
     width: Metrics.rfv(20),
@@ -242,12 +365,14 @@ const styles = StyleSheet.create({
     padding: Metrics.rfv(12),
     textAlign: 'center',
     color: COLORS_NEW.white,
+    fontSize: 16,
   },
   cancelButton: {
     flex: 1,
     padding: Metrics.rfv(12),
     textAlign: 'center',
     color: COLORS_NEW.blue,
+    fontSize: 16,
   },
   ModalImage: {
     height: Metrics.rfv(30),
@@ -258,6 +383,7 @@ const styles = StyleSheet.create({
     fontSize: Metrics.rfv(20),
     marginTop: Metrics.rfv(10),
     color: COLORS_NEW.black,
+    fontFamily: fontConstant.gambetta,
   },
   text2: {
     fontSize: Metrics.rfv(12),
@@ -269,5 +395,11 @@ const styles = StyleSheet.create({
     color: COLORS_NEW.black,
     textAlign: 'center',
     marginTop: Metrics.rfv(10),
+  },
+  modalStyle: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    position: 'absolute',
   },
 });

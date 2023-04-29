@@ -14,7 +14,7 @@ import Metrics from '../../Helper/metrics';
 import {Badge} from 'react-native-paper';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import {AppButton} from '../../Component/button/app-button';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
 import MyStatusBar from '../../Component/MyStatusBar';
 
 const ImageData = [
@@ -48,7 +48,7 @@ const ImageData = [
 ];
 export default function OrderDetails({route, navigation}) {
   const {page} = route.params;
-  const { t } = useTranslation();
+  const {t} = useTranslation();
   const [orderClick, setOrderClick] = useState(false);
   const [refund, setRefund] = useState(true);
   return (
@@ -60,8 +60,8 @@ export default function OrderDetails({route, navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -133,13 +133,13 @@ export default function OrderDetails({route, navigation}) {
                     justifyContent: 'space-between',
                     marginVertical: Metrics.rfv(10),
                   }}>
-                  <Text style={{fontSize: Metrics.rfv(18), fontWeight: 800}}>
+                  <Text style={{fontSize: Metrics.rfv(18), fontWeight: '800'}}>
                     Order Total
                   </Text>
                   <Text
                     style={{
                       fontSize: Metrics.rfv(18),
-                      fontWeight: 800,
+                      fontWeight: '800',
                       color: COLORS_NEW.black,
                     }}>
                     82.00 AED
@@ -198,7 +198,7 @@ export default function OrderDetails({route, navigation}) {
                   <Text
                     style={{
                       fontSize: Metrics.rfv(20),
-                      fontWeight: 800,
+                      fontWeight: '700',
                       color: COLORS_NEW.black,
                     }}>
                     Order Total
@@ -206,7 +206,7 @@ export default function OrderDetails({route, navigation}) {
                   <Text
                     style={{
                       fontSize: Metrics.rfv(20),
-                      fontWeight: 800,
+                      fontWeight: '700',
                       color: COLORS_NEW.black,
                     }}>
                     82.00 {t('AED')}
@@ -240,13 +240,14 @@ export default function OrderDetails({route, navigation}) {
                   <View
                     style={{
                       justifyContent: 'space-around',
+                      flex: 1,
                       marginHorizontal: Metrics.rfv(10),
                     }}>
-                    <View style={styles.productViewDiscription}>
+                    <View style={{}}>
                       <Text
                         style={{
                           fontSize: 18,
-                          fontWeight: 600,
+                          fontWeight: '600',
                           color: COLORS_NEW.black,
                         }}>
                         {t(item.title)}
@@ -264,7 +265,7 @@ export default function OrderDetails({route, navigation}) {
                         style={{
                           fontSize: Metrics.rfv(18),
                           color: COLORS_NEW.blue,
-                          fontWeight: 800,
+                          fontWeight: '700',
                         }}>
                         {item.discountPrice} {t('AED')}
                       </Text>
@@ -289,7 +290,7 @@ export default function OrderDetails({route, navigation}) {
           <View style={{marginHorizontal: Metrics.rfv(20)}}>
             <AppButton
               preset="primary"
-              text={t("Reorder")}
+              text={t('Reorder')}
               style={{marginTop: Metrics.rfv(16)}}
             />
           </View>
@@ -338,7 +339,7 @@ const styles = StyleSheet.create({
   },
   orderNumberText: {
     fontSize: Metrics.rfv(18),
-    fontWeight: 500,
+    fontWeight: '500',
     paddingHorizontal: Metrics.rfv(20),
     color: COLORS_NEW.black,
   },
@@ -358,7 +359,7 @@ const styles = StyleSheet.create({
   },
   orderDetailViewLabel: {
     fontSize: Metrics.rfv(16),
-    color: '#EEEDE5',
+    color: '#C0BBB7',
   },
   totalViewPrice: {
     marginVertical: Metrics.rfv(7),
@@ -368,7 +369,7 @@ const styles = StyleSheet.create({
   totalViewTitle: {
     marginVertical: Metrics.rfv(7),
     fontSize: Metrics.rfv(14),
-    color: COLORS_NEW.gray,
+    color: COLORS_NEW.TEXT_COLOR,
     opacity: 0.2,
   },
   orderDetailViewText: {

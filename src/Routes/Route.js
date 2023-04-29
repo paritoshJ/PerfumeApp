@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomTabs} from 'rn-animated-tabbar';
@@ -67,34 +67,47 @@ import BuyGiftCard from '../Screens/GiftCards/GiftCards';
 import PickAmount from '../Screens/GiftCards/pick-amount';
 import ChooseDelivery from '../Screens/GiftCards/Choosedelivery';
 import GiftCardCheckout from '../Screens/GiftCards/giftCardCheckout';
-import GiftCardEnvelope from "../Screens/GiftCards/giftCardEnvelope";
+import GiftCardEnvelope from '../Screens/GiftCards/giftCardEnvelope';
 
-import CustomizedBundle from "../Screens/CustomizedBundle/CustomizedBundle";
-import BuildYourOwnBundle from "../Screens/CustomizedBundle/build-your-own-bundle";
-import AddCustomizedCardMessage from "../Screens/CustomizedBundle/add-customized-card-message";
-import ReviewCustomizedBundle from "../Screens/CustomizedBundle/review-customized-bundle";
-import CustomizedBundleBox from "../Screens/CustomizedBundle/discovery-bundle-box";
+import CustomizedBundle from '../Screens/CustomizedBundle/CustomizedBundle';
+import BuildYourOwnBundle from '../Screens/CustomizedBundle/build-your-own-bundle';
+import AddCustomizedCardMessage from '../Screens/CustomizedBundle/add-customized-card-message';
+import ReviewCustomizedBundle from '../Screens/CustomizedBundle/review-customized-bundle';
+import CustomizedBundleBox from '../Screens/CustomizedBundle/discovery-bundle-box';
 
 import DiscoveryKitBack from '../Screens/DiscovryKit/discovery-kit';
-import BuildYourOwnKit from "../Screens/DiscovryKit/build-your-own-kit";
-import BuildYourOwnKitWithProduct from "../Screens/DiscovryKit/build-your-own-kit-product";
-import ReviewDiscoveryKit from "../Screens/DiscovryKit/review-discovery-kit";
-import DiscoveryKitBox from "../Screens/DiscovryKit/discovery-kit-box";
+import BuildYourOwnKit from '../Screens/DiscovryKit/build-your-own-kit';
+import BuildYourOwnKitWithProduct from '../Screens/DiscovryKit/build-your-own-kit-product';
+import ReviewDiscoveryKit from '../Screens/DiscovryKit/review-discovery-kit';
+import DiscoveryKitBox from '../Screens/DiscovryKit/discovery-kit-box';
 
-import GiftBox from "../Screens/GiftBox/GiftBox";
-import PickBox from "../Screens/GiftBox/pick-box";
-import BuildYourOwnGiftBox from "../Screens/GiftBox/build-your-own-gift-box";
-import AddGiftBoxMessage from "../Screens/GiftBox/add-gift-box-message";
-import ReviewGiftCode from "../Screens/GiftBox/review-gift-box";
-import GiftCardBox from "../Screens/GiftBox/gift-card-box";
+import GiftBox from '../Screens/GiftBox/GiftBox';
+import PickBox from '../Screens/GiftBox/pick-box';
+import BuildYourOwnGiftBox from '../Screens/GiftBox/build-your-own-gift-box';
+import AddGiftBoxMessage from '../Screens/GiftBox/add-gift-box-message';
+import ReviewGiftCode from '../Screens/GiftBox/review-gift-box';
+import GiftCardBox from '../Screens/GiftBox/gift-card-box';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const ProfileStack = () => {
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    checkIfTokenExists();
+  }, []);
+
+  const checkIfTokenExists = async () => {
+    const tokenVal = await AsyncStorage.getItem('token');
+    setToken(tokenVal);
+  };
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         cardStyle: {backgroundColor: '#ffff'},
       }}
-      initialRouteName="Login">
+      initialRouteName={token ? 'Login' : 'Profile'}>
       <Stack.Screen name="Login" component={LoginPage} />
       <Stack.Screen name="EnterDetail" component={EnterYourDetails} />
       <Stack.Screen name="CreateAccount" component={createAccount} />
@@ -114,7 +127,7 @@ const ProfileStack = () => {
       <Stack.Screen name="ContactUs" component={ContactUs} />
       <Stack.Screen name="WriteUs" component={WriteUs} />
       <Stack.Screen name="FAQ" component={FAQ} />
-     
+
       <Stack.Screen name="Feed" component={Feed} />
       <Stack.Screen name="GiftCard" component={FeeGiftCard} />
       <Stack.Screen name="Wallet" component={Wallet} />
@@ -133,23 +146,37 @@ const ProfileStack = () => {
       <Stack.Screen name="GiftCardEnvelope" component={GiftCardEnvelope} />
 
       <Stack.Screen name="BuildYourOwnKit" component={BuildYourOwnKit} />
-      <Stack.Screen name="BuildYourOwnKitWithProduct" component={BuildYourOwnKitWithProduct} />
+      <Stack.Screen
+        name="BuildYourOwnKitWithProduct"
+        component={BuildYourOwnKitWithProduct}
+      />
       <Stack.Screen name="ReviewDiscoveryKit" component={ReviewDiscoveryKit} />
       <Stack.Screen name="DiscoveryKitBox" component={DiscoveryKitBox} />
-      <Stack.Screen name="CustomizedBundleBox" component={CustomizedBundleBox} />
+      <Stack.Screen
+        name="CustomizedBundleBox"
+        component={CustomizedBundleBox}
+      />
 
       <Stack.Screen name="CustomizedBundle" component={CustomizedBundle} />
       <Stack.Screen name="BuildYourOwnBundle" component={BuildYourOwnBundle} />
-      <Stack.Screen name="AddCustomizedCardMessage" component={AddCustomizedCardMessage} />
-      <Stack.Screen name="ReviewCustomizedBundle" component={ReviewCustomizedBundle} />
+      <Stack.Screen
+        name="AddCustomizedCardMessage"
+        component={AddCustomizedCardMessage}
+      />
+      <Stack.Screen
+        name="ReviewCustomizedBundle"
+        component={ReviewCustomizedBundle}
+      />
 
       <Stack.Screen name="GiftBox" component={GiftBox} />
       <Stack.Screen name="PickBox" component={PickBox} />
-      <Stack.Screen name="BuildYourOwnGiftBox" component={BuildYourOwnGiftBox} />
+      <Stack.Screen
+        name="BuildYourOwnGiftBox"
+        component={BuildYourOwnGiftBox}
+      />
       <Stack.Screen name="AddGiftBoxMessage" component={AddGiftBoxMessage} />
       <Stack.Screen name="GiftCardBox" component={GiftCardBox} />
       <Stack.Screen name="ReviewGiftCode" component={ReviewGiftCode} />
-      
     </Stack.Navigator>
   );
 };
@@ -180,7 +207,6 @@ const WishlistStack = () => {
       }}>
       {/* <Stack.Screen name="WishlistScreen" component={WishlistScreen} /> */}
       <Stack.Screen name="WishList" component={WishList} />
-
     </Stack.Navigator>
   );
 };
@@ -267,7 +293,7 @@ const Route = navigation => {
       screenOptions={{headerShown: false}}
       // tabBarOptions={{}}
       initialRouteName="Main">
-      <TabsNavigator.Screen name="Catalog" component={CatalogStack}  />
+      <TabsNavigator.Screen name="Catalog" component={CatalogStack} />
       <TabsNavigator.Screen name="Wishlist" component={WishlistStack} />
       <TabsNavigator.Screen name="Main" component={MainStack} />
       <TabsNavigator.Screen name="My cart" component={MyCartStack} />

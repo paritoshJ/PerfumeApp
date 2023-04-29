@@ -18,7 +18,7 @@ import {AppButton} from '../../Component/button/app-button';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import LinearGradient from 'react-native-linear-gradient';
 import MyStatusBar from '../../Component/MyStatusBar';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
 
 const ImageData = [
   {
@@ -40,8 +40,7 @@ const ImageData = [
 
 export default function Wallet({navigation}) {
   const [feed, setFeed] = useState(true);
-  const { t } = useTranslation()
-
+  const {t} = useTranslation();
 
   return (
     <>
@@ -52,8 +51,8 @@ export default function Wallet({navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -112,7 +111,9 @@ export default function Wallet({navigation}) {
             }}>
             <View style={styles.orderView}>
               <TouchableOpacity style={styles.orderView}>
-                <Text style={styles.orderNumberText}>{t('orders')} #4562378</Text>
+                <Text style={styles.orderNumberText}>
+                  {t('orders')} #4562378
+                </Text>
               </TouchableOpacity>
             </View>
             <View>
@@ -339,7 +340,7 @@ const styles = StyleSheet.create({
   },
   orderNumberText: {
     fontSize: Metrics.rfv(20),
-    fontWeight: 500,
+    fontWeight: '500',
     color: COLORS_NEW.black,
     marginTop: Metrics.rfv(20),
   },
