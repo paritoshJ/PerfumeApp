@@ -28,7 +28,8 @@ const PremiumCard = props => {
         borderRadius: 10,
       }}
       onPress={() => {
-        navigationRef.navigate('ProductPage');
+        console.log('item?.sku',item?.sku);
+        navigationRef.navigate('ProductPage',{skuID:item?.sku});
         // navigationRef.navigate('ProductPage');
       }}>
       <View

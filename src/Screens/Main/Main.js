@@ -10,6 +10,7 @@ import {
   ImageBackground,
   I18nManager,
   Alert,
+  SafeAreaView,
 } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import style from './style';
@@ -46,6 +47,7 @@ import {GET_HOME_CONFIG_DATA} from '../../api/getHomeConfigData';
 import {isNonNullObject} from '@apollo/client/utilities';
 
 const MainScreen = props => {
+  const [loading, setLoading] = useState(false);
   const [onOpenDailog, setonOpenDailog] = useState(false);
   const [stateWidth, setStateWidth] = useState(300);
   const [productData, setProductData] = useState('');
@@ -276,180 +278,139 @@ const MainScreen = props => {
     setonOpenDailog(false);
   };
   return (
-    <ScrollView style={style.container}>
-      {/* <StatusBar
+    <SafeAreaView style={{flex: 1}}>
+      <ScrollView style={style.container}>
+        {/* <StatusBar
         backgroundColor={colorConstant.PRIMARY}
         barStyle="dark-content"
       /> */}
-      <StatusBar
-        translucent
-        backgroundColor="transparent"
-        barStyle="dark-content"
-      />
-
-      {onOpenDailog && (
-        <ProductModal
-          item={selectedProduct}
-          onOpenDailog={onOpenDailog}
-          setOnOpenDailog={closeDialog}
-          // image={selectedProduct?.image.url}
-          image={selectedProduct?.image}
-          title={selectedProduct?.name}
-          sku={selectedProduct.sku}
-          cat={selectedProduct?.customAttributesAjmalData[0]?.display_category}
-          price={
-            selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]
-              .value
-          }
-          offer={
-            // selectedProduct?.price_range?.minimum_price?.discount?.amount_off
-            selectedProduct?.discount_percent
-          }
-          displaySize1={
-            selectedProduct?.customAttributesAjmalData[0]?.display_size
-          }
-          finalPrice={
-            selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]
-          }
-          regularPrice={
-            selectedProduct?.price_range[0]?.minimum_price[0]?.regular_price[0]
-          }
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="dark-content"
         />
-      )}
-      {bannerData && (
-        <ImageBackground
-          source={imageConstant.main_header}
-          borderBottomRightRadius={25}
-          style={style.header_view}>
-          <SwiperFlatList
-            showPagination
-            data={bannerData}
-            paginationDefaultColor={colorConstant.WHITE}
-            paginationActiveColor={colorConstant.DARK_PRIMARY}
-            paginationStyleItemActive={{width: 30, height: 5}}
-            paginationStyleItemInactive={{width: 5, height: 5}}
-            paginationStyle={style.paginationContain}
-            renderItem={({item}) => (
-              <View style={style.child}>
-                <View style={style.shop_view}>
-                  <Text style={style.ajmal_text}>{item?.title}</Text>
-                  <TouchableOpacity style={style.shop_button}>
-                    <Text style={style.button_text}>{t('Shop now')}</Text>
-                  </TouchableOpacity>
-                </View>
-                <View onLayout={onLayout} style={style.banner_image_view}>
-                  {renderBannerImage(item?.items)}
-                </View>
-              </View>
-            )}
-          />
-        </ImageBackground>
-      )}
 
-      <View style={style.searchContain}>
-        <View style={style.searchbarRow}>
-          <EvilIcons name="search" size={30} color={colorConstant.LIGHT_GREY} />
-        </View>
-        <View style={style.TextInput_row_Contain}>
-          <TextInput
-            value={text}
-            onChangeText={setText}
-            placeholder={t('Search for perfume')}
-            style={style.textinputContain}
+        {onOpenDailog && (
+          <ProductModal
+            item={selectedProduct}
+            onOpenDailog={onOpenDailog}
+            setOnOpenDailog={closeDialog}
+            // image={selectedProduct?.image.url}
+            image={selectedProduct?.image}
+            title={selectedProduct?.name}
+            sku={selectedProduct.sku}
+            cat={
+              selectedProduct?.customAttributesAjmalData[0]?.display_category
+            }
+            price={
+              selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]
+                .value
+            }
+            offer={
+              // selectedProduct?.price_range?.minimum_price?.discount?.amount_off
+              selectedProduct?.discount_percent
+            }
+            displaySize1={
+              selectedProduct?.customAttributesAjmalData[0]?.display_size
+            }
+            finalPrice={
+              selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]
+            }
+            regularPrice={
+              selectedProduct?.price_range[0]?.minimum_price[0]
+                ?.regular_price[0]
+            }
           />
-        </View>
-        <View style={style.micIcon_Contain}></View>
-        <TouchableOpacity style={style.micContain}>
-          <MaterialIcons
-            name="mic-none"
-            size={25}
-            color={colorConstant.LIGHT_GREY}
-            style={style.micnoneicon}
-          />
-        </TouchableOpacity>
-      </View>
-
-      <View style={style.container_two}>
-        {!isObjectNullOrUndefined(newArrivals) && (
-          <>
-            <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
-            <FlatList
-              data={newArrivals?.items}
-              extraData={newArrivals?.items}
-              renderItem={renderItemProduct}
-              horizontal={true}
-              ItemSeparatorComponent={(item, index) => {
-                return (
-                  <View style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-              ListFooterComponent={renderFooter}
-              showsHorizontalScrollIndicator={false}
+        )}
+        {bannerData && (
+          <ImageBackground
+            source={imageConstant.main_header}
+            borderBottomRightRadius={25}
+            style={style.header_view}>
+            <SwiperFlatList
+              showPagination
+              data={bannerData}
+              paginationDefaultColor={colorConstant.WHITE}
+              paginationActiveColor={colorConstant.DARK_PRIMARY}
+              paginationStyleItemActive={{width: 30, height: 5}}
+              paginationStyleItemInactive={{width: 5, height: 5}}
+              paginationStyle={style.paginationContain}
+              renderItem={({item}) => (
+                <View style={style.child}>
+                  <View style={style.shop_view}>
+                    <Text style={style.ajmal_text}>{item?.title}</Text>
+                    <TouchableOpacity style={style.shop_button}>
+                      <Text style={style.button_text}>{t('Shop now')}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <View onLayout={onLayout} style={style.banner_image_view}>
+                    {renderBannerImage(item?.items)}
+                  </View>
+                </View>
+              )}
             />
-          </>
+          </ImageBackground>
         )}
 
-        {!isObjectNullOrUndefined(categoryData) && (
-          <View style={{}}>
-            <Text style={style.arrivals_text}>{t('Our perfumes')}</Text>
-            <FlatList
-              data={categoryData}
-              extraData={categoryData}
-              horizontal={true}
-              keyExtractor={item => item.id}
-              renderItem={cardrenderItem}
-              // ListFooterComponent={renderFooterCard}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={(item, index) => {
-                return (
-                  <View style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
-                );
-              }}
+        <View style={style.searchContain}>
+          <View style={style.searchbarRow}>
+            <EvilIcons
+              name="search"
+              size={30}
+              color={colorConstant.LIGHT_GREY}
             />
           </View>
-        )}
+          <View style={style.TextInput_row_Contain}>
+            <TextInput
+              value={text}
+              onChangeText={setText}
+              placeholder={t('Search for perfume')}
+              style={style.textinputContain}
+            />
+          </View>
+          <View style={style.micIcon_Contain}></View>
+          <TouchableOpacity style={style.micContain}>
+            <MaterialIcons
+              name="mic-none"
+              size={25}
+              color={colorConstant.LIGHT_GREY}
+              style={style.micnoneicon}
+            />
+          </TouchableOpacity>
+        </View>
 
-        {!isObjectNullOrUndefined(premiumCollection) && (
-          <View style={style.imageContstant_banner_image_Contain}>
-            <ImageBackground
-              source={imageConstant.banner}
-              style={style.imageContstant_banner_image}
-              borderRadius={16}
-              resizeMode="contain">
-              <Text style={style.premium_text}>{t('Premium collection')}</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: 24,
-                  marginTop: 16,
-                }}>
-                <Text style={style.collection_text}>
-                  {t('Go to collection')}
-                </Text>
-                <AntDesign
-                  name="arrowright"
-                  size={14}
-                  color={colorConstant.WHITE}
-                  style={{
-                    alignSelf: 'center',
-                    marginLeft: 10,
-                    transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
-                  }}
-                />
-              </View>
-
+        <View style={style.container_two}>
+          {!isObjectNullOrUndefined(newArrivals) && (
+            <>
+              <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
               <FlatList
-                data={premiumCollection?.items}
-                contentContainerStyle={{paddingHorizontal: 16}}
-                renderItem={({item}) => {
-                  console.log(item);
-                  return <PremiumCard item={item} offer={true} />;
+                data={newArrivals?.items}
+                extraData={newArrivals?.items}
+                renderItem={renderItemProduct}
+                horizontal={true}
+                ItemSeparatorComponent={(item, index) => {
+                  return (
+                    <View
+                      style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
+                  );
                 }}
+                keyExtractor={(item, index) => index.toString()}
+                ListFooterComponent={renderFooter}
+                showsHorizontalScrollIndicator={false}
+              />
+            </>
+          )}
+
+          {!isObjectNullOrUndefined(categoryData) && (
+            <View style={{}}>
+              <Text style={style.arrivals_text}>{t('Our perfumes')}</Text>
+              <FlatList
+                data={categoryData}
+                extraData={categoryData}
                 horizontal={true}
                 keyExtractor={item => item.id}
-                // ListFooterComponent={renderFooter}
+                renderItem={cardrenderItem}
+                // ListFooterComponent={renderFooterCard}
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={(item, index) => {
                   return (
@@ -458,18 +419,19 @@ const MainScreen = props => {
                   );
                 }}
               />
-            </ImageBackground>
-          </View>
-        )}
+            </View>
+          )}
 
-        {!isObjectNullOrUndefined(shopWomens) && (
-          <>
-            <View style={style.Premiumcollection_Conatin}>
+          {!isObjectNullOrUndefined(premiumCollection) && (
+            <View style={style.imageContstant_banner_image_Contain}>
               <ImageBackground
-                source={imageConstant.cardwomen}
-                style={style.imageConstant_card}
-                borderRadius={16}>
-                <Text style={style.premium_text}>{t(`Shop women's`)}</Text>
+                source={imageConstant.banner}
+                style={style.imageContstant_banner_image}
+                borderRadius={16}
+                resizeMode="contain">
+                <Text style={style.premium_text}>
+                  {t('Premium collection')}
+                </Text>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -482,7 +444,7 @@ const MainScreen = props => {
                   </Text>
                   <AntDesign
                     name="arrowright"
-                    size={16}
+                    size={14}
                     color={colorConstant.WHITE}
                     style={{
                       alignSelf: 'center',
@@ -491,97 +453,152 @@ const MainScreen = props => {
                     }}
                   />
                 </View>
+
+                <FlatList
+                  data={premiumCollection?.items}
+                  contentContainerStyle={{paddingHorizontal: 16}}
+                  renderItem={({item}) => {
+                    console.log(item);
+                    return <PremiumCard item={item} offer={true} />;
+                  }}
+                  horizontal={true}
+                  keyExtractor={item => item.id}
+                  // ListFooterComponent={renderFooter}
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={(item, index) => {
+                    return (
+                      <View
+                        style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
+                    );
+                  }}
+                />
               </ImageBackground>
             </View>
-            <View style={style.perfumeData}>
+          )}
+
+          {!isObjectNullOrUndefined(shopWomens) && (
+            <>
+              <View style={style.Premiumcollection_Conatin}>
+                <ImageBackground
+                  source={imageConstant.cardwomen}
+                  style={style.imageConstant_card}
+                  borderRadius={16}>
+                  <Text style={style.premium_text}>{t(`Shop women's`)}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 24,
+                      marginTop: 16,
+                    }}>
+                    <Text style={style.collection_text}>
+                      {t('Go to collection')}
+                    </Text>
+                    <AntDesign
+                      name="arrowright"
+                      size={16}
+                      color={colorConstant.WHITE}
+                      style={{
+                        alignSelf: 'center',
+                        marginLeft: 10,
+                        transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+                      }}
+                    />
+                  </View>
+                </ImageBackground>
+              </View>
+              <View style={style.perfumeData}>
+                <FlatList
+                  ItemSeparatorComponent={(item, index) => {
+                    return (
+                      <View
+                        style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
+                    );
+                  }}
+                  data={shopWomens?.items}
+                  renderItem={renderItem}
+                  horizontal={true}
+                  keyExtractor={item => item.id}
+                  ListFooterComponent={renderFooter}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            </>
+          )}
+
+          {!isObjectNullOrUndefined(shopMans) && (
+            <>
+              <View style={style.imageConstant_cardman_Contain}>
+                <ImageBackground
+                  source={imageConstant.cardman}
+                  style={style.imageConstant_card}
+                  borderRadius={16}>
+                  <Text style={style.premium_text}>{t(`Shop men's`)}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginBottom: 24,
+                      marginTop: 16,
+                    }}>
+                    <Text style={style.collection_text}>
+                      {t('Go to collection')}
+                    </Text>
+                    <AntDesign
+                      name="arrowright"
+                      size={16}
+                      color={colorConstant.WHITE}
+                      style={[
+                        style.arrowrightIcon,
+                        {transform: [{scaleX: I18nManager.isRTL ? -1 : 1}]},
+                      ]}
+                    />
+                  </View>
+                </ImageBackground>
+              </View>
+              <View style={style.perfumedata_contain}>
+                <FlatList
+                  data={perfumedata}
+                  renderItem={renderItem}
+                  horizontal={true}
+                  keyExtractor={item => item.id}
+                  ItemSeparatorComponent={(item, index) => {
+                    return (
+                      <View
+                        style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
+                    );
+                  }}
+                  ListFooterComponent={renderFooter}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </View>
+            </>
+          )}
+
+          {!isObjectNullOrUndefined(sales) && (
+            <View style={{marginTop: '-25%'}}>
+              <Text style={style.sale_text}>{t('Sale')}</Text>
+
               <FlatList
+                data={sales.items}
+                renderItem={renderSaleItem}
+                horizontal={true}
                 ItemSeparatorComponent={(item, index) => {
                   return (
                     <View
                       style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                   );
                 }}
-                data={shopWomens?.items}
-                renderItem={renderItem}
-                horizontal={true}
                 keyExtractor={item => item.id}
                 ListFooterComponent={renderFooter}
                 showsHorizontalScrollIndicator={false}
               />
             </View>
-          </>
-        )}
-
-        {!isObjectNullOrUndefined(shopMans) && (
-          <>
-            <View style={style.imageConstant_cardman_Contain}>
-              <ImageBackground
-                source={imageConstant.cardman}
-                style={style.imageConstant_card}
-                borderRadius={16}>
-                <Text style={style.premium_text}>{t(`Shop men's`)}</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginBottom: 24,
-                    marginTop: 16,
-                  }}>
-                  <Text style={style.collection_text}>
-                    {t('Go to collection')}
-                  </Text>
-                  <AntDesign
-                    name="arrowright"
-                    size={16}
-                    color={colorConstant.WHITE}
-                    style={[
-                      style.arrowrightIcon,
-                      {transform: [{scaleX: I18nManager.isRTL ? -1 : 1}]},
-                    ]}
-                  />
-                </View>
-              </ImageBackground>
-            </View>
-            <View style={style.perfumedata_contain}>
-              <FlatList
-                data={perfumedata}
-                renderItem={renderItem}
-                horizontal={true}
-                keyExtractor={item => item.id}
-                ItemSeparatorComponent={(item, index) => {
-                  return (
-                    <View
-                      style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
-                  );
-                }}
-                ListFooterComponent={renderFooter}
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-          </>
-        )}
-
-        {!isObjectNullOrUndefined(sales) && (
-          <View style={{marginTop: '-25%'}}>
-            <Text style={style.sale_text}>{t('Sale')}</Text>
-
-            <FlatList
-              data={sales.items}
-              renderItem={renderSaleItem}
-              horizontal={true}
-              ItemSeparatorComponent={(item, index) => {
-                return (
-                  <View style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
-                );
-              }}
-              keyExtractor={item => item.id}
-              ListFooterComponent={renderFooter}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-        )}
-      </View>
-    </ScrollView>
+          )}
+        </View>
+      </ScrollView>
+      <Loader loading={loading} />
+    </SafeAreaView>
   );
 };
 

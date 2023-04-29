@@ -19,10 +19,10 @@ import ProductCard from '../../Component/ProducCard';
 import Swipeout from 'react-native-swipeout';
 import MyStatusBar from '../../Component/MyStatusBar';
 import fontConstant from '../../constant/fontConstant';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
 import colorConstant from '../../constant/colorConstant';
-import {EMPTY_CART} from "../../api/getEmptyCart";
-import {CART_DATA} from "../../api/getCartData";
+import {EMPTY_CART} from '../../api/getEmptyCart';
+import {CART_DATA} from '../../api/getCartData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const CART_DATA = [
@@ -45,19 +45,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // ];
 export default function MyCartScreen({navigation}) {
   const [isEmpty, setIsEmpty] = useState();
-  const [cartId, setCartId] = useState("");
+  const [cartId, setCartId] = useState('');
   const [orderClick, setOrderClick] = useState(false);
   const [cartLst, setCartList] = useState([]);
-  const { t } = useTranslation();
-
+  const {t} = useTranslation();
+  console.warn(navigation);
   const renderItem = ({item, index}) => {
     return (
       <>
-        <ProductCard item={item} offer={false} onSizeSelect={(data)=>{}} 
-      onFullItemPress ={() => {
-          // setSelectedProduct(item);
-          // setonOpenDailog(true);
-        }} />
+        <ProductCard
+          item={item}
+          offer={false}
+          onSizeSelect={data => {}}
+          onFullItemPress={() => {
+            // setSelectedProduct(item);
+            // setonOpenDailog(true);
+          }}
+        />
       </>
     );
   };
@@ -86,39 +90,35 @@ export default function MyCartScreen({navigation}) {
   ];
 
   const handleCartId = async () => {
-      let res = await EMPTY_CART();
-      console.log(res);
-      if (res && res?.createEmptyCart) {
-        try {
-    // await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
-  setCartId(res?.createEmptyCart)
-  } catch (e) {
-    // saving error
-    console.log(e);
-  }
-        
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        // await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+        setCartId(res?.createEmptyCart);
+      } catch (e) {
+        // saving error
+        console.log(e);
       }
-  }
+    }
+  };
 
-  const handleCartData = async (cartId) => {
+  const handleCartData = async cartId => {
     let res = await CART_DATA(cartId);
-    if(res)
-    setCartList(res);
+    if (res) setCartList(res);
 
-    console.log("CART_DATA", res);
+    console.log('CART_DATA', res);
     // AsyncStorage.setItem('CART_ID', res);
     // setCartId(res?.createEmptyCart)
-}
+  };
 
   useEffect(() => {
-    handleCartId()
-  },[])
+    handleCartId();
+  }, []);
   useEffect(() => {
-    handleCartData(cartId)
-    console.log("cartId", cartId)
-  },[cartId])
-  
-
+    handleCartData(cartId);
+    console.log('cartId', cartId);
+  }, [cartId]);
 
   return (
     <>
@@ -155,99 +155,100 @@ export default function MyCartScreen({navigation}) {
       ) : (
         <ScrollView>
           <View style={styles.cartDetailView}>
-            {cartLst.length>0 && cartLst.map(item => {
-              return (
-                <Swipeout
-                  right={swipeoutBtns}
-                  backgroundColor={COLORS_NEW.white}
-                  buttonWidth={120}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      borderBottomColor: COLORS_NEW.lightGray,
-                      borderBottomWidth: 1,
-                    }}>
-                    <View>
-                      <Image
-                        style={styles.cartPerfumeImage}
-                        source={item.image}
-                      />
-                    </View>
+            {cartLst.length > 0 &&
+              cartLst.map(item => {
+                return (
+                  <Swipeout
+                    right={swipeoutBtns}
+                    backgroundColor={COLORS_NEW.white}
+                    buttonWidth={120}>
                     <View
                       style={{
-                        margin: Metrics.rfv(10),
-                        justifyContent: 'space-evenly',
+                        flexDirection: 'row',
+                        borderBottomColor: COLORS_NEW.lightGray,
+                        borderBottomWidth: 1,
                       }}>
-                      <Text
+                      <View>
+                        <Image
+                          style={styles.cartPerfumeImage}
+                          source={item.image}
+                        />
+                      </View>
+                      <View
                         style={{
-                          fontSize: Metrics.rfv(16),
-                          fontWeight: 600,
-                          color: COLORS_NEW.black,
-                          fontFamily: fontConstant.satoshi,
-                          fontStyle: 'normal',
+                          margin: Metrics.rfv(10),
+                          justifyContent: 'space-evenly',
                         }}>
-                        {t('Amber Wood Noir')}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: Metrics.rfv(12),
-                          fontWeight: 300,
-                          color: COLORS_NEW.gray,
-                          fontFamily: fontConstant.satoshi,
-                          fontStyle: 'normal',
-                        }}>
-                        EAU DE PARFUME / 75ML / WOMAN
-                      </Text>
-                      <View style={{flexDirection: 'row'}}>
                         <Text
                           style={{
                             fontSize: Metrics.rfv(16),
-                            color: COLORS_NEW.blue,
-                            fontWeight: 800,
-                            fontFamily: fontConstant.satoshi,
-                            fontStyle: 'normal',
-                          }}>
-                          {item.discountPrice} {t('AED')}
-                        </Text>
-                        <Text
-                          style={{
-                            marginHorizontal: Metrics.rfv(10),
-                            textDecorationLine: 'line-through',
-                            textDecorationStyle: 'solid',
-                            fontSize: Metrics.rfv(16),
-                            opacity: 0.3,
+                            fontWeight: 600,
                             color: COLORS_NEW.black,
                             fontFamily: fontConstant.satoshi,
                             fontStyle: 'normal',
                           }}>
-                          {item.price} {t('AED')}
+                          {t('Amber Wood Noir')}
                         </Text>
-                      </View>
-                      <View style={{flexDirection: 'row'}}>
-                        <Image
-                          style={styles.plusMinusButton}
-                          source={require('../../../assets/minus-button.png')}
-                        />
                         <Text
                           style={{
-                            marginHorizontal: Metrics.rfv(5),
+                            fontSize: Metrics.rfv(12),
+                            fontWeight: 300,
+                            color: COLORS_NEW.gray,
                             fontFamily: fontConstant.satoshi,
                             fontStyle: 'normal',
-                            fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
-                            fontWeight: fontConstant.WEIGHT_LEIGHT,
                           }}>
-                          2
+                          EAU DE PARFUME / 75ML / WOMAN
                         </Text>
-                        <Image
-                          style={styles.plusMinusButton}
-                          source={require('../../../assets/plus-button.png')}
-                        />
+                        <View style={{flexDirection: 'row'}}>
+                          <Text
+                            style={{
+                              fontSize: Metrics.rfv(16),
+                              color: COLORS_NEW.blue,
+                              fontWeight: 800,
+                              fontFamily: fontConstant.satoshi,
+                              fontStyle: 'normal',
+                            }}>
+                            {item.discountPrice} {t('AED')}
+                          </Text>
+                          <Text
+                            style={{
+                              marginHorizontal: Metrics.rfv(10),
+                              textDecorationLine: 'line-through',
+                              textDecorationStyle: 'solid',
+                              fontSize: Metrics.rfv(16),
+                              opacity: 0.3,
+                              color: COLORS_NEW.black,
+                              fontFamily: fontConstant.satoshi,
+                              fontStyle: 'normal',
+                            }}>
+                            {item.price} {t('AED')}
+                          </Text>
+                        </View>
+                        <View style={{flexDirection: 'row'}}>
+                          <Image
+                            style={styles.plusMinusButton}
+                            source={require('../../../assets/minus-button.png')}
+                          />
+                          <Text
+                            style={{
+                              marginHorizontal: Metrics.rfv(5),
+                              fontFamily: fontConstant.satoshi,
+                              fontStyle: 'normal',
+                              fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+                              fontWeight: fontConstant.WEIGHT_LEIGHT,
+                            }}>
+                            2
+                          </Text>
+                          <Image
+                            style={styles.plusMinusButton}
+                            source={require('../../../assets/plus-button.png')}
+                          />
+                        </View>
                       </View>
                     </View>
-                  </View>
-                </Swipeout>
-              );
-            })}
+                  </Swipeout>
+                );
+              })}
             <View style={styles.orderSummaryView}>
               <View
                 style={styles.refundView}
@@ -270,10 +271,11 @@ export default function MyCartScreen({navigation}) {
                       fontSize: fontConstant.TEXT_12_SIZE_REGULAR,
                       fontWeight: fontConstant.WEIGHT_LEIGHT,
                     }}>
-                    
                     {t('Subtotal')}
                   </Text>
-                  <Text style={styles.CreditCardNumberView}>117.00 {t('AED')}</Text>
+                  <Text style={styles.CreditCardNumberView}>
+                    117.00 {t('AED')}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -312,7 +314,7 @@ export default function MyCartScreen({navigation}) {
                   fontFamily: fontConstant.gambetta,
                   fontStyle: 'italic',
                   fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
-                  fontWeight:fontConstant.WEIGHT_REGULAR,
+                  fontWeight: fontConstant.WEIGHT_REGULAR,
                   marginVertical: Metrics.rfv(20),
                 }}>
                 {t('Recommended products')}
@@ -322,8 +324,12 @@ export default function MyCartScreen({navigation}) {
                   data={perfumedata}
                   renderItem={renderItem}
                   horizontal={true}
-                              ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
-
+                  ItemSeparatorComponent={(item, index) => {
+                    return (
+                      <View
+                        style={{marginHorizontal: index === 0 ? 0 : 10}}></View>
+                    );
+                  }}
                   keyExtractor={item => item.id}
                   // ListFooterComponent={renderFooter}
                   showsHorizontalScrollIndicator={false}
@@ -335,7 +341,7 @@ export default function MyCartScreen({navigation}) {
               <AppButton
                 preset="primary"
                 text={t('Checkout')}
-                style={{marginTop: Metrics.rfv(16),}}
+                style={{marginTop: Metrics.rfv(16)}}
               />
             </View>
           </View>

@@ -2,12 +2,12 @@ import {Dimensions, I18nManager, StyleSheet} from 'react-native';
 import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
 
-const { width } = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 export default StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
   },
-  child: { width, justifyContent: 'center',flexDirection:"row" },
+  child: {width, justifyContent: 'center', flexDirection: 'row'},
   share_view: {
     width: '100%',
     height: 40,
@@ -16,43 +16,42 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    marginTop:'10%'
+    marginTop: '10%',
   },
   vanilla: {
     width: 130,
     height: 30,
-    backgroundColor: "#BC8B57",
+    backgroundColor: '#BC8B57',
     borderBottomRightRadius: 50,
     justifyContent: 'center',
-    alignItems:"flex-start",
-    opacity:0.5
+    alignItems: 'flex-start',
+    opacity: 0.5,
   },
-  rose:{
+  rose: {
     width: 100,
     height: 30,
     backgroundColor: '#BC8B57',
     borderBottomRightRadius: 50,
     justifyContent: 'center',
-    opacity:0.4,
-    alignItems:"flex-start",
+    opacity: 0.4,
+    alignItems: 'flex-start',
   },
-  oud:{
+  oud: {
     width: 60,
     height: 30,
     backgroundColor: '#BC8B57',
     borderBottomRightRadius: 50,
     justifyContent: 'center',
-    opacity:0.3,
-    alignItems:"flex-start",
+    opacity: 0.3,
+    alignItems: 'flex-start',
   },
-  offer:{
+  offer: {
     width: '10%',
 
     // alignItems: 'center',
     // justifyContent: 'center',
   },
   header_container: {
-    width: '100%',
     height: 400,
     // backgroundColor: colorConstant.PRIMARY,
     borderBottomLeftRadius: 20,
@@ -87,7 +86,7 @@ export default StyleSheet.create({
     fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
     paddingTop: 15,
-    marginLeft:5
+    marginLeft: 5,
   },
   last_time_offer_text: {
     marginLeft: 10,
@@ -110,100 +109,100 @@ export default StyleSheet.create({
     fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
   },
-  offer_price:{
+  offer_price: {
     color: colorConstant.DARK_PRIMARY,
     fontStyle: 'normal',
-    fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+    fontSize: 20,
     fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+    paddingBottom: 10,
   },
-  price_view:{flexDirection: 'row',  marginTop: 15,    marginLeft:5},
-  free_offer_view:{
+  price_view: {flexDirection: 'row', marginTop: 15, marginLeft: 5},
+  free_offer_view: {
     marginTop: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft:5
+    marginLeft: 5,
   },
-  free_offer_text:{
+  free_offer_text: {
     fontStyle: 'normal',
     color: colorConstant.BLACK,
     fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_REGULAR,
   },
-  dicription_view:{
-    marginTop:"10%",
-    flexWrap: 'nowrap'
+  dicription_view: {
+    marginTop: '10%',
+    flexWrap: 'nowrap',
   },
-  des_title_text:{
-    justifyContent:"space-between",
-    flexDirection:"row",
-    alignItems:"center",
+  des_title_text: {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  des_titile:{
-    fontFamily:fontConstant.satoshi,
-    fontSize:fontConstant.TEXT_15_SIZE_REGULAR,
-    fontWeight:fontConstant.WEIGHT_REGULAR,
-    color:colorConstant.DARK_PRIMARY
+  des_titile: {
+    fontFamily: fontConstant.satoshi,
+    fontSize: fontConstant.TEXT_15_SIZE_REGULAR,
+    fontWeight: fontConstant.WEIGHT_REGULAR,
+    color: colorConstant.DARK_PRIMARY,
   },
-  des_text:{
-    fontFamily:fontConstant.satoshi,
-    fontSize:fontConstant.TEXT_15_SIZE_REGULAR,
-    fontWeight:fontConstant.WEIGHT_REGULAR,
-    color:colorConstant.BLACK,
-    paddingTop:10
+  des_text: {
+    fontFamily: fontConstant.satoshi,
+    fontSize: fontConstant.TEXT_15_SIZE_REGULAR,
+    fontWeight: fontConstant.WEIGHT_REGULAR,
+    color: colorConstant.BLACK,
+    paddingTop: 10,
   },
-  border:{
-    width:"100%",
-    height:0.5,
-    backgroundColor:colorConstant.LIGHT_GREY,
-    marginTop:"10%",marginBottom:"10%"
+  border: {
+    height: 0.5,
+    backgroundColor: colorConstant.LIGHT_GREY,
+    marginVertical: 10,
   },
-  review_user_name:{
+  review_user_name: {
     color: colorConstant.BLACK,
     fontFamily: fontConstant.satoshi,
     fontSize: fontConstant.TEXT_15_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
   },
-  review_text:{
+  review_text: {
     color: colorConstant.BLACK,
     fontFamily: fontConstant.satoshi,
     fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_LEIGHT,
     color: colorConstant.BLACK,
   },
-  review_add_view:{
+  review_add_view: {
     width: 150,
     height: 40,
     borderRadius: 20,
-    alignItems:"center",
-    justifyContent:"center"
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  text_viewall:{
+  text_viewall: {
     color: colorConstant.DARK_PRIMARY,
     fontFamily: fontConstant.satoshi,
     fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_LEIGHT,
   },
-  condition_text:{
+  condition_text: {
     marginLeft: 15,
     fontFamily: fontConstant.satoshi,
     fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_LEIGHT,
-    color:colorConstant.BLACK
+    color: colorConstant.BLACK,
   },
   footer: {
     width: 200,
     height: 250,
     marginLeft: 20,
-    marginRight:15
+    marginRight: 15,
     // marginRight:"5%"
   },
-  add_card_view:{
+  add_card_view: {
     width: '90%',
     height: 60,
-    alignSelf:"center",
-    marginTop:"8%",
-    marginBottom:"8%",
-  flexDirection:"row"
-  }
+    alignSelf: 'center',
+    // marginTop:"8%",
+    marginBottom: '8%',
+    flexDirection: 'row',
+  },
 });

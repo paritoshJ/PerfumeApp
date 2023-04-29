@@ -78,3 +78,14 @@ export function isObjectNullOrUndefined(obj) {
     Object.keys(obj).length === 0
   );
 }
+
+export function removeHtmlTags(data){
+  const regex = /(<([^>]+)>)/ig;
+  if(data){
+ const result = data?.replace(regex, '').trim();
+  return result;
+  }else{
+    return '';
+  }
+ 
+}
