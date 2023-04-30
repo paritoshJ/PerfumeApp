@@ -107,7 +107,7 @@ const ProfileStack = () => {
         headerShown: false,
         cardStyle: {backgroundColor: '#ffff'},
       }}
-      initialRouteName={token ? 'Login' : 'Profile'}>
+      initialRouteName={!token ? 'Login' : 'Profile'}>
       <Stack.Screen name="Login" component={LoginPage} />
       <Stack.Screen name="EnterDetail" component={EnterYourDetails} />
       <Stack.Screen name="CreateAccount" component={createAccount} />

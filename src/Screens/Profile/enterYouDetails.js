@@ -151,8 +151,9 @@ export default function EnterYourDetails({navigation}) {
         });
     } else {
       await USER_LOGIN(inputDetail, password)
-        .then(res => {
+        .then(async res => {
           setLoading(false);
+           await AsyncStorage.setItem('token', res);
           navigation.navigate('Profile');
         })
         .catch(err => {

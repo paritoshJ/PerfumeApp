@@ -17,6 +17,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import Modal from 'react-native-modal';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -390,6 +391,10 @@ export default function ProfilePage({navigation}) {
               <Text style={styles.cancelButton}>{t('Cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              onPress={async()=>{
+                await AsyncStorage.setItem('token', '');
+              handleModal();
+              }}
               style={{
                 flex: 0,
                 backgroundColor: '#BC8B57',

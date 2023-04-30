@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -9,6 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   I18nManager,
+  SafeAreaView,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AppButton} from '../../Component/button/app-button';
@@ -19,15 +20,42 @@ import PerfumeData from '../../utils/perfumedata';
 import {FlatGrid} from 'react-native-super-grid';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '../../Component/MyStatusBar';
+import { GET_WISHLIST_PRODUCTS } from '../../api/geWishlistProducts';
+import EmptyPageView from '../../Component/EmptyPageView';
+import HeartSVG from '../../assets/svg/Heart';
+import CartBagSVG from '../../assets/svg/CartBag';
 
 export default function WishList({navigation}) {
   const { t } = useTranslation();
   const [feed, setFeed] = useState(true);
+  const [errorTitle, setErrorTitle] = useState('You have no saved items');
+  const [errorMessage, setErrorMessage] = useState('Start saving as you shop by selecting the little heart.');
+  const [data, setData] = useState([]);
 
   const onSelectSwitch = index => {
   };
+
+  useEffect(() => {
+    getWishListProducts();
+  }, [])
+  
+  const getWishListProducts = async() =>{
+    await GET_WISHLIST_PRODUCTS().then((res)=>{
+      console.log('GET_WISHLIST_PRODUCTS',res);
+    }).catch((err)=>{
+       console.log('GET_WISHLIST_ERROR',err);
+    })
+  }
+  const renderEmptyAndNoLogin = () =>{
+  return <EmptyPageView 
+          icon={<HeartSVG/>}
+          title={errorTitle}
+          message={errorMessage}
+          hideAddButton={false}
+            />
+  }
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <ImageBackground
         source={require('../../../assets/wishlist-back.png')}
@@ -73,40 +101,24 @@ export default function WishList({navigation}) {
         </View>
       </ImageBackground>
       {/* No Return View */}
-      {!feed ? (
-        <View style={styles.mainView}>
-          <Image
-            style={styles.emptyCartImage}
-            source={require('../../../assets/wishlist-color.png')}
-          />
-          <Text style={styles.text1}>{t('You have no saved items')}</Text>
-          <Text style={styles.text2}>
-            {t('Start saving as you shop by selecting the little heart.')}
-          </Text>
-          <AppButton
-            preset="primary"
-            text="Go Shopping"
-            style={{marginTop: Metrics.rfv(16)}}
-          />
-        </View>
-      ) : (
-        <>
-          <ScrollView style={styles.scrollView}>
-            <FlatGrid
-              itemDimension={130}
-              data={PerfumeData}
+       
+       {data.length > 0 ? <FlatGrid
+              // itemDimension={130}
+              data={data}
+              contentContainerStyle={styles.scrollView}
               renderItem={({item}) => (
-                <ProductCard item={item} offer={true} wishlist={true} onSizeSelect={(data)=>{}} 
-      onFullItemPress ={() => {
-          // setSelectedProduct(item);
-          // setonOpenDailog(true);
-        }} />
+                <ProductCard item={item}
+                 offer={true}
+                wishlist={true} 
+                onSizeSelect={(data)=>{}} 
+                onFullItemPress ={() => {
+                    // setSelectedProduct(item);
+                    // setonOpenDailog(true);
+                  }} />
               )}
-            />
-          </ScrollView>
-        </>
-      )}
-    </>
+            /> : renderEmptyAndNoLogin()}
+     
+    </SafeAreaView>
   );
 }
 
@@ -126,7 +138,7 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
     backgroundColor: COLORS_NEW.white,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     marginTop: Metrics.rfv(20),
   },
   navBarView: {

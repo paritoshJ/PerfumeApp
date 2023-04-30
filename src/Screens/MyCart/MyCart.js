@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  SafeAreaView,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 
@@ -24,6 +25,8 @@ import colorConstant from '../../constant/colorConstant';
 import {EMPTY_CART} from "../../api/getEmptyCart";
 import {CART_DATA} from "../../api/getCartData";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import CartBagSVG from '../../assets/svg/CartBag';
+import EmptyPageView from '../../Component/EmptyPageView';
 
 // const CART_DATA = [
 //   {
@@ -49,7 +52,16 @@ export default function MyCartScreen({navigation}) {
   const [orderClick, setOrderClick] = useState(false);
   const [cartLst, setCartList] = useState([]);
   const { t } = useTranslation();
-
+  const [errorTitle, setErrorTitle] = useState('Your cart is empty');
+  const [errorMessage, setErrorMessage] = useState(' Find products in the catalog or through the search.');
+const renderEmptyAndNoLogin = () =>{
+  return <EmptyPageView 
+          icon={<CartBagSVG/>}
+          title={errorTitle}
+          message={errorMessage}
+          hideAddButton={false}
+            />
+  }
   const renderItem = ({item, index}) => {
     return (
       <>
@@ -121,38 +133,12 @@ export default function MyCartScreen({navigation}) {
 
 
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
-      {/* <StatusBar barStyle="dark-content" /> */}
       <View style={styles.navBarView}>
-        {/* <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image
-            style={styles.navBarImage1}
-            source={require('../../../assets/Back-Arrow.png')}
-          />
-        </TouchableOpacity> */}
         <Text style={styles.navBarText}>{t('My cart')}</Text>
-        {/* <TouchableOpacity>
-          <Image style={styles.navBarImage1} source={''} />
-        </TouchableOpacity> */}
       </View>
-      {isEmpty ? (
-        <View style={styles.mainView}>
-          <Image
-            style={styles.emptyCartImage}
-            source={require('../../../assets/empty-cart.png')}
-          />
-          <Text style={styles.text1}>Your cart is empty</Text>
-          <Text style={styles.text2}>
-            Find products in the catalog or through the search
-          </Text>
-          <AppButton
-            preset="primary"
-            text="Go Shopping"
-            style={{marginTop: Metrics.rfv(16)}}
-          />
-        </View>
-      ) : (
+      {isEmpty ? renderEmptyAndNoLogin() : (
         <ScrollView>
           <View style={styles.cartDetailView}>
             {cartLst.length>0 && cartLst.map(item => {
@@ -341,7 +327,7 @@ export default function MyCartScreen({navigation}) {
           </View>
         </ScrollView>
       )}
-    </>
+    </SafeAreaView>
   );
 }
 
