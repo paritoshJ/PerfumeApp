@@ -61,8 +61,8 @@ const ProductPage = props => {
 
   const callProductDetailApi = async () => {
     setLoading(true);
-    // const obj = {sku:{eq: props?.route.params.skuID}};
-    const obj = {sku: {eq: 'ETIQUETTE-config'}};
+    const obj = {sku:{eq: props?.route.params.skuID}};
+    // const obj = {sku: {eq: 'ETIQUETTE-config'}};
     await GET_PRODUCT_DETAILS(obj)
       .then(res => {
         console.log('callProductDetailApi', res);
