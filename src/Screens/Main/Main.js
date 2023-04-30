@@ -45,6 +45,7 @@ import {
 import {getRandomColor, isObjectNullOrUndefined} from '../../Helper/helper';
 import {GET_HOME_CONFIG_DATA} from '../../api/getHomeConfigData';
 import {isNonNullObject} from '@apollo/client/utilities';
+import Loader from '../../Component/Loader';
 
 const MainScreen = props => {
   const [loading, setLoading] = useState(false);
