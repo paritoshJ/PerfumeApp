@@ -154,7 +154,7 @@ const MainScreen = props => {
       <ProductCard
         isHome={true}
         item={item}
-        offer={false}
+        offer={true}
         onSizeSelect={data => {}}
         onFullItemPress={() => {
           setSelectedProduct(item);
@@ -173,6 +173,8 @@ const MainScreen = props => {
           offer={true}
           onSizeSelect={data => {}}
           onFullItemPress={() => {
+            setSelectedProduct(item);
+            setonOpenDailog(true);
             // setSelectedProduct(item);
             // setonOpenDailog(true);
           }}
@@ -429,7 +431,7 @@ const MainScreen = props => {
                 source={imageConstant.banner}
                 style={style.imageContstant_banner_image}
                 borderRadius={16}
-                resizeMode="contain">
+                resizeMode="cover">
                 <Text style={style.premium_text}>
                   {t('Premium collection')}
                 </Text>
@@ -577,7 +579,7 @@ const MainScreen = props => {
           )}
 
           {!isObjectNullOrUndefined(sales) && (
-            <View style={{marginTop: '-25%'}}>
+            <View style={{marginTop: Metrics.rfp(-15)}}>
               <Text style={style.sale_text}>{t('Sale')}</Text>
 
               <FlatList
