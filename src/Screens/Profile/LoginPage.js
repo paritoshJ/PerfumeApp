@@ -72,13 +72,13 @@ export default function LoginPage({navigation}) {
           preset="primary"
           text={t('text login')}
           style={{marginTop: Metrics.rfv(16)}}
-          onPress={() => navigation.navigate('EnterDetail')}
+          onPress={() => navigation.replace('EnterDetail')}
         />
         <AppButton
           preset="secondary"
           text={t('Create account')}
           style={{marginTop: Metrics.rfv(16)}}
-          onPress={() => navigation.navigate('CreateAccount')}
+          onPress={() => navigation.replace('CreateAccount')}
         />
         <View
           style={{flexDirection: 'row', alignItems: 'center', marginTop: 15}}>

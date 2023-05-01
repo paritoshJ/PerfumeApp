@@ -15,6 +15,7 @@ import {
   I18nManager,
   PermissionsAndroid,
   Pressable,
+  Alert,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import PhoneInput from 'react-native-phone-number-input';
@@ -60,12 +61,18 @@ export default function PersonalInfo({navigation}) {
           console.log(err, '----err');
         });
     } else {
-      chooseFromCamera('photo').then(({isPicked, data}) => {
+      try {
+         chooseFromCamera('photo').then(({isPicked, data}) => {
         if (isPicked) {
           console.log(data, '--data');
           setImage(data);
         }
       });
+      } catch (error) {
+        // Alert.alert(error)
+        console.log(error)
+      }
+     
     }
   };
 

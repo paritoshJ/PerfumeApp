@@ -142,18 +142,18 @@ export default function EnterYourDetails({navigation}) {
           setLoading(false);
           await AsyncStorage.setItem('token', res?.token);
 
-          navigation.navigate('Profile');
+          navigation.replace('Profile');
         })
         .catch(async err => {
           showDefaultAlert(err?.message);
-
           setLoading(false);
         });
     } else {
       await USER_LOGIN(inputDetail, password)
-        .then(res => {
+        .then(async res => {
           setLoading(false);
-          navigation.navigate('Profile');
+          navigation.replace('Profile');
+           await AsyncStorage.setItem('token', res);
         })
         .catch(err => {
           showDefaultAlert(err?.message);
@@ -291,7 +291,7 @@ export default function EnterYourDetails({navigation}) {
     <View style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.replace('Login')}>
           <Image
             style={{
               width: Metrics.rfv(15),

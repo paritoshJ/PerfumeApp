@@ -143,7 +143,7 @@ export default function CreateAccount({navigation}) {
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.replace('Login')}>
           <Image
             style={{
               width: Metrics.rfv(15),

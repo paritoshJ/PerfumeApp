@@ -10,6 +10,7 @@ import {
   ScrollView,
   Switch,
   I18nManager,
+  DeviceEventEmitter,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AccordionList} from 'accordion-collapse-react-native';
@@ -17,7 +18,8 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import Modal from 'react-native-modal';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import RNRestart from 'react-native-restart';
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
@@ -390,6 +392,19 @@ export default function ProfilePage({navigation}) {
               <Text style={styles.cancelButton}>{t('Cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
+            onPress={ async ()=>{
+             try {
+              DeviceEventEmitter.emit('event.logout', {});
+              await AsyncStorage.setItem('token','');
+
+             } catch (error) {
+              console.log(error);
+             }
+             handleModal();
+             setTimeout(()=>{
+              navigation.replace("LoadingPage");
+             },500)             
+            }}
               style={{
                 flex: 0,
                 backgroundColor: '#BC8B57',
