@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomTabs} from 'rn-animated-tabbar';
-import {Image} from 'react-native';
+import {Image,DeviceEventEmitter} from 'react-native';
 import {
   Search_ic,
   Search_ic_active,
@@ -19,6 +19,7 @@ import {
 const Stack = createStackNavigator();
 const TabsNavigator = createBottomTabNavigator();
 
+import LoadingPage from '../Screens/Profile/LoadingPage';
 import LoginPage from '../Screens/Profile/LoginPage';
 import EnterYourDetails from '../Screens/Profile/enterYouDetails';
 import createAccount from '../Screens/Profile/createAccount';
@@ -90,16 +91,6 @@ import GiftCardBox from '../Screens/GiftBox/gift-card-box';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProfileStack = () => {
-  const [token, setToken] = useState('');
-
-  useEffect(() => {
-    checkIfTokenExists();
-  }, []);
-
-  const checkIfTokenExists = async () => {
-    const tokenVal = await AsyncStorage.getItem('token');
-    setToken(tokenVal);
-  };
 
   return (
     <Stack.Navigator
@@ -107,7 +98,8 @@ const ProfileStack = () => {
         headerShown: false,
         cardStyle: {backgroundColor: '#ffff'},
       }}
-      initialRouteName={token ? 'Login' : 'Profile'}>
+      initialRouteName={'LoadingPage'}>
+      <Stack.Screen name="LoadingPage" component={LoadingPage} />
       <Stack.Screen name="Login" component={LoginPage} />
       <Stack.Screen name="EnterDetail" component={EnterYourDetails} />
       <Stack.Screen name="CreateAccount" component={createAccount} />

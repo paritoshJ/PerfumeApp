@@ -47,7 +47,7 @@ import EmptyPageView from '../../Component/EmptyPageView';
 //   },
 // ];
 export default function MyCartScreen({navigation}) {
-  const [isEmpty, setIsEmpty] = useState();
+  const [isEmpty, setIsEmpty] = useState(true);
   const [cartId, setCartId] = useState("");
   const [orderClick, setOrderClick] = useState(false);
   const [cartLst, setCartList] = useState([]);

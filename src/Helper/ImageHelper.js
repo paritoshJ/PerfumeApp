@@ -65,14 +65,15 @@ export const chooseFromFrontCamera = mediaType => {
   };
 
   return new Promise(function (isPicked) {
-    launchCamera(options, response => {
+    try {
+      launchCamera(options, response => {
       console.log(response, '--?resp');
       if (response.didCancel) {
         isPicked({
           isPicked: false,
           data: undefined,
         });
-      } else if (response.error) {
+      } else if (response.error || response.errorCode) {
         isPicked({
           isPicked: false,
           data: undefined,
@@ -84,6 +85,10 @@ export const chooseFromFrontCamera = mediaType => {
         });
       }
     });
+    } catch (error) {
+      console.log(error)
+    }
+    
   });
 };
 
