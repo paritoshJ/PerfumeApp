@@ -20,7 +20,7 @@ import PerfumeData from '../../utils/perfumedata';
 import {FlatGrid} from 'react-native-super-grid';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '../../Component/MyStatusBar';
-// import { GET_WISHLIST_PRODUCTS } from '../../api/geWishlistProducts';
+import { GET_WISHLIST_PRODUCTS } from '../../api/getWishlistApi';
 import EmptyPageView from '../../Component/EmptyPageView';
 import HeartSVG from '../../assets/svg/Heart';
 import CartBagSVG from '../../assets/svg/CartBag';
@@ -36,7 +36,7 @@ export default function WishList({navigation}) {
   };
 
   useEffect(() => {
-    // getWishListProducts();
+    getWishListProducts();
   }, [])
   
   const getWishListProducts = async() =>{
@@ -54,7 +54,7 @@ export default function WishList({navigation}) {
           hideAddButton={false}
           onButtonPress={()=>{}}
           buttonTitle={'Go shopping'}
-            />
+          />
   }
   return (
     <SafeAreaView style={{flex:1}}>

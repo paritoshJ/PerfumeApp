@@ -21,6 +21,7 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/native';
 import {isStringNotNull} from '../Helper/helper';
 import UIStepper from 'react-native-ui-stepper';
+import { ADD_TO_CART_DATA } from '../api/getAddToCartData';
 
 const ProductModal = props => {
   const navigation = useNavigation();
@@ -41,13 +42,17 @@ const ProductModal = props => {
   const [selected, setSelected] = useState('50 ml');
   const [value, setValue] = useState(1);
 
+  
   const closeDailog = () => {
     setOnOpenDailog(false);
   };
 
-  const handleAddToCart = () => {
+
+  const handleAddToCart = async () => {
     if (sku) {
-      navigation.navigate('My cart');
+      console.log(sku);
+       await ADD_TO_CART_DATA(parseFloat(value).toFixed(1), `${sku}`);
+      // navigation.navigate('My cart');
     }
   };
 

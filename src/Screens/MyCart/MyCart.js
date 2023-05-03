@@ -27,6 +27,7 @@ import {CART_DATA} from "../../api/getCartData";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartBagSVG from '../../assets/svg/CartBag';
 import EmptyPageView from '../../Component/EmptyPageView';
+import { useFocusEffect } from '@react-navigation/native';
 
 // const CART_DATA = [
 //   {
@@ -54,7 +55,15 @@ export default function MyCartScreen({navigation}) {
   const { t } = useTranslation();
   const [errorTitle, setErrorTitle] = useState('Your cart is empty');
   const [errorMessage, setErrorMessage] = useState(' Find products in the catalog or through the search.');
-const renderEmptyAndNoLogin = () =>{
+
+  useEffect(async ()=>{
+   const cart_id =  await AsyncStorage.getItem('CART_ID');
+   if(cart_id){
+    setCartId(cart_id);
+   }
+  },[])
+
+  const renderEmptyAndNoLogin = () =>{
   return <EmptyPageView 
           icon={<CartBagSVG/>}
           title={errorTitle}
@@ -125,13 +134,14 @@ const renderEmptyAndNoLogin = () =>{
     // setCartId(res?.createEmptyCart)
 }
 
-  useEffect(() => {
-    handleCartId()
-  },[])
+  // useEffect(() => {
+  //   handleCartId()
+  // },[])
   useEffect(() => {
     handleCartData(cartId)
     console.log("cartId", cartId)
   },[cartId])
+
   
 
 
