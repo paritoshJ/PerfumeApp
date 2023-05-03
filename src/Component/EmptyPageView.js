@@ -26,8 +26,10 @@ const EmptyPageView = props => {
         {!hideAddButton && (
           <AppButton
             preset="primary"
-            text="Go Shopping"
-            style={{marginTop:32, paddingHorizontal:36}}
+            text={props.buttonTitle}
+            onPress={props.onButtonPress}
+            style={[{marginTop:32, paddingHorizontal:36},props.buttonStyle]}
+            // textStyle={[{marginTop:32, paddingHorizontal:36},props.buttonTextStyle]}
           />
         )}
       </View>
