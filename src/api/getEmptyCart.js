@@ -2,12 +2,16 @@ import React from 'react';
 import {gql} from '@apollo/client';
 import {ApolloClient, InMemoryCache} from '@apollo/client';
 import Constants from '../Comman/Constants';
+import { getAuthTokenHeaders } from '../Helper/helper';
 
 
 export const client = new ApolloClient({
     uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
-    connectToDevTools: true
+    connectToDevTools: true,
+    headers:{
+      authorization: getAuthTokenHeaders(),
+    }
   });
 
 export const EMPTY_CART = async () => {
