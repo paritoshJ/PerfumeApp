@@ -60,6 +60,9 @@ const renderEmptyAndNoLogin = () =>{
           title={errorTitle}
           message={errorMessage}
           hideAddButton={false}
+          buttonTitle={t('Go shopping')}
+          onButtonPress={()=>{}}
+          
             />
   }
   const renderItem = ({item, index}) => {

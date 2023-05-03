@@ -52,6 +52,8 @@ export default function WishList({navigation}) {
           title={errorTitle}
           message={errorMessage}
           hideAddButton={false}
+          onButtonPress={()=>{}}
+          buttonTitle={'Go shopping'}
             />
   }
   return (
