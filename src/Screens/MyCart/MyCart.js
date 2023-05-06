@@ -159,7 +159,9 @@ export default function MyCartScreen({navigation}) {
   };
 
   const handleCartData = async cartId => {
+     setLoading(true)
     let res = await CART_DATA(cartId);
+    setLoading(false)
     if (res) {
       console.log('CART_DATA', res);
       setCartData(res?.cart);
@@ -465,7 +467,8 @@ export default function MyCartScreen({navigation}) {
               <AppButton
                 preset="primary"
                 text={t('Checkout')}
-                style={{marginTop: Metrics.rfv(16)}}
+                onPress={() => navigation.navigate('Checkout',{cart:cartData})}
+                style={{marginTop: Metrics.rfv(16),}}
               />
             </View>
           </View>

@@ -21,4 +21,6 @@ export const COLORS_NEW = {
   balanceColor: '#BC8B57',
   borderBottomColor: '#EEEDE7',
   itemTagColor: '#EAA24D',
+  mainBlack:'#2B2826',
+  pineTree:'#C0BBB7',
 };

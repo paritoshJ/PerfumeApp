@@ -2,6 +2,7 @@
 import React, {useState} from 'react';
 
 import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import fontConstant from '../constant/fontConstant';
 import { COLORS_NEW } from '../Helper/colors.new';
 import Metrics from '../Helper/metrics';
 
@@ -50,6 +51,8 @@ const CustomSwitch = ({
           <Text
             style={{
               color: getSelectionMode == 1 ? 'white' : selectionColor,
+              fontSize:16,
+              fontFamily: fontConstant.gambetta,
             }}>
             {option1}
           </Text>
@@ -69,6 +72,8 @@ const CustomSwitch = ({
           <Text
             style={{
               color: getSelectionMode == 2 ? 'white' : selectionColor,
+              fontSize:16,
+              fontFamily: fontConstant.gambetta,
             }}>
             {option2}
           </Text>
