@@ -46,7 +46,7 @@ import {getRandomColor, isObjectNullOrUndefined} from '../../Helper/helper';
 import {GET_HOME_CONFIG_DATA} from '../../api/getHomeConfigData';
 import {isNonNullObject} from '@apollo/client/utilities';
 import Loader from '../../Component/Loader';
-import { EMPTY_CART } from '../../api/getEmptyCart';
+import {EMPTY_CART} from '../../api/getEmptyCart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen = props => {
@@ -82,19 +82,18 @@ const MainScreen = props => {
     // getHomeData();
   }, []);
   const handleCartId = async () => {
-      let res = await EMPTY_CART();
-      console.log(res);
-      if (res && res?.createEmptyCart) {
-        try {
-    await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
-  // setCartId(res?.createEmptyCart)
-  } catch (e) {
-    // saving error
-    console.log(e);
-  }
-        
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+        // setCartId(res?.createEmptyCart)
+      } catch (e) {
+        // saving error
+        console.log(e);
       }
-  }
+    }
+  };
   const getConfigData = async () => {
     let res = await GET_HOME_CONFIG_DATA();
     // setProductData(res.products.items);

@@ -36,6 +36,8 @@ import CheckBoxSection from '../../Component/CheckBoxSection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loader from '../../Component/Loader';
 import {TapGestureHandler} from 'react-native-gesture-handler';
+import {EMPTY_CART} from '../../api/getEmptyCart';
+import {MERGE_CART} from '../../api/getMergeCart';
 
 export default function EnterYourDetails({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
@@ -141,7 +143,7 @@ export default function EnterYourDetails({navigation}) {
         .then(async res => {
           setLoading(false);
           await AsyncStorage.setItem('token', res?.token);
-
+          handleCartId();
           navigation.replace('Profile');
         })
         .catch(async err => {
@@ -152,8 +154,10 @@ export default function EnterYourDetails({navigation}) {
       await USER_LOGIN(inputDetail, password)
         .then(async res => {
           setLoading(false);
+          handleCartId();
+
           navigation.replace('Profile');
-           await AsyncStorage.setItem('token', res);
+          await AsyncStorage.setItem('token', res);
         })
         .catch(err => {
           showDefaultAlert(err?.message);
@@ -162,6 +166,39 @@ export default function EnterYourDetails({navigation}) {
     }
 
     console.log(res, ':::: Final res :::::');
+  };
+  const handleCartId = async () => {
+    let res = await EMPTY_CART();
+    const sourceCartId = await AsyncStorage.getItem('CART_ID');
+
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+
+        setTimeout(() => {
+          handleMergeCart(sourceCartId, res?.createEmptyCart);
+        }, 1000);
+        // setCartId(res?.createEmptyCart)
+      } catch (e) {
+        // saving error
+        console.log(e);
+      }
+    }
+  };
+
+  const handleMergeCart = async (source_cart_id, destination_cart_id) => {
+    let res = await MERGE_CART(source_cart_id, destination_cart_id);
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        console.warn('final res;', res);
+        // setCartId(res?.createEmptyCart)
+      } catch (e) {
+        // saving error
+        console.log(e);
+      }
+    }
   };
   const handleLogin = () => {
     if (showMobile) {

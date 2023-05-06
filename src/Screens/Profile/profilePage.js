@@ -392,19 +392,19 @@ export default function ProfilePage({navigation}) {
               <Text style={styles.cancelButton}>{t('Cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-            onPress={ async ()=>{
-             try {
-              DeviceEventEmitter.emit('event.logout', {});
-              await AsyncStorage.setItem('token','');
-
-             } catch (error) {
-              console.log(error);
-             }
-             handleModal();
-             setTimeout(()=>{
-              navigation.replace("LoadingPage");
-             },500)             
-            }}
+              onPress={async () => {
+                try {
+                  DeviceEventEmitter.emit('event.logout', {});
+                  await AsyncStorage.setItem('token', '');
+                  await AsyncStorage.setItem('CART_ID', '');
+                } catch (error) {
+                  console.log(error);
+                }
+                handleModal();
+                setTimeout(() => {
+                  navigation.replace('LoadingPage');
+                }, 500);
+              }}
               style={{
                 flex: 0,
                 backgroundColor: '#BC8B57',
