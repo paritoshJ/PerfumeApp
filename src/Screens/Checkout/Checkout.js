@@ -1,5 +1,5 @@
-import {StyleSheet,TouchableOpacity,Image, Text,SafeAreaView, View, ScrollView, I18nManager, FlatList} from 'react-native';
-import React,{useState} from 'react';
+import {StyleSheet,TouchableOpacity,Image, Text,SafeAreaView, View, ScrollView, I18nManager, FlatList, ImageBackground} from 'react-native';
+import React,{useState,useEffect} from 'react';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { COLORS_NEW } from '../../Helper/colors.new';
 import i18n from '../../Helper/i18n';
@@ -19,10 +19,10 @@ import CheckedRadioSVG from '../../assets/svg/CheckedRadio';
 import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 
   
-export default function Checkout({navigation}) {
+export default function Checkout({route,navigation}) {
 
 const { t } = useTranslation();
-const [orders, setOrders] = useState([1,2,4,1,2,4,1,2,4])
+const [orders, setOrders] = useState([])
 const [isDeliveryActive, setDeliveryActive] = useState(true)
 const [isDeliveryMethodActive, setDeliveryMethodActive] = useState(false)
 const [isPaymentActive, setPaymentActive] = useState(false)
@@ -40,6 +40,12 @@ const [deliveryMethodsData, setDeliveryMethodsData] = useState([
   {id:1,name:'Standard',price:'FREE',deliveryDate:'Delivered on before Tuesday, Jun 3, 2023'},
   {id:2,name:'Express',price:'14.00 AED',deliveryDate:'Delivered on before Tuesday, Jun 1, 2023'},
 ])
+
+useEffect(() => {
+  console.log('Checkout', route.params)
+  setOrders(route?.params?.cart?.items)
+}, [])
+
 
   const renderHeader = () => {
     return <View style={[styles.navBarView,styles.devider]}>
@@ -75,11 +81,14 @@ const [deliveryMethodsData, setDeliveryMethodsData] = useState([
     keyExtractor={(item,index)=>  'index'+index}
     ItemSeparatorComponent={()=> {return <View style={{marginHorizontal:3}}/>}}
     renderItem={(item,index)=>{
+      console.log('image',item?.item?.product?.image?.url)
       return <View style={{
-        height:60, width:60,overflow:'hidden', borderRadius:8, borderWidth:1, borderColor:COLORS_NEW.black, alignItems:'center',justifyContent:'center'
+        overflow:'hidden',
+        height:60, width:60,
+        borderRadius:8, borderWidth:1, borderColor:COLORS_NEW.black,
       }}>
-        <Image
-            source={require('../../assets/images/ajmal_blu.png')}
+        <ImageBackground
+            source={{uri:item?.item?.product?.image?.url}}
             style={{height:60, width:60,aspectRatio:9/16}}
           />
       </View>
