@@ -20,7 +20,7 @@ export default function Loader(props) {
         <View
           style={{
             flex: 1,
-            backgroundColor: colorConstant.DARK_PEACH,
+            backgroundColor: colorConstant.DARK_PEACH_TRANS,
             alignItems: 'center',
             justifyContent: 'center',
             position: 'absolute',
