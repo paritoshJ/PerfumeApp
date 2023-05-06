@@ -20,233 +20,351 @@ import ProductCard from '../../Component/ProducCard';
 import Swipeout from 'react-native-swipeout';
 import MyStatusBar from '../../Component/MyStatusBar';
 import fontConstant from '../../constant/fontConstant';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
 import colorConstant from '../../constant/colorConstant';
-import {EMPTY_CART} from "../../api/getEmptyCart";
-import {CART_DATA} from "../../api/getCartData";
+import {EMPTY_CART} from '../../api/getEmptyCart';
+import {CART_DATA} from '../../api/getCartData';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CartBagSVG from '../../assets/svg/CartBag';
 import EmptyPageView from '../../Component/EmptyPageView';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
+import style from './style';
+import UIStepperView from '../../Component/UiStepper';
+import {
+  REMOVE_CART_ITEM_DATA,
+  UPDATE_ITEM_FROM_CART_API,
+} from '../../api/getAddToCartData';
+import Loader from '../../Component/Loader';
 
-// const CART_DATA = [
-//   {
-//     id: '1',
-//     image: require('../../../assets/per.png'),
-//     title: 'Amber Wood Noir',
-//     keyWord: 'EAU DE PARFUME / 75ML / WOMAN',
-//     price: '48',
-//     discountPrice: '24',
-//   },
-//   {
-//     id: '2',
-//     image: require('../../../assets/per-2.png'),
-//     title: 'Amber Wood Noir',
-//     keyWord: 'EAU DE PARFUME / 75ML / WOMAN',
-//     price: '48',
-//     discountPrice: '24',
-//   },
-// ];
 export default function MyCartScreen({navigation}) {
   const [isEmpty, setIsEmpty] = useState(true);
-  const [cartId, setCartId] = useState("");
+  const [cartId, setCartId] = useState('');
   const [orderClick, setOrderClick] = useState(false);
   const [cartLst, setCartList] = useState([]);
-  const { t } = useTranslation();
+  const [recommendedProduct, setRecommendedProduct] = useState([]);
+  const [value, setValue] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const [cartData, setCartData] = useState({});
+  const {t} = useTranslation();
   const [errorTitle, setErrorTitle] = useState('Your cart is empty');
-  const [errorMessage, setErrorMessage] = useState(' Find products in the catalog or through the search.');
+  const [errorMessage, setErrorMessage] = useState(
+    ' Find products in the catalog or through the search.',
+  );
 
-  useEffect(async ()=>{
-   const cart_id =  await AsyncStorage.getItem('CART_ID');
-   if(cart_id){
-    setCartId(cart_id);
-   }
-  },[])
+  // useEffect(() => {
+  // }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      setCartIDInState();
 
-  const renderEmptyAndNoLogin = () =>{
-  return <EmptyPageView 
-          icon={<CartBagSVG/>}
-          title={errorTitle}
-          message={errorMessage}
-          hideAddButton={false}
-          buttonTitle={t('Go shopping')}
-          onButtonPress={()=>{}}
-          
-            />
-  }
+      return () => {};
+    }, []),
+  );
+
+  const setCartIDInState = async () => {
+    const cart_id = await AsyncStorage.getItem('CART_ID');
+    if (cart_id) {
+      setCartId(cart_id);
+      handleCartData(cart_id);
+      console.log('cartId', cart_id);
+    }
+  };
+
+  const renderEmptyAndNoLogin = () => {
+    return (
+      <EmptyPageView
+        icon={<CartBagSVG />}
+        title={errorTitle}
+        message={errorMessage}
+        hideAddButton={false}
+        buttonTitle={t('Go shopping')}
+        onButtonPress={() => {}}
+      />
+    );
+  };
   const renderItem = ({item, index}) => {
     return (
       <>
-        <ProductCard item={item} offer={false} onSizeSelect={(data)=>{}} 
-      onFullItemPress ={() => {
-          // setSelectedProduct(item);
-          // setonOpenDailog(true);
-        }} />
+        <ProductCard
+          item={item}
+          offer={false}
+          onSizeSelect={data => {}}
+          onFullItemPress={() => {
+            // setSelectedProduct(item);
+            // setonOpenDailog(true);
+          }}
+        />
       </>
     );
   };
 
-  var swipeoutBtns = [
-    {
-      component: (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            marginTop: '50%',
-          }}>
-          <Image
-            style={styles.swipeButton}
-            source={require('../../../assets/cart-like-button.png')}
-          />
-          <Image
-            style={styles.swipeButton}
-            source={require('../../../assets/cart-delete-button.png')}
-          />
-        </View>
-      ),
-      backgroundColor: COLORS_NEW.white,
-    },
-  ];
+  // var swipeoutBtns = (e = [
+  //   {
+  //     component: (
+  //       <View
+  //         style={{
+  //           flexDirection: 'row',
+  //           justifyContent: 'space-evenly',
+  //           marginTop: '50%',
+  //         }}>
+  //         <TouchableOpacity>
+  //           <Image
+  //             style={styles.swipeButton}
+  //             source={require('../../../assets/cart-like-button.png')}
+  //           />
+  //         </TouchableOpacity>
+
+  //         <TouchableOpacity onPress={deleteCartItem}>
+  //           <Image
+  //             style={styles.swipeButton}
+  //             source={require('../../../assets/cart-delete-button.png')}
+  //           />
+  //         </TouchableOpacity>
+  //       </View>
+  //     ),
+  //     backgroundColor: COLORS_NEW.white,
+  //   },
+  // ]);
+
+  const deleteCartItem = async cartID => {
+    setLoading(true);
+
+    let res = await REMOVE_CART_ITEM_DATA(cartID);
+    console.log(res);
+    setLoading(false);
+    if (res) {
+      try {
+        setCartData(res?.removeItemFromCart?.cart);
+        setCartList(res?.removeItemFromCart?.cart?.items);
+      } catch (e) {
+        // saving error
+        console.log(e);
+      }
+    }
+  };
 
   const handleCartId = async () => {
-      let res = await EMPTY_CART();
-      console.log(res);
-      if (res && res?.createEmptyCart) {
-        try {
-    // await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
-  setCartId(res?.createEmptyCart)
-  } catch (e) {
-    // saving error
-    console.log(e);
-  }
-        
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        // await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+        setCartId(res?.createEmptyCart);
+      } catch (e) {
+        // saving error
+        console.log(e);
       }
-  }
+    }
+  };
 
-  const handleCartData = async (cartId) => {
+  const handleCartData = async cartId => {
     let res = await CART_DATA(cartId);
-    if(res)
-    setCartList(res);
+    if (res) {
+      console.log('CART_DATA', res);
+      setCartData(res?.cart);
+      setCartList(res?.cart?.items);
+    }
 
-    console.log("CART_DATA", res);
     // AsyncStorage.setItem('CART_ID', res);
     // setCartId(res?.createEmptyCart)
-}
+  };
 
   // useEffect(() => {
-  //   handleCartId()
-  // },[])
-  useEffect(() => {
-    handleCartData(cartId)
-    console.log("cartId", cartId)
-  },[cartId])
+  //   if (cartId) {
+  //     handleCartData(cartId);
+  //     console.log('cartId', cartId);
+  //   }
+  // }, [cartId]);
 
-  
+  const renderPriceView = productDetail => {
+    let finalPrice = productDetail?.price_range?.minimum_price?.final_price;
+    let regularPrice = productDetail?.price_range?.minimum_price?.regular_price;
+    return (
+      <View style={style.price_view}>
+        <Text
+          style={
+            style.offer_price
+          }>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+        {finalPrice?.value < regularPrice?.value && (
+          <Text
+            style={[
+              style.offer_price,
+              {
+                marginLeft: 10,
+                color: colorConstant.LIGHT_GREY,
+                textDecorationLine: 'line-through',
+              },
+            ]}>
+            {`${regularPrice?.value} ${regularPrice?.currency}`}
+          </Text>
+        )}
+      </View>
+    );
+  };
 
+  const updateCart = async (updatedQuantity, cart) => {
+    setLoading(true);
+    let objNew = {
+      cart_item_uid: cart?.uid,
+      quantity: updatedQuantity,
+    };
+    console.warn(objNew);
+
+    let res = await UPDATE_ITEM_FROM_CART_API(objNew);
+    setLoading(false);
+
+    if (res?.updateCartItems) {
+      console.log('UPDATE_ITEM_FROM_CART_API', res);
+      setCartData(res?.updateCartItems?.cart);
+      setCartList(res?.updateCartItems?.cart?.items);
+    }
+  };
 
   return (
-    <SafeAreaView style={{flex:1}}>
+    <SafeAreaView style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
         <Text style={styles.navBarText}>{t('My cart')}</Text>
       </View>
-      {isEmpty ? renderEmptyAndNoLogin() : (
+      {cartLst?.length === 0 ? (
+        renderEmptyAndNoLogin()
+      ) : (
         <ScrollView>
           <View style={styles.cartDetailView}>
-            {cartLst.length>0 && cartLst.map(item => {
-              return (
-                <Swipeout
-                  right={swipeoutBtns}
-                  backgroundColor={COLORS_NEW.white}
-                  buttonWidth={120}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      borderBottomColor: COLORS_NEW.lightGray,
-                      borderBottomWidth: 1,
-                    }}>
-                    <View>
-                      <Image
-                        style={styles.cartPerfumeImage}
-                        source={item.image}
-                      />
-                    </View>
+            {cartLst.length > 0 &&
+              cartLst.map(e => {
+                let item = e.product;
+                let quantity = e.quantity;
+                console.warn(quantity, '----quantity');
+                const categoryDetail = item?.customAttributesAjmalData
+                  ? `${item?.customAttributesAjmalData[0]?.display_category} / ${item?.customAttributesAjmalData[0]?.display_size} / ${item?.customAttributesAjmalData[0]?.gender}`
+                  : '';
+                return (
+                  <Swipeout
+                    right={[
+                      {
+                        component: (
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              justifyContent: 'space-evenly',
+                              marginTop: '50%',
+                            }}>
+                            <TouchableOpacity>
+                              <Image
+                                style={styles.swipeButton}
+                                source={require('../../../assets/cart-like-button.png')}
+                              />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity
+                              onPress={() => deleteCartItem(e?.uid)}>
+                              <Image
+                                style={styles.swipeButton}
+                                source={require('../../../assets/cart-delete-button.png')}
+                              />
+                            </TouchableOpacity>
+                          </View>
+                        ),
+                        backgroundColor: COLORS_NEW.white,
+                      },
+                    ]}
+                    backgroundColor={COLORS_NEW.white}
+                    buttonWidth={120}>
                     <View
                       style={{
-                        margin: Metrics.rfv(10),
-                        justifyContent: 'space-evenly',
+                        flexDirection: 'row',
+                        borderBottomColor: COLORS_NEW.lightGray,
+                        borderBottomWidth: 1,
                       }}>
-                      <Text
+                      <View>
+                        <Image
+                          style={styles.cartPerfumeImage}
+                          source={item.image}
+                        />
+                      </View>
+                      <View
                         style={{
-                          fontSize: Metrics.rfv(16),
-                          fontWeight: 600,
-                          color: COLORS_NEW.black,
-                          fontFamily: fontConstant.satoshi,
-                          fontStyle: 'normal',
+                          margin: Metrics.rfv(10),
+                          justifyContent: 'space-evenly',
                         }}>
-                        {t('Amber Wood Noir')}
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: Metrics.rfv(12),
-                          fontWeight: 300,
-                          color: COLORS_NEW.gray,
-                          fontFamily: fontConstant.satoshi,
-                          fontStyle: 'normal',
-                        }}>
-                        EAU DE PARFUME / 75ML / WOMAN
-                      </Text>
-                      <View style={{flexDirection: 'row'}}>
                         <Text
                           style={{
                             fontSize: Metrics.rfv(16),
-                            color: COLORS_NEW.blue,
-                            fontWeight: 800,
-                            fontFamily: fontConstant.satoshi,
-                            fontStyle: 'normal',
-                          }}>
-                          {item.discountPrice} {t('AED')}
-                        </Text>
-                        <Text
-                          style={{
-                            marginHorizontal: Metrics.rfv(10),
-                            textDecorationLine: 'line-through',
-                            textDecorationStyle: 'solid',
-                            fontSize: Metrics.rfv(16),
-                            opacity: 0.3,
+                            fontWeight: 600,
                             color: COLORS_NEW.black,
                             fontFamily: fontConstant.satoshi,
                             fontStyle: 'normal',
                           }}>
-                          {item.price} {t('AED')}
+                          {item?.name}
                         </Text>
-                      </View>
-                      <View style={{flexDirection: 'row'}}>
-                        <Image
-                          style={styles.plusMinusButton}
-                          source={require('../../../assets/minus-button.png')}
-                        />
                         <Text
                           style={{
-                            marginHorizontal: Metrics.rfv(5),
+                            fontSize: Metrics.rfv(12),
+                            fontWeight: 300,
+                            color: COLORS_NEW.gray,
                             fontFamily: fontConstant.satoshi,
                             fontStyle: 'normal',
-                            fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
-                            fontWeight: fontConstant.WEIGHT_LEIGHT,
                           }}>
-                          2
+                          {categoryDetail}
                         </Text>
-                        <Image
-                          style={styles.plusMinusButton}
-                          source={require('../../../assets/plus-button.png')}
+                        {renderPriceView(item)}
+                        {/* <View style={{flexDirection: 'row'}}>
+                          <Text
+                            style={{
+                              fontSize: Metrics.rfv(16),
+                              color: COLORS_NEW.blue,
+                              fontWeight: 800,
+                              fontFamily: fontConstant.satoshi,
+                              fontStyle: 'normal',
+                            }}>
+                            {item.discountPrice} {t('AED')}
+                          </Text>
+                          <Text
+                            style={{
+                              marginHorizontal: Metrics.rfv(10),
+                              textDecorationLine: 'line-through',
+                              textDecorationStyle: 'solid',
+                              fontSize: Metrics.rfv(16),
+                              opacity: 0.3,
+                              color: COLORS_NEW.black,
+                              fontFamily: fontConstant.satoshi,
+                              fontStyle: 'normal',
+                            }}>
+                            {item.price} {t('AED')}
+                          </Text>
+                        </View> */}
+                        {/* <View style={{flexDirection: 'row'}}>
+                          <Image
+                            style={styles.plusMinusButton}
+                            source={require('../../../assets/minus-button.png')}
+                          />
+                          <Text
+                            style={{
+                              marginHorizontal: Metrics.rfv(5),
+                              fontFamily: fontConstant.satoshi,
+                              fontStyle: 'normal',
+                              fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+                              fontWeight: fontConstant.WEIGHT_LEIGHT,
+                            }}>
+                            {item?.quantity}
+                          </Text>
+                          <Image
+                            style={styles.plusMinusButton}
+                            source={require('../../../assets/plus-button.png')}
+                          />
+                        </View> */}
+                        <UIStepperView
+                          value={quantity}
+                          setValue={val => updateCart(val, e)}
+                          minimumValue={0}
                         />
                       </View>
                     </View>
-                  </View>
-                </Swipeout>
-              );
-            })}
+                  </Swipeout>
+                );
+              })}
             <View style={styles.orderSummaryView}>
               <View
                 style={styles.refundView}
@@ -269,10 +387,13 @@ export default function MyCartScreen({navigation}) {
                       fontSize: fontConstant.TEXT_12_SIZE_REGULAR,
                       fontWeight: fontConstant.WEIGHT_LEIGHT,
                     }}>
-                    
                     {t('Subtotal')}
                   </Text>
-                  <Text style={styles.CreditCardNumberView}>117.00 {t('AED')}</Text>
+                  <Text style={styles.CreditCardNumberView}>
+                    {cartData?.prices
+                      ? `${cartData?.prices?.subtotal_excluding_tax?.value} ${cartData?.prices?.subtotal_excluding_tax?.currency}`
+                      : ''}
+                  </Text>
                 </View>
                 <View
                   style={{
@@ -298,48 +419,59 @@ export default function MyCartScreen({navigation}) {
                       fontFamily: fontConstant.satoshi,
                       fontStyle: 'normal',
                     }}>
-                    117.00 {t('AED')}
+                    {cartData?.prices
+                      ? `${cartData?.prices?.subtotal_including_tax?.value} ${cartData?.prices?.subtotal_including_tax?.currency}`
+                      : ''}
                   </Text>
                 </View>
               </View>
             </View>
             {/* Recommended Product View */}
-            <View style={{marginTop: Metrics.rfv(20)}}>
-              <Text
-                style={{
-                  color: COLORS_NEW.black,
-                  fontFamily: fontConstant.gambetta,
-                  fontStyle: 'italic',
-                  fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
-                  fontWeight:fontConstant.WEIGHT_REGULAR,
-                  marginVertical: Metrics.rfv(20),
-                }}>
-                {t('Recommended products')}
-              </Text>
-              <View style={{width: '100%'}}>
-                <FlatList
-                  data={perfumedata}
-                  renderItem={renderItem}
-                  horizontal={true}
-                              ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 10}}></View>)}}
-
-                  keyExtractor={item => item.id}
-                  // ListFooterComponent={renderFooter}
-                  showsHorizontalScrollIndicator={false}
-                />
+            {recommendedProduct.length > 0 && (
+              <View style={{marginTop: Metrics.rfv(20)}}>
+                <Text
+                  style={{
+                    color: COLORS_NEW.black,
+                    fontFamily: fontConstant.gambetta,
+                    fontStyle: 'italic',
+                    fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
+                    fontWeight: fontConstant.WEIGHT_REGULAR,
+                    marginVertical: Metrics.rfv(20),
+                  }}>
+                  {t('Recommended products')}
+                </Text>
+                <View style={{width: '100%'}}>
+                  <FlatList
+                    data={perfumedata}
+                    renderItem={renderItem}
+                    horizontal={true}
+                    ItemSeparatorComponent={(item, index) => {
+                      return (
+                        <View
+                          style={{
+                            marginHorizontal: index === 0 ? 0 : 10,
+                          }}></View>
+                      );
+                    }}
+                    keyExtractor={item => item.id}
+                    // ListFooterComponent={renderFooter}
+                    showsHorizontalScrollIndicator={false}
+                  />
+                </View>
               </View>
-            </View>
+            )}
             {/* CheckOut Button */}
             <View style={{marginVertical: Metrics.rfv(10)}}>
               <AppButton
                 preset="primary"
                 text={t('Checkout')}
-                style={{marginTop: Metrics.rfv(16),}}
+                style={{marginTop: Metrics.rfv(16)}}
               />
             </View>
           </View>
         </ScrollView>
       )}
+      <Loader loading={loading} />
     </SafeAreaView>
   );
 }

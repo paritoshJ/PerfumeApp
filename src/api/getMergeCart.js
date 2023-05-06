@@ -14,13 +14,23 @@ export const client = new ApolloClient({
   },
 });
 
-export const EMPTY_CART = async () => {
+export const MERGE_CART = async (source_cart_id, destination_cart_id) => {
+  const token = await getAuthTokenHeaders();
+
+  const client = new ApolloClient({
+    uri: Constants.BASE_GRAPH_QL,
+    cache: new InMemoryCache(),
+    connectToDevTools: true,
+    headers: {
+      authorization: token,
+    },
+  });
   const {data, error} = await client.mutate({
-    mutation: gql`
-      mutation CreateEmptyCart {
-        createEmptyCart
-      }
-    `,
+    mutation: MERGE_CART_DATA,
+    variables: {
+      source_cart_id: source_cart_id,
+      destination_cart_id: destination_cart_id,
+    },
   });
   if (error) {
     alert(`error => ${JSON.stringify(error)}`);
