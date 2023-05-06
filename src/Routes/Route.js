@@ -64,6 +64,7 @@ import Search from '../Screens/Search/Search';
 import SearchScreen from '../Screens/Search';
 import ReviewScreen from '../Screens/review';
 
+import Checkout from '../Screens/Checkout/Checkout';
 import BuyGiftCard from '../Screens/GiftCards/GiftCards';
 import PickAmount from '../Screens/GiftCards/pick-amount';
 import ChooseDelivery from '../Screens/GiftCards/Choosedelivery';
@@ -225,6 +226,10 @@ const MyCartStack = () => {
         cardStyle: {backgroundColor: '#ffff'},
       }}>
       <Stack.Screen name="MyCartScreen" component={MyCartScreen} />
+      <Stack.Screen name="Checkout" component={Checkout} />
+      <Stack.Screen name="ChooseDelivery" component={ChooseDelivery} />
+      <Stack.Screen name="GiftCardCheckout" component={GiftCardCheckout} />
+      <Stack.Screen name="PickAmount" component={PickAmount} />
     </Stack.Navigator>
   );
 };

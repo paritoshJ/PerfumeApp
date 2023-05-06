@@ -56,12 +56,12 @@ export default function MyCartScreen({navigation}) {
   const [errorTitle, setErrorTitle] = useState('Your cart is empty');
   const [errorMessage, setErrorMessage] = useState(' Find products in the catalog or through the search.');
 
-  useEffect(async ()=>{
-   const cart_id =  await AsyncStorage.getItem('CART_ID');
-   if(cart_id){
-    setCartId(cart_id);
-   }
-  },[])
+  // useEffect(async ()=>{
+  //  const cart_id =  await AsyncStorage.getItem('CART_ID');
+  //  if(cart_id){
+  //   setCartId(cart_id);
+  //  }
+  // },[])
 
   const renderEmptyAndNoLogin = () =>{
   return <EmptyPageView 
@@ -151,7 +151,7 @@ export default function MyCartScreen({navigation}) {
       <View style={styles.navBarView}>
         <Text style={styles.navBarText}>{t('My cart')}</Text>
       </View>
-      {isEmpty ? renderEmptyAndNoLogin() : (
+      {!isEmpty ? renderEmptyAndNoLogin() : (
         <ScrollView>
           <View style={styles.cartDetailView}>
             {cartLst.length>0 && cartLst.map(item => {
@@ -334,6 +334,7 @@ export default function MyCartScreen({navigation}) {
               <AppButton
                 preset="primary"
                 text={t('Checkout')}
+                onPress={() => navigation.navigate('Checkout')}
                 style={{marginTop: Metrics.rfv(16),}}
               />
             </View>
