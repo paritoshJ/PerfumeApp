@@ -33,7 +33,9 @@ import {useTranslation} from 'react-i18next';
 import {GET_PRODUCT_DETAILS} from '../../api/getProductDetails';
 import Loader from '../../Component/Loader';
 import {isObjectNullOrUndefined, removeHtmlTags} from '../../Helper/helper';
-import UIStepper from 'react-native-ui-stepper';
+import UIStepperView from '../../Component/UiStepper';
+import {ADD_ITEM_TO_CART} from '../../api/addToCart';
+import {ADD_TO_CART_DATA} from '../../api/getAddToCartData';
 
 const ProductPage = props => {
   const [selected, setSelected] = useState('50 ml');
@@ -45,6 +47,7 @@ const ProductPage = props => {
   const [productType, setProductType] = useState(null);
   const [productVariant, setProductVariant] = useState([]);
   const [value, setValue] = useState(1);
+  const [skuValue, setSkuValue] = useState('');
 
   const {t, i18n} = useTranslation();
   const data = [
@@ -55,13 +58,14 @@ const ProductPage = props => {
   useEffect(() => {
     if (props?.route.params.skuID) {
       console.log(props?.route.params.skuID);
+      setSkuValue(props?.route.params.skuID);
       callProductDetailApi();
     }
   }, []);
 
   const callProductDetailApi = async () => {
     setLoading(true);
-    const obj = {sku:{eq: props?.route.params.skuID}};
+    const obj = {sku: {eq: props?.route.params.skuID}};
     // const obj = {sku: {eq: 'ETIQUETTE-config'}};
     await GET_PRODUCT_DETAILS(obj)
       .then(res => {
@@ -393,6 +397,16 @@ const ProductPage = props => {
       </View>
     );
   };
+
+  const handleAddItemToCart = async () => {
+    setLoading(true);
+    let res = await ADD_TO_CART_DATA(value, skuValue);
+    setLoading(false);
+    if (res) {
+      console.log('CART_DATA', res);
+    }
+  };
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView style={style.container}>
@@ -748,27 +762,12 @@ const ProductPage = props => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <UIStepper
-                  displayValue
-                  backgroundColor={'#BC8B571A'}
-                  borderRadius={50}
-                  fontSize={16}
-                  width={100}
-                  height={40}
-                  onValueChange={value => {
-                    setValue(value);
-                  }}
-                  initialValue={1}
-                  maximumValue={10}
-                  minimumValue={1}
-                  fontFamily={fontConstant.satoshi}
+                <UIStepperView
                   value={value}
-                  borderColor="transparent"
-                  textColor="rebeccapurple"
-                  overrideTintColor
-                  tintColor={colorConstant.BLACK}
-                  decrementImage={require('./../../assets/icon/ic_minus.png')}
-                  incrementImage={require('./../../assets/icon/ic_plus.png')}
+                  setValue={val => {
+                    setValue(val);
+                    console.log(val, '---added count');
+                  }}
                 />
               </View>
               <View
@@ -779,7 +778,9 @@ const ProductPage = props => {
                   justifyContent: 'center',
                 }}>
                 <TouchableOpacity
-                  onPress={() => props.navigation.navigate('My cart')}
+                  onPress={() => {
+                    handleAddItemToCart();
+                  }}
                   style={[
                     style.review_add_view,
                     {backgroundColor: colorConstant.DARK_PRIMARY},

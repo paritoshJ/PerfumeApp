@@ -20,6 +20,7 @@ import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
+import {EMPTY_CART} from '../../api/getEmptyCart';
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
@@ -111,6 +112,18 @@ export default function ProfilePage({navigation}) {
       await I18nManager.forceRTL(true);
     }
     //  RNRestart.Restart();
+  };
+
+  const createEmptyCartForLogout = async () => {
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return (
@@ -396,7 +409,7 @@ export default function ProfilePage({navigation}) {
                 try {
                   DeviceEventEmitter.emit('event.logout', {});
                   await AsyncStorage.setItem('token', '');
-                  await AsyncStorage.setItem('CART_ID', '');
+                  createEmptyCartForLogout();
                 } catch (error) {
                   console.log(error);
                 }
