@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {BottomTabs} from 'rn-animated-tabbar';
-import {Image,DeviceEventEmitter} from 'react-native';
+import {Image, DeviceEventEmitter} from 'react-native';
 import {
   Search_ic,
   Search_ic_active,
@@ -90,9 +90,9 @@ import AddGiftBoxMessage from '../Screens/GiftBox/add-gift-box-message';
 import ReviewGiftCode from '../Screens/GiftBox/review-gift-box';
 import GiftCardBox from '../Screens/GiftBox/gift-card-box';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Payment from '../Screens/Payment/Payment';
 
 const ProfileStack = () => {
-
   return (
     <Stack.Navigator
       screenOptions={{
@@ -230,6 +230,7 @@ const MyCartStack = () => {
       <Stack.Screen name="ChooseDelivery" component={ChooseDelivery} />
       <Stack.Screen name="GiftCardCheckout" component={GiftCardCheckout} />
       <Stack.Screen name="PickAmount" component={PickAmount} />
+      <Stack.Screen name="Payment" component={Payment} />
     </Stack.Navigator>
   );
 };
