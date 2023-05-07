@@ -1,4 +1,11 @@
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import Metrics from '../Helper/metrics';
 
@@ -7,7 +14,7 @@ export default function Input(props) {
     style,
     placeholder = '',
     placeholderTextColor = 'gray',
-    value = '',
+    value,
     onChangeText,
     keyboardType,
     showRightIcon,
@@ -16,13 +23,17 @@ export default function Input(props) {
     iw,
     imageSource,
     hidePassword,
-    maxLength
+    maxLength,
+    editable,
   } = props;
 
   return (
     <View>
       <TextInput
-        style={[showRightIcon?styles.TextInputWithIcon:styles.TextInput, style]}
+        style={[
+          showRightIcon ? styles.TextInputWithIcon : styles.TextInput,
+          style,
+        ]}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}
         value={value}
@@ -30,13 +41,20 @@ export default function Input(props) {
         keyboardType={keyboardType}
         secureTextEntry={hidePassword}
         maxLength={maxLength}
+        editable={editable ?? true}
       />
-      {showRightIcon && 
-        <TouchableOpacity onPress={handleImagePress} style={{position:'absolute',right:20,bottom:15}}>
-        <Image resizeMode='contain' width={iw} height={ih} source={imageSource} />
+      {showRightIcon && (
+        <TouchableOpacity
+          onPress={handleImagePress}
+          style={{position: 'absolute', right: 20, bottom: 15}}>
+          <Image
+            resizeMode="contain"
+            width={iw}
+            height={ih}
+            source={imageSource}
+          />
         </TouchableOpacity>
-      }
-      
+      )}
     </View>
   );
 }
