@@ -21,7 +21,7 @@ import PinSVG from '../../assets/svg/Pin';
 import CreaditSVG from '../../assets/svg/Creadit';
 import DeliverySVG from '../../assets/svg/Delivery';
 import PercentSVG from '../../assets/svg/Percent';
-import {isObjectNullOrUndefined} from '../../Helper/helper';
+import {isArrayNullOrEmpty, isObjectNullOrUndefined} from '../../Helper/helper';
 import ArrowRightSVG from '../../assets/svg/ArrowRight';
 import {AppButton} from '../../Component/button/app-button';
 import CustomSwitch from '../../Component/toggleSwitch';
@@ -48,18 +48,6 @@ export default function Checkout({route, navigation}) {
   const [discountCode, setDiscountCode] = useState('');
   const [totalIncludingText, setTotalIncludingText] = useState('');
   const [deliveryMethodsData, setDeliveryMethodsData] = useState([
-    {
-      id: 1,
-      name: 'Standard',
-      price: 'FREE',
-      deliveryDate: 'Delivered on before Tuesday, Jun 3, 2023',
-    },
-    {
-      id: 2,
-      name: 'Express',
-      price: '14.00 AED',
-      deliveryDate: 'Delivered on before Tuesday, Jun 1, 2023',
-    },
   ]);
 
   useEffect(() => {
@@ -166,6 +154,12 @@ export default function Checkout({route, navigation}) {
     return (
       <>
         <TouchableOpacity
+        onPress={()=>{
+       navigation.navigate('AddressBookList',{
+              selectedAddress:deliveryTypeData,
+              onAddressFetch:onAddressFetch,
+            });
+      }}
           style={{
             height: 48,
             marginVertical: 12,
@@ -193,6 +187,11 @@ export default function Checkout({route, navigation}) {
       </>
     );
   };
+  const onAddressFetch = (item) =>{
+      console.log(item);
+      setDeliveryTypeData(item);
+      setDeliveryMethodsData(item?.available_shipping_methods)
+  }
   const renderAfterAddressSelect = () => {
     return (
       <>
@@ -215,7 +214,12 @@ export default function Checkout({route, navigation}) {
             justifyContent: 'space-between',
           }}>
           <Text>{t('Address')}</Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('AddressBookList',{
+              selectedAddress:deliveryTypeData,
+              onAddressFetch:onAddressFetch,
+            });
+          }}>
             <EditPencilSVG />
           </TouchableOpacity>
         </View>
@@ -226,7 +230,7 @@ export default function Checkout({route, navigation}) {
             letterSpacing: 2,
             color: COLORS_NEW.mainBlack,
           }}>
-          {'Germany, Berlin'}
+          {`${deliveryTypeData?.street?.toString()} ${deliveryTypeData?.postcode}`}
         </Text>
         <Text
           style={{
@@ -236,7 +240,7 @@ export default function Checkout({route, navigation}) {
             letterSpacing: 2,
             color: COLORS_NEW.mainBlack,
           }}>
-          {'Alexander Platz 32'}
+          {`${deliveryTypeData?.firstname}`}
         </Text>
       </>
     );
@@ -261,30 +265,30 @@ export default function Checkout({route, navigation}) {
             {t('Delivery details')}
           </Text>
         </TouchableOpacity>
-        {!isObjectNullOrUndefined(deliveryTypeData)
+        {isObjectNullOrUndefined(deliveryTypeData)
           ? renderBeforeAddressSelect()
           : renderAfterAddressSelect()}
       </View>
     );
   };
-  const rendeDeliveryMethodsItem = item => {
+  const rendeDeliveryMethodsItem = (item) => {
+    console.log('rendeDeliveryMethodsItem',item);
     return (
       <TouchableOpacity
         onPress={() => {
           setDeliveryMethod(item);
         }}
         style={{flex: 1, marginTop: 16, flexDirection: 'row'}}>
-        {deliveryMethod?.id === item.id ? (
+        {deliveryMethod?.method_code === item.method_code ? (
           <CheckedRadioSVG />
         ) : (
           <UnCheckedRadioSVG />
         )}
         <View style={{flex: 1, marginHorizontal: 20}}>
           <Text style={{letterSpacing: 1}}>
-            {item?.price}
-            <Text>{` ${item?.name}`}</Text>
+            {item?.method_code}
           </Text>
-          <Text>{item?.deliveryDate}</Text>
+          <Text>{item?.method_title}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -452,7 +456,7 @@ export default function Checkout({route, navigation}) {
                 fontSize: 12,
                 color: COLORS_NEW.mainBlack,
               }}>
-              {deliveryMethod?.price}
+              {deliveryMethod?.method_title}
             </Text>
           </View>
         )}
@@ -549,7 +553,7 @@ export default function Checkout({route, navigation}) {
       <ScrollView style={styles.ScrollView}>
         {renderOrders()}
         {renderDeliveryDetails()}
-        {renderDeliveryMethods()}
+        {!isArrayNullOrEmpty(deliveryMethodsData) && renderDeliveryMethods()}
         {renderPaymentDetails()}
         {renderAdditionalDetails()}
         {renderOrderSummery()}

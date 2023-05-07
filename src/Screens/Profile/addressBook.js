@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   StyleSheet,
   StatusBar,
@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   I18nManager,
+  SafeAreaView,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
@@ -17,18 +18,74 @@ import Input from '../../Component/Input';
 import CustomSwitch from '../../Component/toggleSwitch';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import MobileInput from '../../Component/MobileInput';
+import colorConstant from '../../constant/colorConstant';
+import { isStringNotNull } from '../../Helper/helper';
+import { SAVE_BILLING_ADDRESS, SAVE_SHIPPING_ADDRESS } from '../../api/SaveAddress';
+import Loader from '../../Component/Loader';
 
-export default function AddressBook({navigation}) {
+export default function AddressBook({route,navigation}) {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [firstname, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [zipCode, setZipCode] = useState('');
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+  const [address, setAddress] = useState('');
+  const [buildingName, setBuildingName] = useState('');
   const [inputDetail, setinputDetail] = useState();
   const [value, setValue] = useState('');
+    const [countryCode, setCountryCode] = useState('AE');
+    const [countryPhoneCode, setCountryPhoneCode] = useState('+971');
+  // const [country, setCountry] = useState(null);
   const { t } = useTranslation()
+    const [formattedValue, setFormattedValue] = useState('');
 
   const onSelectSwitch = index => {
   };
+  useEffect(() => {
+    console.log(route?.params)
+  
+  }, [])
+  const onSelect = country => {
+    setCountryCode(country.cca2);
+    setCountryPhoneCode(country.callingCode[0]);
+    // setCountry(country);
+    console.log(country);
+  };
 
+  const onSaveAddress = async() =>{
+
+    let obj = {
+      address  : {
+        city:city,
+        country_code:countryCode,
+        firstname:firstname,
+        lastname:lastName,
+        postcode:zipCode,
+        telephone:mobile,
+        street:[`${buildingName} ${address}`],
+      }
+    }
+               
+
+          setLoading(true)
+        const res = await SAVE_SHIPPING_ADDRESS([obj]);
+        const res1 = await SAVE_BILLING_ADDRESS(obj);
+          setLoading(false)
+          if(res){
+             if(route?.params.onAddAddress)
+              route?.params?.onAddAddress(res?.setShippingAddressesOnCart?.cart?.shipping_addresses);
+              navigation.goBack();
+          }
+          if(res1){
+            console.log("SAVE_BILLING_ADDRESS",res1);
+          }
+  }
   return (
-    <>
+    <SafeAreaView style={{flex:1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -66,7 +123,7 @@ export default function AddressBook({navigation}) {
       ) : (
         <ScrollView style={styles.scrollView}>
           {/* Toggle Switch */}
-          <View style={{alignItems: 'center', margin: 20}}>
+          <View style={{alignItems: 'center', marginVertical: 20}}>
             <CustomSwitch
               selectionMode={2}
               roundCorner={true}
@@ -80,69 +137,100 @@ export default function AddressBook({navigation}) {
           <Text style={styles.addressHeading}>{t('Main information')}</Text>
           <View>
             <Input
-              placeholder={t("Name")}
+              placeholder={t("First Name")}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={firstname}
+              onChangeText={e => setFirstName(e)}
             />
             <Input
-              placeholder={t("Surname")}
+              placeholder={t("Last Name")}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={lastName}
+              onChangeText={e => setLastName(e)}
             />
-            <View style={styles.TextInput}>
-              <PhoneInput
-                defaultValue={value}
-                layout="first"
-                onChangeText={text => {
-                  setValue(text);
-                }}
-                onChangeFormattedText={text => {
-                  setFormattedValue(text);
-                }}
-              />
-            </View>
+            <View
+                  style={{
+                    marginTop: Metrics.rfv(12),
+                    flexDirection: 'row',
+                    alignItems: I18nManager.isRTL ? 'flex-start' : 'flex-start',
+                  }}>
+                  <MobileInput
+                    onSelect={onSelect}
+                    onChangeText={e => setFormattedValue(e)}
+                    countryCode={countryCode}
+                    placeholder={'Select code'}
+                  />
+                  <View style={{flex: 1}}>
+                    <Input
+                      placeholder={t('Phone number')}
+                      placeholderTextColor="gray"
+                      value={`${mobile}`}
+                      editable={true}
+                      keyboardType={'numeric'}
+                      onChangeText={e => setMobile(e)}
+                      maxLength={10}
+                      style={{
+                        borderWidth: 1,
+                        borderTopRightRadius: 50,
+                        borderBottomRightRadius: 50,
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                        borderColor: colorConstant.LIGHT_MIDIUM_GREY,
+                        marginTop: 5,
+                        justifyContent: 'center',
+                        backgroundColor: 'transparent',
+                        paddingHorizontal: 10,
+                        paddingVertical: 10,
+                      }}
+                    />
+                  </View>
+                </View>
             <Input
               placeholder={t('Zip code (optional)')}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={zipCode}
+              onChangeText={e => setZipCode(e)}
             />
             <Input
               placeholder={t("Country")}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={country}
+              onChangeText={e => setCountry(e)}
             />
             <Input
               placeholder={t("City")}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={city}
+              onChangeText={e => setCity(e)}
             />
           </View>
-          <Text style={styles.addressHeading}>{t('Delivery address')}</Text>
+          <Text style={styles.addressHeading1}>{t('Delivery address')}</Text>
           <View>
             <Input
               placeholder={t("Enter the address or select it on the map")}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={address}
+              onChangeText={e => setAddress(e)}
             />
             <Input
               placeholder={t("Building name/floor number/flat number")}
               placeholderTextColor="gray"
-              value={inputDetail}
-              onChangeText={e => setinputDetail(e)}
+              value={buildingName}
+              onChangeText={e => setBuildingName(e)}
             />
           </View>
           <View style={{marginBottom: Metrics.rfv(10)}}>
-            <AppButton tx={t("Save address")} style={{marginTop: Metrics.rfv(16)}} />
+            <AppButton 
+            disabled={!isStringNotNull(firstname) || !isStringNotNull(lastName) || !isStringNotNull(mobile) || !isStringNotNull(zipCode) || !isStringNotNull(city) || !isStringNotNull(address) ||!isStringNotNull(buildingName)}
+            onPress={()=>{
+              onSaveAddress();
+            }}
+            tx={t("Save address")} style={{marginTop: Metrics.rfv(16)}} />
           </View>
         </ScrollView>
       )}
-    </>
+      <Loader loading={loading} />
+    </SafeAreaView>
   );
 }
 
@@ -246,7 +334,7 @@ const styles = StyleSheet.create({
   TextInput: {
     backgroundColor: COLORS_NEW.white,
     width: '100%',
-    height: Metrics.rfv(45),
+    minHeight: Metrics.rfv(40),
     borderRadius: Metrics.rfv(20),
     borderColor: COLORS_NEW.lightGray,
     borderWidth: 1,
@@ -256,7 +344,12 @@ const styles = StyleSheet.create({
   },
   addressHeading: {
     fontSize: Metrics.rfv(18),
-    marginVertical: Metrics.rfv(5),
+    marginVertical: Metrics.rfv(10),
+    color: COLORS_NEW.black,
+  },
+  addressHeading1: {
+    fontSize: Metrics.rfv(18),
+    marginTop: Metrics.rfv(15),
     color: COLORS_NEW.black,
   },
 });
