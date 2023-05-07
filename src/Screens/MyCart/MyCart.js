@@ -79,7 +79,12 @@ export default function MyCartScreen({navigation}) {
         message={errorMessage}
         hideAddButton={false}
         buttonTitle={t('Go shopping')}
-        onButtonPress={() => {}}
+        onButtonPress={() => {
+          navigation.reset({
+        index: 0,
+        routes: [{name: 'Main'}],
+      });
+        }}
       />
     );
   };
@@ -139,6 +144,8 @@ export default function MyCartScreen({navigation}) {
         setCartList(res?.removeItemFromCart?.cart?.items);
       } catch (e) {
         // saving error
+        setCartData({})
+        setCartList([])
         console.log(e);
       }
     }

@@ -9,6 +9,7 @@ import {
   I18nManager,
   FlatList,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import MyStatusBar from '../../Component/MyStatusBar';
@@ -29,6 +30,7 @@ import EditPencilSVG from '../../assets/svg/EditPencil';
 import CheckedRadioSVG from '../../assets/svg/CheckedRadio';
 import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 import ArrowRightGray from '../../assets/svg/ArrowRightGray';
+import { CONFIRM_PAYMENT_METHOD, SAVE_PAYMENT_METHOD, SET_DELIVERY_CHECKOUT_METHOD, SET_DELIVERY_METHOD } from '../../api/SetDeliveryAndPaymentMethodToCart';
 
 export default function Checkout({route, navigation}) {
   const {t} = useTranslation();
@@ -271,12 +273,21 @@ export default function Checkout({route, navigation}) {
       </View>
     );
   };
+  const callDeliveryMethodApi = async (item) =>{
+
+    const res = await SET_DELIVERY_CHECKOUT_METHOD({'carrier_code': item.carrier_code, 'method_code':item.method_code});
+    if(res){
+      console.log('onPaymentSelection',item)
+    }
+  }
   const rendeDeliveryMethodsItem = (item) => {
     console.log('rendeDeliveryMethodsItem',item);
     return (
       <TouchableOpacity
         onPress={() => {
           setDeliveryMethod(item);
+          callDeliveryMethodApi(item);
+
         }}
         style={{flex: 1, marginTop: 16, flexDirection: 'row'}}>
         {deliveryMethod?.method_code === item.method_code ? (
@@ -340,6 +351,13 @@ export default function Checkout({route, navigation}) {
       </View>
     );
   };
+  const onPaymentSelection = async(item) =>{
+    setPaymentMethod(item);
+    const res = await SAVE_PAYMENT_METHOD({code:item.code});
+    if(res){
+      console.log('onPaymentSelection',item)
+    }
+  }
   const renderPaymentDetails = () => {
     return (
       <View style={[styles.methodView]}>
@@ -348,6 +366,7 @@ export default function Checkout({route, navigation}) {
             // setPaymentActive(!isPaymentActive);
             navigation.navigate('Payment', {
               payment: cartData?.available_payment_methods,
+              onPaymentSelection:onPaymentSelection,
             });
           }}
           style={styles.methodClick}>
@@ -363,8 +382,16 @@ export default function Checkout({route, navigation}) {
             }}>
             {t('Payment')}
           </Text>
-          <ArrowRightGray />
+         { <TouchableOpacity onPress={()=>{
+          navigation.navigate('Payment', {
+              payment: cartData?.available_payment_methods,
+              onPaymentSelection:onPaymentSelection,
+            });
+         }}> 
+           {!isObjectNullOrUndefined(paymentMethod) ? <EditPencilSVG/> : <ArrowRightGray />}
+            </TouchableOpacity>}
         </TouchableOpacity>
+        {!isObjectNullOrUndefined(paymentMethod) && <Text style={{marginTop:16}}>{paymentMethod?.title}</Text>}
       </View>
     );
   };
@@ -527,10 +554,11 @@ export default function Checkout({route, navigation}) {
       <View style={{margin: 20}}>
         <AppButton
           disabled={
-            !isObjectNullOrUndefined(deliveryTypeData) ||
-            isObjectNullOrUndefined(paymentMethod) ||
-            isObjectNullOrUndefined(additionaMethod) ||
-            isObjectNullOrUndefined(deliveryMethod)
+            // !isObjectNullOrUndefined(deliveryTypeData) ||
+            // !isObjectNullOrUndefined(paymentMethod) ||
+            // // isObjectNullOrUndefined(additionaMethod) ||
+            // !isObjectNullOrUndefined(deliveryMethod)
+            false
           }
           preset="primary"
           text={
@@ -541,11 +569,27 @@ export default function Checkout({route, navigation}) {
                 : ''
             }`
           }
-          onPress={() => navigation.navigate('Checkout')}
+          onPress={() => confirmPaymentApi()}
         />
       </View>
     );
   };
+  const confirmPaymentApi = async() => {
+//  navigation.navigate('Order')
+//  navigation.navigate('Main')
+
+    const res = await CONFIRM_PAYMENT_METHOD();
+    if(res){
+      console.log(res);
+      Alert.alert('','Order placed successfully.',[{
+        text:'Go Home',
+        onPress:()=>{
+           navigation.popToTop();
+          navigation.navigate('Main')
+        }
+      }])
+    }
+  }
   return (
     <SafeAreaView style={{flex: 1}}>
       <MyStatusBar backgroundColor={COLORS_NEW.white} />

@@ -21,12 +21,13 @@ import { useTranslation } from 'react-i18next'
 import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
 import { isStringNotNull } from '../../Helper/helper';
-import { SAVE_BILLING_ADDRESS, SAVE_SHIPPING_ADDRESS } from '../../api/SaveAddress';
+import { SAVE_BILLING_ADDRESS, SAVE_GUEST_EMAIL, SAVE_SHIPPING_ADDRESS } from '../../api/SaveAddress';
 import Loader from '../../Component/Loader';
 
 export default function AddressBook({route,navigation}) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState('');
   const [firstname, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [mobile, setMobile] = useState('');
@@ -73,16 +74,20 @@ export default function AddressBook({route,navigation}) {
 
           setLoading(true)
         const res = await SAVE_SHIPPING_ADDRESS([obj]);
-        const res1 = await SAVE_BILLING_ADDRESS(obj);
           setLoading(false)
           if(res){
              if(route?.params.onAddAddress)
               route?.params?.onAddAddress(res?.setShippingAddressesOnCart?.cart?.shipping_addresses);
               navigation.goBack();
           }
+          const res1 = await SAVE_BILLING_ADDRESS(obj);
           if(res1){
             console.log("SAVE_BILLING_ADDRESS",res1);
           }
+          const resEmail = await SAVE_GUEST_EMAIL(email);
+           if(resEmail){
+            console.log(resEmail);
+           }
   }
   return (
     <SafeAreaView style={{flex:1}}>
@@ -147,6 +152,12 @@ export default function AddressBook({route,navigation}) {
               placeholderTextColor="gray"
               value={lastName}
               onChangeText={e => setLastName(e)}
+            />
+            <Input
+              placeholder={t("Email")}
+              placeholderTextColor="gray"
+              value={email}
+              onChangeText={e => setEmail(e)}
             />
             <View
                   style={{
@@ -221,7 +232,7 @@ export default function AddressBook({route,navigation}) {
           </View>
           <View style={{marginBottom: Metrics.rfv(10)}}>
             <AppButton 
-            disabled={!isStringNotNull(firstname) || !isStringNotNull(lastName) || !isStringNotNull(mobile) || !isStringNotNull(zipCode) || !isStringNotNull(city) || !isStringNotNull(address) ||!isStringNotNull(buildingName)}
+            disabled={!isStringNotNull(firstname) || !isStringNotNull(lastName) || !isStringNotNull(email) ||!isStringNotNull(mobile) || !isStringNotNull(zipCode) || !isStringNotNull(city) || !isStringNotNull(address) ||!isStringNotNull(buildingName)}
             onPress={()=>{
               onSaveAddress();
             }}
