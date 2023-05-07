@@ -17,6 +17,7 @@ import fontConstant from '../../constant/fontConstant';
 import RNRestart from 'react-native-restart';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import colorConstant from '../../constant/colorConstant';
 
 export default function LoginPage({navigation}) {
   const {t, i18n} = useTranslation();
@@ -214,7 +215,13 @@ export default function LoginPage({navigation}) {
               </Text>
             </View>
             <View style={styles.loginPageComponentText}>
-              <Text style={{paddingEnd: Metrics.rfv(8)}}>English</Text>
+              <Text
+                style={{
+                  paddingEnd: Metrics.rfv(8),
+                  color: colorConstant.black,
+                }}>
+                English
+              </Text>
               <Switch
                 trackColor={{false: '#767577', true: '#DFC8AF'}}
                 thumbColor="white"
@@ -222,7 +229,13 @@ export default function LoginPage({navigation}) {
                 onValueChange={toggleSwitch}
                 value={isEnabled}
               />
-              <Text style={{paddingStart: Metrics.rfv(8)}}>العربية</Text>
+              <Text
+                style={{
+                  paddingStart: Metrics.rfv(8),
+                  color: colorConstant.black,
+                }}>
+                العربية
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
