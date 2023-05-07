@@ -31,10 +31,12 @@ import CheckedRadioSVG from '../../assets/svg/CheckedRadio';
 import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 import ArrowRightGray from '../../assets/svg/ArrowRightGray';
 import { CONFIRM_PAYMENT_METHOD, SAVE_PAYMENT_METHOD, SET_DELIVERY_CHECKOUT_METHOD, SET_DELIVERY_METHOD } from '../../api/SetDeliveryAndPaymentMethodToCart';
+import Loader from '../../Component/Loader';
 
 export default function Checkout({route, navigation}) {
   const {t} = useTranslation();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isDeliveryActive, setDeliveryActive] = useState(true);
   const [isDeliveryMethodActive, setDeliveryMethodActive] = useState(false);
   const [isPaymentActive, setPaymentActive] = useState(false);
@@ -578,7 +580,9 @@ export default function Checkout({route, navigation}) {
 //  navigation.navigate('Order')
 //  navigation.navigate('Main')
 
+setLoading(true)
     const res = await CONFIRM_PAYMENT_METHOD();
+    setLoading(false)
     if(res){
       console.log(res);
       Alert.alert('','Order placed successfully.',[{
@@ -603,6 +607,7 @@ export default function Checkout({route, navigation}) {
         {renderOrderSummery()}
         {renderButtonView()}
       </ScrollView>
+      <Loader loading={loading} />
     </SafeAreaView>
   );
 }
