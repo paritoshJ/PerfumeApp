@@ -198,6 +198,11 @@ export default function Payment({route, navigation}) {
           verifyPhoneNumber={handlePhoneVerify}
           setOnOpenDailog={() => {
             setShowVerificationModal(!showVerificationModal);
+            setVerification(false);
+          }}
+          handleOTPSubmit={() => {
+            setShowVerificationModal(!showVerificationModal);
+            setVerification(false);
           }}
         />
       )}
