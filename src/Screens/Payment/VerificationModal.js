@@ -1,9 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {
   Alert,
   BackHandler,
   I18nManager,
   Image,
+  Keyboard,
   KeyboardAvoidingView,
   Modal,
   Platform,
@@ -24,6 +25,7 @@ import MobileInput from '../../Component/MobileInput';
 import Input from '../../Component/Input';
 import Metrics from '../../Helper/metrics';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
+import OTPTextInput from 'react-native-otp-textinput';
 import {AppButton} from '../../Component/button/app-button';
 
 const VerificationModal = props => {
@@ -57,6 +59,15 @@ const VerificationModal = props => {
   const closeDailog = () => {
     setOnOpenDailog(false);
   };
+  let otpInput = useRef(null);
+
+  const clearText = () => {
+    otpInput.current.clear();
+  };
+
+  const setText = () => {
+    otpInput.current.setValue('1234');
+  };
 
   const handleAddToCart = async () => {
     if (sku) {
@@ -64,6 +75,13 @@ const VerificationModal = props => {
       await ADD_TO_CART_DATA(parseFloat(value).toFixed(1), `${sku}`);
       // navigation.navigate('My cart');
     }
+  };
+  const setOTP = val => {
+    if (val.length == 4) {
+      Keyboard.dismiss();
+      props.handleOTPSubmit();
+    }
+    console.warn(val);
   };
   useEffect(() => {
     if (props.mobile) {
@@ -86,19 +104,18 @@ const VerificationModal = props => {
       {/* <MyStatusBar backgroundColor={'rgba(0, 0, 0, 0.6)'} /> */}
 
       {props.showVerification ? (
-        <View style={style.centeredView}>
-          <View
-            style={{
-              minHeight: 450,
-              backgroundColor: 'rgba(255, 255, 255, 1)',
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-              padding: 16,
-            }}>
-            <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS == 'ios' ? 45 : 0}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{flex: 1}}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1}}>
+          <View style={style.centeredView}>
+            <View
+              style={{
+                minHeight: 450,
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+                padding: 16,
+              }}>
               <View
                 style={{
                   flex: 1,
@@ -142,7 +159,7 @@ const VerificationModal = props => {
                   </Text>
                 </View>
                 <View style={style.ScrollViewOTP}>
-                  <OTPInputView
+                  {/* <OTPInputView
                     style={{width: '80%', height: 150}}
                     pinCount={4}
                     codeInputFieldStyle={style.underlineStyleBase}
@@ -155,6 +172,16 @@ const VerificationModal = props => {
                     }}
                     autoFocusOnLoad
                     editable={true}
+                  /> */}
+                  <OTPTextInput
+                    textInputStyle={style.underlineStyleBase}
+                    containerStyle={style.underlineStyleHighLighted}
+                    tintColor={colorConstant.DARK_PRIMARY}
+                    offTintColor={colorConstant.LIGHT_GREY}
+                    ref={e => (otpInput = e)}
+                    inputCellLength={1}
+                    inputCount={4}
+                    handleTextChange={setOTP}
                   />
                   <View />
                   <Text style={style.didNotReceiveText}>
@@ -169,23 +196,22 @@ const VerificationModal = props => {
                   </Text>
                 </View>
               </View>
-            </KeyboardAvoidingView>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       ) : (
-        <View style={style.centeredView}>
-          <View
-            style={{
-              minHeight: 450,
-              backgroundColor: 'rgba(255, 255, 255, 1)',
-              borderTopLeftRadius: 24,
-              borderTopRightRadius: 24,
-              padding: 16,
-            }}>
-            <KeyboardAvoidingView
-              keyboardVerticalOffset={Platform.OS == 'ios' ? 45 : 0}
-              behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-              style={{flex: 1}}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1}}>
+          <View style={style.centeredView}>
+            <View
+              style={{
+                minHeight: 450,
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+                padding: 16,
+              }}>
               <View
                 style={{
                   flex: 1,
@@ -223,6 +249,7 @@ const VerificationModal = props => {
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    marginBottom: 10,
                   }}>
                   <Text style={style.product_name}>
                     Enter a new phone number to verify
@@ -236,7 +263,9 @@ const VerificationModal = props => {
                   }}>
                   <MobileInput
                     onSelect={onSelect}
-                    onChangeText={e => setinputDetail(e)}
+                    onChangeText={e => {
+                      setinputDetail(e);
+                    }}
                     countryCode={countryCode}
                     placeholder={'Select code'}
                   />
@@ -245,9 +274,10 @@ const VerificationModal = props => {
                       placeholder={t('Enter Phone number')}
                       placeholderTextColor="gray"
                       value={`${inputDetail}`}
-                      editable={false}
                       keyboardType={'numeric'}
-                      onChangeText={e => setinputDetail(e)}
+                      onChangeText={e => {
+                        setinputDetail(e);
+                      }}
                       maxLength={10}
                       style={{
                         borderWidth: 1,
@@ -286,9 +316,9 @@ const VerificationModal = props => {
                   />
                 </View>
               </View>
-            </KeyboardAvoidingView>
+            </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       )}
     </Modal>
   );
@@ -356,6 +386,7 @@ const style = StyleSheet.create({
     paddingHorizontal: 20,
     alignItems: 'center',
     alignContent: 'center',
+    marginTop: 20,
   },
   underlineStyleHighLighted: {
     color: COLORS_NEW.black,
@@ -373,7 +404,7 @@ const style = StyleSheet.create({
   underlineStyleBase: {
     width: Metrics.rfv(50),
     height: Metrics.rfv(50),
-    borderWidth: 1,
+    borderWidth: 3,
     borderColor: COLORS_NEW.blue,
     borderRadius: Metrics.rfv(10),
   },
@@ -382,6 +413,7 @@ const style = StyleSheet.create({
   },
   didNotReceiveText: {
     color: COLORS_NEW.black,
+    marginTop: 30,
   },
 });
 
