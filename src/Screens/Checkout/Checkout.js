@@ -9,6 +9,7 @@ import {
   I18nManager,
   FlatList,
   ImageBackground,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import MyStatusBar from '../../Component/MyStatusBar';
@@ -21,7 +22,7 @@ import PinSVG from '../../assets/svg/Pin';
 import CreaditSVG from '../../assets/svg/Creadit';
 import DeliverySVG from '../../assets/svg/Delivery';
 import PercentSVG from '../../assets/svg/Percent';
-import {isObjectNullOrUndefined} from '../../Helper/helper';
+import {isArrayNullOrEmpty, isObjectNullOrUndefined} from '../../Helper/helper';
 import ArrowRightSVG from '../../assets/svg/ArrowRight';
 import {AppButton} from '../../Component/button/app-button';
 import CustomSwitch from '../../Component/toggleSwitch';
@@ -29,10 +30,13 @@ import EditPencilSVG from '../../assets/svg/EditPencil';
 import CheckedRadioSVG from '../../assets/svg/CheckedRadio';
 import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 import ArrowRightGray from '../../assets/svg/ArrowRightGray';
+import { CONFIRM_PAYMENT_METHOD, SAVE_PAYMENT_METHOD, SET_DELIVERY_CHECKOUT_METHOD, SET_DELIVERY_METHOD } from '../../api/SetDeliveryAndPaymentMethodToCart';
+import Loader from '../../Component/Loader';
 
 export default function Checkout({route, navigation}) {
   const {t} = useTranslation();
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [isDeliveryActive, setDeliveryActive] = useState(true);
   const [isDeliveryMethodActive, setDeliveryMethodActive] = useState(false);
   const [isPaymentActive, setPaymentActive] = useState(false);
@@ -48,18 +52,6 @@ export default function Checkout({route, navigation}) {
   const [discountCode, setDiscountCode] = useState('');
   const [totalIncludingText, setTotalIncludingText] = useState('');
   const [deliveryMethodsData, setDeliveryMethodsData] = useState([
-    {
-      id: 1,
-      name: 'Standard',
-      price: 'FREE',
-      deliveryDate: 'Delivered on before Tuesday, Jun 3, 2023',
-    },
-    {
-      id: 2,
-      name: 'Express',
-      price: '14.00 AED',
-      deliveryDate: 'Delivered on before Tuesday, Jun 1, 2023',
-    },
   ]);
 
   useEffect(() => {
@@ -166,6 +158,12 @@ export default function Checkout({route, navigation}) {
     return (
       <>
         <TouchableOpacity
+        onPress={()=>{
+       navigation.navigate('AddressBookList',{
+              selectedAddress:deliveryTypeData,
+              onAddressFetch:onAddressFetch,
+            });
+      }}
           style={{
             height: 48,
             marginVertical: 12,
@@ -193,6 +191,11 @@ export default function Checkout({route, navigation}) {
       </>
     );
   };
+  const onAddressFetch = (item) =>{
+      console.log(item);
+      setDeliveryTypeData(item);
+      setDeliveryMethodsData(item?.available_shipping_methods)
+  }
   const renderAfterAddressSelect = () => {
     return (
       <>
@@ -215,7 +218,12 @@ export default function Checkout({route, navigation}) {
             justifyContent: 'space-between',
           }}>
           <Text>{t('Address')}</Text>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('AddressBookList',{
+              selectedAddress:deliveryTypeData,
+              onAddressFetch:onAddressFetch,
+            });
+          }}>
             <EditPencilSVG />
           </TouchableOpacity>
         </View>
@@ -226,7 +234,7 @@ export default function Checkout({route, navigation}) {
             letterSpacing: 2,
             color: COLORS_NEW.mainBlack,
           }}>
-          {'Germany, Berlin'}
+          {`${deliveryTypeData?.street?.toString()} ${deliveryTypeData?.postcode}`}
         </Text>
         <Text
           style={{
@@ -236,7 +244,7 @@ export default function Checkout({route, navigation}) {
             letterSpacing: 2,
             color: COLORS_NEW.mainBlack,
           }}>
-          {'Alexander Platz 32'}
+          {`${deliveryTypeData?.firstname}`}
         </Text>
       </>
     );
@@ -261,30 +269,39 @@ export default function Checkout({route, navigation}) {
             {t('Delivery details')}
           </Text>
         </TouchableOpacity>
-        {!isObjectNullOrUndefined(deliveryTypeData)
+        {isObjectNullOrUndefined(deliveryTypeData)
           ? renderBeforeAddressSelect()
           : renderAfterAddressSelect()}
       </View>
     );
   };
-  const rendeDeliveryMethodsItem = item => {
+  const callDeliveryMethodApi = async (item) =>{
+
+    const res = await SET_DELIVERY_CHECKOUT_METHOD({'carrier_code': item.carrier_code, 'method_code':item.method_code});
+    if(res){
+      console.log('onPaymentSelection',item)
+    }
+  }
+  const rendeDeliveryMethodsItem = (item) => {
+    console.log('rendeDeliveryMethodsItem',item);
     return (
       <TouchableOpacity
         onPress={() => {
           setDeliveryMethod(item);
+          callDeliveryMethodApi(item);
+
         }}
         style={{flex: 1, marginTop: 16, flexDirection: 'row'}}>
-        {deliveryMethod?.id === item.id ? (
+        {deliveryMethod?.method_code === item.method_code ? (
           <CheckedRadioSVG />
         ) : (
           <UnCheckedRadioSVG />
         )}
         <View style={{flex: 1, marginHorizontal: 20}}>
           <Text style={{letterSpacing: 1}}>
-            {item?.price}
-            <Text>{` ${item?.name}`}</Text>
+            {item?.method_code}
           </Text>
-          <Text>{item?.deliveryDate}</Text>
+          <Text>{item?.method_title}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -336,6 +353,13 @@ export default function Checkout({route, navigation}) {
       </View>
     );
   };
+  const onPaymentSelection = async(item) =>{
+    setPaymentMethod(item);
+    const res = await SAVE_PAYMENT_METHOD({code:item.code});
+    if(res){
+      console.log('onPaymentSelection',item)
+    }
+  }
   const renderPaymentDetails = () => {
     return (
       <View style={[styles.methodView]}>
@@ -344,6 +368,7 @@ export default function Checkout({route, navigation}) {
             // setPaymentActive(!isPaymentActive);
             navigation.navigate('Payment', {
               payment: cartData?.available_payment_methods,
+              onPaymentSelection:onPaymentSelection,
             });
           }}
           style={styles.methodClick}>
@@ -359,8 +384,16 @@ export default function Checkout({route, navigation}) {
             }}>
             {t('Payment')}
           </Text>
-          <ArrowRightGray />
+         { <TouchableOpacity onPress={()=>{
+          navigation.navigate('Payment', {
+              payment: cartData?.available_payment_methods,
+              onPaymentSelection:onPaymentSelection,
+            });
+         }}> 
+           {!isObjectNullOrUndefined(paymentMethod) ? <EditPencilSVG/> : <ArrowRightGray />}
+            </TouchableOpacity>}
         </TouchableOpacity>
+        {!isObjectNullOrUndefined(paymentMethod) && <Text style={{marginTop:16}}>{paymentMethod?.title}</Text>}
       </View>
     );
   };
@@ -452,7 +485,7 @@ export default function Checkout({route, navigation}) {
                 fontSize: 12,
                 color: COLORS_NEW.mainBlack,
               }}>
-              {deliveryMethod?.price}
+              {deliveryMethod?.method_title}
             </Text>
           </View>
         )}
@@ -523,10 +556,11 @@ export default function Checkout({route, navigation}) {
       <View style={{margin: 20}}>
         <AppButton
           disabled={
-            !isObjectNullOrUndefined(deliveryTypeData) ||
-            isObjectNullOrUndefined(paymentMethod) ||
-            isObjectNullOrUndefined(additionaMethod) ||
-            isObjectNullOrUndefined(deliveryMethod)
+            // !isObjectNullOrUndefined(deliveryTypeData) ||
+            // !isObjectNullOrUndefined(paymentMethod) ||
+            // // isObjectNullOrUndefined(additionaMethod) ||
+            // !isObjectNullOrUndefined(deliveryMethod)
+            false
           }
           preset="primary"
           text={
@@ -537,11 +571,29 @@ export default function Checkout({route, navigation}) {
                 : ''
             }`
           }
-          onPress={() => navigation.navigate('Checkout')}
+          onPress={() => confirmPaymentApi()}
         />
       </View>
     );
   };
+  const confirmPaymentApi = async() => {
+//  navigation.navigate('Order')
+//  navigation.navigate('Main')
+
+setLoading(true)
+    const res = await CONFIRM_PAYMENT_METHOD();
+    setLoading(false)
+    if(res){
+      console.log(res);
+      Alert.alert('','Order placed successfully.',[{
+        text:'Go Home',
+        onPress:()=>{
+           navigation.popToTop();
+          navigation.navigate('Main')
+        }
+      }])
+    }
+  }
   return (
     <SafeAreaView style={{flex: 1}}>
       <MyStatusBar backgroundColor={COLORS_NEW.white} />
@@ -549,12 +601,13 @@ export default function Checkout({route, navigation}) {
       <ScrollView style={styles.ScrollView}>
         {renderOrders()}
         {renderDeliveryDetails()}
-        {renderDeliveryMethods()}
+        {!isArrayNullOrEmpty(deliveryMethodsData) && renderDeliveryMethods()}
         {renderPaymentDetails()}
         {renderAdditionalDetails()}
         {renderOrderSummery()}
         {renderButtonView()}
       </ScrollView>
+      <Loader loading={loading} />
     </SafeAreaView>
   );
 }

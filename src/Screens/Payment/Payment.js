@@ -61,7 +61,11 @@ export default function Payment({route, navigation}) {
         onPress={() => {
           console.log(item);
           if (item?.code == 'cashondelivery') {
-            setShowPaymentDetailScreen(true);
+            // setShowPaymentDetailScreen(true);
+            if(route.params?.onPaymentSelection){
+              route.params?.onPaymentSelection(item)
+              navigation.goBack();
+            }
           }
           // setPaymentMethod(item);
           // navigation.navigate('Payment', {
