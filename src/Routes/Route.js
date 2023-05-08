@@ -91,6 +91,7 @@ import ReviewGiftCode from '../Screens/GiftBox/review-gift-box';
 import GiftCardBox from '../Screens/GiftBox/gift-card-box';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Payment from '../Screens/Payment/Payment';
+import OrderCart from '../Screens/OrderCart';
 
 const ProfileStack = () => {
   return (
@@ -231,6 +232,7 @@ const MyCartStack = () => {
       <Stack.Screen name="GiftCardCheckout" component={GiftCardCheckout} />
       <Stack.Screen name="PickAmount" component={PickAmount} />
       <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen name="OrderCart" component={OrderCart} />
     </Stack.Navigator>
   );
 };
