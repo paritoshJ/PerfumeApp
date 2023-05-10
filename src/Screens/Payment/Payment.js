@@ -62,8 +62,8 @@ export default function Payment({route, navigation}) {
           console.log(item);
           if (item?.code == 'cashondelivery') {
             // setShowPaymentDetailScreen(true);
-            if(route.params?.onPaymentSelection){
-              route.params?.onPaymentSelection(item)
+            if (route.params?.onPaymentSelection) {
+              route.params?.onPaymentSelection(item);
               navigation.goBack();
             }
           }
@@ -87,7 +87,9 @@ export default function Payment({route, navigation}) {
             paddingBottom: 10,
           }}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{letterSpacing: 1, flex: 1}}>{item?.title}</Text>
+            <Text style={{letterSpacing: 1, flex: 1, color: '#000'}}>
+              {item?.title}
+            </Text>
             <ArrowRightGray />
           </View>
         </View>
@@ -113,7 +115,7 @@ export default function Payment({route, navigation}) {
             <Text
               style={{
                 fontSize: 20,
-                color: COLORS_NEW.black,
+                color: colorConstant.BLACK,
                 fontFamily: fontConstant.gambetta,
               }}>
               {t('Cash on delivery')}
@@ -121,7 +123,7 @@ export default function Payment({route, navigation}) {
             <Text
               style={{
                 fontSize: 16,
-                color: COLORS_NEW.black,
+                color: colorConstant.BLACK,
                 paddingTop: 8,
                 fontFamily: fontConstant.satoshi,
               }}>
@@ -130,7 +132,7 @@ export default function Payment({route, navigation}) {
             <Text
               style={{
                 fontSize: 16,
-                color: COLORS_NEW.black,
+                color: colorConstant.BLACK,
                 fontFamily: fontConstant.satoshi,
               }}>
               +48 985 988 788
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
   },
   navBarText: {
     fontSize: 16,
-    color: COLORS_NEW.black,
+    color: colorConstant.BLACK,
     textAlign: 'center',
     flex: 1,
   },
