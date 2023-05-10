@@ -9,6 +9,7 @@ import {
   ImageBackground,
   I18nManager,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import style from './style';
@@ -41,6 +42,7 @@ const ProductPage = props => {
   const [selected, setSelected] = useState('50 ml');
   const [decription, setdecription] = useState(true);
   const [reviewshow, setreviewshow] = useState(true);
+  const [isAdded, setisAdded] = useState(false);
   const [visibale, setvisibale] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productDetail, setProductDetail] = useState({});
@@ -399,11 +401,15 @@ const ProductPage = props => {
   };
 
   const handleAddItemToCart = async () => {
-    setLoading(true);
+    // setLoading(true);
+    setisAdded(true);
     let res = await ADD_TO_CART_DATA(value, skuValue);
-    setLoading(false);
+    // setLoading(false);
+    setisAdded(false);
+
     if (res) {
       console.log('CART_DATA', res);
+      Alert.alert('Your item is added to cart successfully');
     }
   };
 
@@ -838,6 +844,7 @@ const ProductPage = props => {
         )}
       </ScrollView>
       <Loader loading={loading} />
+      <Loader loading={isAdded} />
     </SafeAreaView>
   );
 };

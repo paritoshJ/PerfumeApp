@@ -30,8 +30,14 @@ import EditPencilSVG from '../../assets/svg/EditPencil';
 import CheckedRadioSVG from '../../assets/svg/CheckedRadio';
 import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 import ArrowRightGray from '../../assets/svg/ArrowRightGray';
-import { CONFIRM_PAYMENT_METHOD, SAVE_PAYMENT_METHOD, SET_DELIVERY_CHECKOUT_METHOD, SET_DELIVERY_METHOD } from '../../api/SetDeliveryAndPaymentMethodToCart';
+import {
+  CONFIRM_PAYMENT_METHOD,
+  SAVE_PAYMENT_METHOD,
+  SET_DELIVERY_CHECKOUT_METHOD,
+  SET_DELIVERY_METHOD,
+} from '../../api/SetDeliveryAndPaymentMethodToCart';
 import Loader from '../../Component/Loader';
+import colorConstant from '../../constant/colorConstant';
 
 export default function Checkout({route, navigation}) {
   const {t} = useTranslation();
@@ -51,8 +57,7 @@ export default function Checkout({route, navigation}) {
   const [cartData, setCartData] = useState('');
   const [discountCode, setDiscountCode] = useState('');
   const [totalIncludingText, setTotalIncludingText] = useState('');
-  const [deliveryMethodsData, setDeliveryMethodsData] = useState([
-  ]);
+  const [deliveryMethodsData, setDeliveryMethodsData] = useState([]);
 
   useEffect(() => {
     console.log('Checkout', route.params);
@@ -158,12 +163,12 @@ export default function Checkout({route, navigation}) {
     return (
       <>
         <TouchableOpacity
-        onPress={()=>{
-       navigation.navigate('AddressBookList',{
-              selectedAddress:deliveryTypeData,
-              onAddressFetch:onAddressFetch,
+          onPress={() => {
+            navigation.navigate('AddressBookList', {
+              selectedAddress: deliveryTypeData,
+              onAddressFetch: onAddressFetch,
             });
-      }}
+          }}
           style={{
             height: 48,
             marginVertical: 12,
@@ -173,9 +178,17 @@ export default function Checkout({route, navigation}) {
             borderWidth: 1,
             borderColor: 'rgba(43, 40, 38, 0.1)',
           }}>
-          <Text>{t('Delivery')}</Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: colorConstant.BLACK,
+            }}>
+            {t('Delivery')}
+          </Text>
         </TouchableOpacity>
-        <Text style={{flex: 1, textAlign: 'center'}}>{t('or')}</Text>
+        <Text style={{textAlign: 'center', color: colorConstant.BLACK}}>
+          {t('or')}
+        </Text>
         <TouchableOpacity
           style={{
             height: 48,
@@ -186,16 +199,23 @@ export default function Checkout({route, navigation}) {
             borderWidth: 1,
             borderColor: 'rgba(43, 40, 38, 0.1)',
           }}>
-          <Text>{t('Pickup')}</Text>
+          <Text
+            style={{
+              // flex: 1,
+              textAlign: 'center',
+              color: colorConstant.BLACK,
+            }}>
+            {t('Pickup')}
+          </Text>
         </TouchableOpacity>
       </>
     );
   };
-  const onAddressFetch = (item) =>{
-      console.log(item);
-      setDeliveryTypeData(item);
-      setDeliveryMethodsData(item?.available_shipping_methods)
-  }
+  const onAddressFetch = item => {
+    console.log(item);
+    setDeliveryTypeData(item);
+    setDeliveryMethodsData(item?.available_shipping_methods);
+  };
   const renderAfterAddressSelect = () => {
     return (
       <>
@@ -218,12 +238,13 @@ export default function Checkout({route, navigation}) {
             justifyContent: 'space-between',
           }}>
           <Text>{t('Address')}</Text>
-          <TouchableOpacity onPress={() => {
-            navigation.navigate('AddressBookList',{
-              selectedAddress:deliveryTypeData,
-              onAddressFetch:onAddressFetch,
-            });
-          }}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('AddressBookList', {
+                selectedAddress: deliveryTypeData,
+                onAddressFetch: onAddressFetch,
+              });
+            }}>
             <EditPencilSVG />
           </TouchableOpacity>
         </View>
@@ -234,7 +255,9 @@ export default function Checkout({route, navigation}) {
             letterSpacing: 2,
             color: COLORS_NEW.mainBlack,
           }}>
-          {`${deliveryTypeData?.street?.toString()} ${deliveryTypeData?.postcode}`}
+          {`${deliveryTypeData?.street?.toString()} ${
+            deliveryTypeData?.postcode
+          }`}
         </Text>
         <Text
           style={{
@@ -275,21 +298,22 @@ export default function Checkout({route, navigation}) {
       </View>
     );
   };
-  const callDeliveryMethodApi = async (item) =>{
-
-    const res = await SET_DELIVERY_CHECKOUT_METHOD({'carrier_code': item.carrier_code, 'method_code':item.method_code});
-    if(res){
-      console.log('onPaymentSelection',item)
+  const callDeliveryMethodApi = async item => {
+    const res = await SET_DELIVERY_CHECKOUT_METHOD({
+      carrier_code: item.carrier_code,
+      method_code: item.method_code,
+    });
+    if (res) {
+      console.log('onPaymentSelection', item);
     }
-  }
-  const rendeDeliveryMethodsItem = (item) => {
-    console.log('rendeDeliveryMethodsItem',item);
+  };
+  const rendeDeliveryMethodsItem = item => {
+    console.log('rendeDeliveryMethodsItem', item);
     return (
       <TouchableOpacity
         onPress={() => {
           setDeliveryMethod(item);
           callDeliveryMethodApi(item);
-
         }}
         style={{flex: 1, marginTop: 16, flexDirection: 'row'}}>
         {deliveryMethod?.method_code === item.method_code ? (
@@ -298,10 +322,12 @@ export default function Checkout({route, navigation}) {
           <UnCheckedRadioSVG />
         )}
         <View style={{flex: 1, marginHorizontal: 20}}>
-          <Text style={{letterSpacing: 1}}>
+          <Text style={{letterSpacing: 1, color: colorConstant.BLACK}}>
             {item?.method_code}
           </Text>
-          <Text>{item?.method_title}</Text>
+          <Text style={{letterSpacing: 1, color: colorConstant.BLACK}}>
+            {item?.method_title}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -353,13 +379,13 @@ export default function Checkout({route, navigation}) {
       </View>
     );
   };
-  const onPaymentSelection = async(item) =>{
+  const onPaymentSelection = async item => {
     setPaymentMethod(item);
-    const res = await SAVE_PAYMENT_METHOD({code:item.code});
-    if(res){
-      console.log('onPaymentSelection',item)
+    const res = await SAVE_PAYMENT_METHOD({code: item.code});
+    if (res) {
+      console.log('onPaymentSelection', item);
     }
-  }
+  };
   const renderPaymentDetails = () => {
     return (
       <View style={[styles.methodView]}>
@@ -368,7 +394,7 @@ export default function Checkout({route, navigation}) {
             // setPaymentActive(!isPaymentActive);
             navigation.navigate('Payment', {
               payment: cartData?.available_payment_methods,
-              onPaymentSelection:onPaymentSelection,
+              onPaymentSelection: onPaymentSelection,
             });
           }}
           style={styles.methodClick}>
@@ -384,16 +410,27 @@ export default function Checkout({route, navigation}) {
             }}>
             {t('Payment')}
           </Text>
-         { <TouchableOpacity onPress={()=>{
-          navigation.navigate('Payment', {
-              payment: cartData?.available_payment_methods,
-              onPaymentSelection:onPaymentSelection,
-            });
-         }}> 
-           {!isObjectNullOrUndefined(paymentMethod) ? <EditPencilSVG/> : <ArrowRightGray />}
-            </TouchableOpacity>}
+          {
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Payment', {
+                  payment: cartData?.available_payment_methods,
+                  onPaymentSelection: onPaymentSelection,
+                });
+              }}>
+              {!isObjectNullOrUndefined(paymentMethod) ? (
+                <EditPencilSVG />
+              ) : (
+                <ArrowRightGray />
+              )}
+            </TouchableOpacity>
+          }
         </TouchableOpacity>
-        {!isObjectNullOrUndefined(paymentMethod) && <Text style={{marginTop:16}}>{paymentMethod?.title}</Text>}
+        {!isObjectNullOrUndefined(paymentMethod) && (
+          <Text style={{marginTop: 16, color: colorConstant.BLACK}}>
+            {paymentMethod?.title}
+          </Text>
+        )}
       </View>
     );
   };
@@ -483,7 +520,7 @@ export default function Checkout({route, navigation}) {
               style={{
                 fontFamily: fontConstant.gambetta,
                 fontSize: 12,
-                color: COLORS_NEW.mainBlack,
+                color: colorConstant.BLACK,
               }}>
               {deliveryMethod?.method_title}
             </Text>
@@ -576,24 +613,26 @@ export default function Checkout({route, navigation}) {
       </View>
     );
   };
-  const confirmPaymentApi = async() => {
-//  navigation.navigate('Order')
-//  navigation.navigate('Main')
+  const confirmPaymentApi = async () => {
+    //  navigation.navigate('Order')
+    //  navigation.navigate('Main')
 
-setLoading(true)
+    setLoading(true);
     const res = await CONFIRM_PAYMENT_METHOD();
-    setLoading(false)
-    if(res){
+    setLoading(false);
+    if (res) {
       console.log(res);
-      Alert.alert('','Order placed successfully.',[{
-        text:'Go Home',
-        onPress:()=>{
-           navigation.popToTop();
-          navigation.navigate('Main')
-        }
-      }])
+      Alert.alert('', 'Order placed successfully.', [
+        {
+          text: 'Okay',
+          onPress: () => {
+            navigation.popToTop();
+            navigation.navigate('OrderCart');
+          },
+        },
+      ]);
     }
-  }
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
       <MyStatusBar backgroundColor={COLORS_NEW.white} />
