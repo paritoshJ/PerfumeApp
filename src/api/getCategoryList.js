@@ -8,8 +8,17 @@ export const client = new ApolloClient({
   uri: Constants.BASE_GRAPH_QL,
   cache: new InMemoryCache(),
   connectToDevTools: true,
-});
 
+});
+const client1 = new ApolloClient({
+  uri: Constants.BASE_GRAPH_QL,
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+  headers: {
+    // authorization: "Bearer " + getAuthTokenHeaders(),
+    authorization: "Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM3OTc5OTksImV4cCI6MTY4MzgwMTU5OX0.yG_cgt8S9QVZzjP154zWErBTG4lYEYDVrXWfeHhsEZk",
+  }
+});
 export const GET_CATEGORY_LIST = async () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -105,6 +114,102 @@ export const GET_CATEGORY_LIST = async () => {
     } catch (error) {
       // alert(`error => ${JSON.stringify(error)}`);
       // console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};
+
+export const ADD_WISH_LST_API = async (id, item) => {
+  console.log([item])
+  try {
+    const { data, error } = await client1.mutate({
+      mutation: ADD_ITEAM_WLIST,
+      variables: {
+        wishlistId: id,
+        wishlistItems: [item],
+      },
+    });
+    if (error) {
+      console.log('error', JSON.stringify(error));
+      return;
+    }
+    console.log('data', JSON.stringify(data));
+    return data;
+  } catch (error) {
+    console.log('error', JSON.stringify(error));
+    return [];
+  }
+};
+export const ADD_ITEAM_WLIST = gql`
+
+mutation addProductsToWishlist(
+  $wishlistId: String!
+  $wishlistItems: [wishlistItems]!
+  ) {
+    addProductsToWishlist(input: {wishlist_Id: $wishlistId,wishlist_Items: $wishlistItems})
+      {
+    user_errors {
+      code
+      message
+    }
+    wishlist {
+      id
+      items_count
+      name
+      sharing_code
+      updated_at
+      visibility
+    }
+  }
+}
+`;
+
+export const Add_CATEGORY_LIST_CARD = async (wishlistid, arr) => {
+  const client1 = new ApolloClient({
+    uri: Constants.BASE_GRAPH_QL,
+    cache: new InMemoryCache(),
+    connectToDevTools: true,
+    headers: {
+      // authorization: "Bearer " + getAuthTokenHeaders(),
+      authorization: "Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM3ODQ1NDMsImV4cCI6MTY4Mzc4ODE0M30.Y6bT8kaJ77yIhiEoU_WpDNc121RQ9PoEPTbo5c3gmqM",
+    }
+  });
+  console.log('asd', client1, wishlistid, arr);
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { data } = await client1.mutate({
+        mutation: gql` 
+        mutation addProductsToWishlist($wishlistId: String!,$wishlistItems: Array!) {
+          addProductsToWishlist(wishlistId: $wishlistid,wishlistItems:arr) {
+            user_errors {
+              code
+              message
+            }
+            wishlist {
+              id
+              items_count
+              name
+              sharing_code
+              updated_at
+              visibility
+            }
+          }
+        }
+  
+  `,
+        variables: {
+          wishlistId: wishlistid,
+          wishlistItems: arr,
+        },
+      });
+      if (data) {
+        // alert(`Response: ${JSON.stringify(data)}`);
+        console.log('data', JSON.stringify(data));
+        resolve(data);
+      }
+    } catch (error) {
+      //   alert(`error => ${JSON.stringify(error)}`);
+      console.log('error', JSON.stringify(error));
       reject(error);
     }
   });

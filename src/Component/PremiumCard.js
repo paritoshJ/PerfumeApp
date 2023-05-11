@@ -66,6 +66,7 @@ const PremiumCard = props => {
             size={22}
             color={colorConstant.BLACK}
             onPress={() => {
+              props?.SelctHeart()
               // props.navigation.goBack();
             }}
           />
