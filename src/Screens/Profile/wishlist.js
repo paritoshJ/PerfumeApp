@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   I18nManager,
   SafeAreaView,
+  FlatList
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AppButton} from '../../Component/button/app-button';
@@ -24,25 +25,43 @@ import { GET_WISHLIST_PRODUCTS } from '../../api/getWishlistApi';
 import EmptyPageView from '../../Component/EmptyPageView';
 import HeartSVG from '../../assets/svg/Heart';
 import CartBagSVG from '../../assets/svg/CartBag';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../../Component/Loader';
+import colorConstant from '../../constant/colorConstant';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import fontConstant from '../../constant/fontConstant';
 
 export default function WishList({navigation}) {
   const { t } = useTranslation();
+
+  const [loading, setLoading] = useState(false);
+
   const [feed, setFeed] = useState(true);
   const [errorTitle, setErrorTitle] = useState('You have no saved items');
   const [errorMessage, setErrorMessage] = useState('Start saving as you shop by selecting the little heart.');
   const [data, setData] = useState([]);
-
+  const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   const onSelectSwitch = index => {
   };
+  useFocusEffect(
+    React.useCallback(() => {
+      setData([])
+      setLoading(true);
+      getWishListProducts();
 
-  useEffect(() => {
-    getWishListProducts();
-  }, [])
-  
-  const getWishListProducts = async() =>{
-    await GET_WISHLIST_PRODUCTS().then((res)=>{
+      return () => { };
+    }, []),
+  );
+
+
+  const getWishListProducts = () => {
+    GET_WISHLIST_PRODUCTS().then((res) => {
+      setLoading(false);
+      setData(res.wishlist.items);
       console.log('GET_WISHLIST_PRODUCTS',res);
     }).catch((err)=>{
+      setLoading(false);
+
        console.log('GET_WISHLIST_ERROR',err);
     })
   }
@@ -56,10 +75,199 @@ export default function WishList({navigation}) {
           buttonTitle={'Go shopping'}
           />
   }
+  function getRandomColor() {
+    const colorIndex = Math.floor(Math.random() * COLORS.length);
+    return COLORS[colorIndex];
+  }
+  const renderItem = ({ item, index }) => {
+    let name = item.name;
+    console.log('item:=>', item)
+    let finalPrice = {};
+    let regularPrice = {};
+    var image = '';
+    // let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+    // let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+    finalPrice = item?.product.price?.regularPrice?.amount;
+    regularPrice = item?.product.price?.regularPrice?.amount;
+    image = item.product.image.url
+    console.log('image:=>', image)
+
+    // if (isHome) {
+    //   finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+    //   regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+    //   image = item?.image;
+    // } else {
+    //   finalPrice = item?.price_range?.minimum_price?.final_price;
+    //   regularPrice = item?.price_range?.minimum_price?.regular_price;
+    //   image = item?.image[0]?.url
+    // }
+    return (
+      <TouchableOpacity
+        key={item}
+        onPress={() => props?.onFullItemPress()}
+        style={{
+          // flex: 1,
+          marginLeft: '1.2%',
+          marginRight: '1.2%',
+          marginTop: index == 0 || index == 1 ? 0 : '5%',
+          width: '48%',
+        }}>
+        <View
+          style={{
+            height: 200,
+            backgroundColor: getRandomColor(),
+            borderRadius: 12,
+            justifyContent: 'space-between',
+            width: '100%',
+            alignSelf: 'center'
+          }}>
+          <View
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+            }}>
+            {item?.product.price_range.maximum_price.final_price.value != '' ? <View
+              style={{
+                width: '22%',
+                height: 20,
+                backgroundColor: colorConstant.BLACK,
+                borderTopLeftRadius: 10,
+                borderBottomRightRadius: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  color: colorConstant.WHITE,
+                  fontSize: fontConstant.TEXT_10_SIZE_REGULAR,
+                  fontStyle: 'normal',
+                  fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+                }}>
+                {item?.product.price_range.maximum_price.discount.percent_off + '%'}
+              </Text>
+            </View> : <View />}
+            {/* {isStringNotNull(item?.product.price_range.maximum_price.final_price.value) && (
+              <View
+                style={{
+                  width: 35,
+                  height: 20,
+                  backgroundColor: colorConstant.BLACK,
+                  borderTopLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Text
+                  style={{
+                    color: colorConstant.WHITE,
+                    fontSize: fontConstant.TEXT_10_SIZE_REGULAR,
+                    fontStyle: 'normal',
+                    fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+                  }}>
+                  {item?.product.price_range.maximum_price.final_price.value + '%'}
+                </Text>
+              </View>
+            )} */}
+            <View style={{ padding: 10 }}>
+              <MaterialIcons
+                name="favorite"
+                size={22}
+                color={colorConstant.DARK_PRIMARY}
+                onPress={() => { }}
+              />
+            </View>
+          </View>
+
+          <Image
+            source={{ uri: item.product.image.url }}
+            style={{ width: '80%', height: '80%', alignSelf: 'center' }}
+            resizeMode="contain"
+          />
+        </View>
+
+        <View style={{ flexDirection: 'row', marginVertical: 12, }}>
+          <TouchableOpacity
+            style={{
+              borderRadius: 20,
+              borderWidth: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderColor: colorConstant.LIGHT_GREY,
+            }}
+            onPress={() => {
+              props?.onSizeSelect();
+            }}>
+            <Text
+              style={{
+                paddingHorizontal: 12,
+                paddingVertical: 8,
+                fontFamily: fontConstant.satoshi,
+                fontSize: 12,
+                fontWeight: fontConstant.WEIGHT_LEIGHT,
+                color: colorConstant.BLACK,
+              }}>
+              60
+              {/* {item.customAttributesAjmalData[0].display_size} */}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* <Text
+          style={{
+            fontFamily: fontConstant.satoshi,
+            fontSize: 12,
+            fontStyle: 'normal',
+            fontWeight: fontConstant.WEIGHT_LEIGHT,
+            color: colorConstant.LIGHT_TEXT,
+          }}>
+          {item.customAttributesAjmalData[0].display_category + ' / ' + item.customAttributesAjmalData[0].gender}
+        </Text> */}
+        <Text
+          numberOfLines={2}
+          style={{
+            color: colorConstant.BLACK,
+            fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+            fontStyle: 'italic',
+            fontFamily: fontConstant.gambetta,
+            fontWeight: fontConstant.WEIGHT_REGULAR,
+            marginTop: 6,
+            textTransform: 'capitalize',
+          }}>
+          {item.product.name}
+        </Text>
+        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+          <Text style={{
+            color: colorConstant.DARK_PRIMARY,
+            fontStyle: 'normal',
+            fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+            fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+          }}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+          {finalPrice?.value < regularPrice?.value && <Text
+            style={[
+
+              {
+                marginLeft: 10,
+                color: colorConstant.LIGHT_GREY,
+                textDecorationLine: 'line-through',
+                color: colorConstant.DARK_PRIMARY,
+                fontStyle: 'normal',
+                fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+                fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+              },
+            ]}>
+            {`${regularPrice?.value} ${regularPrice?.currency}`}
+          </Text>}
+        </View>
+      </TouchableOpacity>
+
+    );
+  };
+
   return (
     <SafeAreaView style={{flex:1}}>
+      <View style={{ flex: 1 }}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
-      <ImageBackground
+        {loading == false ? <ImageBackground
         source={require('../../../assets/wishlist-back.png')}
         resizeMode="stretch"
         style={styles.img}>
@@ -101,27 +309,31 @@ export default function WishList({navigation}) {
             selectionColor={COLORS_NEW.lightGray}
           />
         </View>
-      </ImageBackground>
+        </ImageBackground> : <View />}
       {/* No Return View */}
        
-       {data.length > 0 ? <FlatGrid
+        {data.length > 0 ? <FlatList
+          numColumns={2}
               // itemDimension={130}
               data={data}
               contentContainerStyle={styles.scrollView}
-              renderItem={({item}) => (
-                <ProductCard item={item}
-                 offer={true}
-                wishlist={true} 
-                onSizeSelect={(data)=>{}} 
-                onFullItemPress ={() => {
-                    // setSelectedProduct(item);
-                    // setonOpenDailog(true);
-                  }} />
-              )}
-            /> : renderEmptyAndNoLogin()}
-     
+          renderItem={renderItem}
+        // renderItem={({item}) => (
+        //   <ProductCard item={item}
+        //    offer={true}
+        //   wishlist={true} 
+        //   onSizeSelect={(data)=>{}} 
+        //   onFullItemPress ={() => {
+        //       // setSelectedProduct(item);
+        //       // setonOpenDailog(true);
+        //     }} />
+        // )}
+        /> : loading == false ? renderEmptyAndNoLogin() : null}
+        <Loader loading={loading} />
+      </View>
     </SafeAreaView>
   );
+
 }
 
 const styles = StyleSheet.create({

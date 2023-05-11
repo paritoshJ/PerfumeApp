@@ -93,7 +93,7 @@ export const getAuthTokenHeaders = async()=>{
   const token = await AsyncStorage.getItem('token');
   console.log('token',token);
   if(isStringNotNull(token)){
-   return 'Bearer '+token;
+    return "Bearer " + token;
   }
-  return '';
+  return "";
 }

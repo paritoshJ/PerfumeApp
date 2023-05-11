@@ -2,6 +2,7 @@ const Constants = {
   fontRegular: 'Poppins-Regular',
   fontBold: 'Poppins-Bold',
   fontMedium: 'Poppins-Medium',
+  Token: '',
 
   Baseurl: 'https://profitworldapp.com/api',
   imageUrl: 'https://profitworldapp.com/storage/',
