@@ -38,10 +38,12 @@ import {
 } from '../../api/SetDeliveryAndPaymentMethodToCart';
 import Loader from '../../Component/Loader';
 import colorConstant from '../../constant/colorConstant';
+import {GET_ALL_STORES_LIST} from '../../api/store';
 
 export default function Checkout({route, navigation}) {
   const {t} = useTranslation();
   const [orders, setOrders] = useState([]);
+  const [storeList, setStoreList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isDeliveryActive, setDeliveryActive] = useState(true);
   const [isDeliveryMethodActive, setDeliveryMethodActive] = useState(false);
@@ -159,6 +161,21 @@ export default function Checkout({route, navigation}) {
   const onSelectSwitch = index => {
     console.log(index);
   };
+  const getStoreList = async () => {
+    setLoading(true);
+
+    let res = await GET_ALL_STORES_LIST();
+    setLoading(false);
+
+    if (res?.StorePickUpData) {
+      console.log('GET_ALL_STORES_LIST', res);
+      setStoreList(res?.StorePickUpData?.allStoreLocation);
+      // console.warn(res?.StorePickUpData?.allStoreLocation);
+      navigation.navigate('AddressBookList', {
+        storeList: res?.StorePickUpData?.allStoreLocation,
+      });
+    }
+  };
   const renderBeforeAddressSelect = () => {
     return (
       <>
@@ -198,7 +215,8 @@ export default function Checkout({route, navigation}) {
             justifyContent: 'center',
             borderWidth: 1,
             borderColor: 'rgba(43, 40, 38, 0.1)',
-          }}>
+          }}
+          onPress={getStoreList}>
           <Text
             style={{
               // flex: 1,
