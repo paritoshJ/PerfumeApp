@@ -13,11 +13,20 @@ import imageConstant from '../constant/imageConstant';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Swiper from 'react-native-swiper';
 import {navigationRef} from '../Navigator/utils';
-import { isStringNotNull } from '../Helper/helper';
+import {isStringNotNull} from '../Helper/helper';
+import {ADD_WISH_LST_API} from '../api/getCategoryList';
 
 const ProductCard = props => {
-  const {item, offer, wishlist, isHome = false} = props;
+  const {
+    item,
+    offer,
+    wishlist,
+    isHome = false,
+    isSearch = false,
+    customFlex = false,
+  } = props;
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
+  console.warn(item?.image);
 
   let name = item?.name;
   let finalPrice = {};
@@ -26,15 +35,18 @@ const ProductCard = props => {
   // let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
   // let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
 
-  if(isHome){
-     finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
-     regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
-     image = item?.image;
-  }else{
-     finalPrice = item?.price_range?.minimum_price?.final_price;
-     regularPrice = item?.price_range?.minimum_price?.regular_price;
-     image = item?.image[0]?.url
-
+  if (isHome) {
+    finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+    regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+    image = item?.image;
+  } else if (isSearch) {
+    finalPrice = item?.price_range?.minimum_price?.final_price;
+    regularPrice = item?.price_range?.minimum_price?.regular_price;
+    image = item?.image?.url;
+  } else {
+    finalPrice = item?.price_range?.minimum_price?.final_price;
+    regularPrice = item?.price_range?.minimum_price?.regular_price;
+    image = item?.image[0]?.url;
   }
   // let offers = item?.price_range?.minimum_price?.discount?.amount_off;
   let size =
@@ -46,7 +58,7 @@ const ProductCard = props => {
       ? item?.customAttributesAjmalData[0]?.display_category
       : '';
   // let image = item?.media_gallery[0]?.url
-  
+
   // let imagetwo =
   //   item?.customAttributesAjmalData !== undefined
   //     ? item?.customAttributesAjmalData[0]?.rtop_note_image
@@ -58,11 +70,19 @@ const ProductCard = props => {
     return COLORS[colorIndex];
   }
 
+  const AddItemTowishlist = async (id, item) => {
+    let res = await ADD_WISH_LST_API(id, item);
+    console.log('GET_CATEGORY_LIST_HOME aasaasdasas', res);
+    if (res) {
+    } else {
+    }
+  };
+
   return (
     <TouchableOpacity
-    key={item}
-    onPress={()=>props?.onFullItemPress()}
-    style={{width: 150,}}>
+      key={item}
+      onPress={() => props?.onFullItemPress()}
+      style={customFlex ? {flex: 1} : {width: 150}}>
       <View
         style={{
           height: 200,
@@ -101,71 +121,85 @@ const ProductCard = props => {
               name="favorite-border"
               size={22}
               color={colorConstant.BLACK}
-              onPress={() => {}}
+              onPress={async () => {
+                console.log('selected OItem', item);
+                console.log('selected OItem', item.sku);
+                let objNew = {
+                  sku: item.sku,
+                  quantity: 1,
+                };
+                console.warn(objNew);
+                let res = await AddItemTowishlist(item.id.toString(), objNew);
+                console.warn(res);
+              }}
             />
           </View>
         </View>
 
         <Image
-            source={{uri: image}}
-            style={{width: '50%', height: 120, alignSelf: 'center'}}
-            resizeMode="contain"
-          />
+          source={{uri: image}}
+          style={{width: '50%', height: 120, alignSelf: 'center'}}
+          resizeMode="contain"
+        />
       </View>
 
-     <View style={{flexDirection: 'row', marginVertical: 12,}}>
-          <TouchableOpacity
-            style={{
-              // width: 50,
-              borderRadius: 20,
-              borderWidth: 1,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderColor: colorConstant.LIGHT_GREY,
-            }}
-            onPress={() => {
-              // setSelected(size);
-              props?.onSizeSelect();
-            }}>
-            <Text
-              style={{
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                fontFamily: fontConstant.satoshi,
-                fontSize: 12,
-                fontWeight: fontConstant.WEIGHT_LEIGHT,
-                color: colorConstant.BLACK,
-              }}>
-              {size}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        
+      <View style={{flexDirection: 'row', marginVertical: 12}}>
+        <TouchableOpacity
+          style={{
+            // width: 50,
+            borderRadius: 20,
+            borderWidth: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderColor: colorConstant.LIGHT_GREY,
+          }}
+          onPress={() => {
+            // setSelected(size);
+            props?.onSizeSelect();
+          }}>
           <Text
             style={{
+              paddingHorizontal: 12,
+              paddingVertical: 8,
               fontFamily: fontConstant.satoshi,
               fontSize: 12,
-              fontStyle: 'normal',
               fontWeight: fontConstant.WEIGHT_LEIGHT,
-              color: colorConstant.LIGHT_TEXT,
-            }}>
-            {cat}
-          </Text>
-          <Text
-            style={{
               color: colorConstant.BLACK,
-              fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
-              fontStyle: 'italic',
-              fontFamily: fontConstant.gambetta,
-              fontWeight: fontConstant.WEIGHT_REGULAR,
-              marginTop:6,
-              textTransform:'capitalize',
             }}>
-            {name}
+            {size}
           </Text>
-        <View style={styles.price_view}>
-          <Text style={styles.offer_price}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
-          {finalPrice?.value < regularPrice?.value && <Text
+        </TouchableOpacity>
+      </View>
+
+      <Text
+        style={{
+          fontFamily: fontConstant.satoshi,
+          fontSize: 12,
+          fontStyle: 'normal',
+          fontWeight: fontConstant.WEIGHT_LEIGHT,
+          color: colorConstant.LIGHT_TEXT,
+        }}>
+        {cat}
+      </Text>
+      <Text
+        style={{
+          color: colorConstant.BLACK,
+          fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+          fontStyle: 'italic',
+          fontFamily: fontConstant.gambetta,
+          fontWeight: fontConstant.WEIGHT_REGULAR,
+          marginTop: 6,
+          textTransform: 'capitalize',
+        }}>
+        {name}
+      </Text>
+      <View style={styles.price_view}>
+        <Text
+          style={
+            styles.offer_price
+          }>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+        {finalPrice?.value < regularPrice?.value && (
+          <Text
             style={[
               styles.offer_price,
               {
@@ -175,8 +209,9 @@ const ProductCard = props => {
               },
             ]}>
             {`${regularPrice?.value} ${regularPrice?.currency}`}
-          </Text>}
-        </View>
+          </Text>
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
