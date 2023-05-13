@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  ActivityIndicator,
   Alert,
   BackHandler,
   I18nManager,
@@ -22,6 +23,7 @@ import {useNavigation} from '@react-navigation/native';
 import {isStringNotNull} from '../Helper/helper';
 import UIStepper from 'react-native-ui-stepper';
 import { ADD_TO_CART_DATA } from '../api/getAddToCartData';
+import Loader from '../Component/Loader';
 
 const ProductModal = props => {
   const navigation = useNavigation();
@@ -41,6 +43,7 @@ const ProductModal = props => {
   } = props;
   const [selected, setSelected] = useState('50 ml');
   const [value, setValue] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   
   const closeDailog = () => {
@@ -50,9 +53,12 @@ const ProductModal = props => {
 
   const handleAddToCart = async () => {
     if (sku) {
-      console.log(sku);
-       await ADD_TO_CART_DATA(parseFloat(value).toFixed(1), `${sku}`);
-      // navigation.navigate('My cart');
+      setLoading(true);
+      let res = await ADD_TO_CART_DATA(parseFloat(value).toFixed(1), `${sku}`);
+      setLoading(false);
+      if(res != undefined && res !== null){
+         Alert.alert('Your item added to cart successfully.') 
+      }
     }
   };
 
@@ -147,8 +153,6 @@ const ProductModal = props => {
                 onPress={() => {
                   props.setOnOpenDailog(false);
                   setTimeout(() => {
-                    // navigationRef.navigate('ProductPage',{});
-                    //  console.log('item?.sku',item?.sku);
                     navigationRef.navigate('ProductPage', {
                       skuID: props.item?.sku,
                     });
@@ -271,12 +275,15 @@ const ProductModal = props => {
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}>
-                <MaterialIcons
+                {!loading ? <MaterialIcons
                   name="favorite-border"
                   size={22}
                   color={colorConstant.DARK_PRIMARY}
                   onPress={() => {}}
-                />
+                /> : <ActivityIndicator 
+                size={'small'}
+                color={colorConstant.DARK_PRIMARY}
+                animating={loading}/>}
               </View>
             </View>
           </View>

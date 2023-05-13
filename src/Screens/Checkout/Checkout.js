@@ -593,11 +593,11 @@ export default function Checkout({route, navigation}) {
       <View style={{margin: 20}}>
         <AppButton
           disabled={
-            // !isObjectNullOrUndefined(deliveryTypeData) ||
-            // !isObjectNullOrUndefined(paymentMethod) ||
-            // // isObjectNullOrUndefined(additionaMethod) ||
-            // !isObjectNullOrUndefined(deliveryMethod)
-            false
+            !isObjectNullOrUndefined(deliveryTypeData) ||
+            !isObjectNullOrUndefined(paymentMethod) ||
+            // isObjectNullOrUndefined(additionaMethod) ||
+            !isObjectNullOrUndefined(deliveryMethod)
+            // false
           }
           preset="primary"
           text={
