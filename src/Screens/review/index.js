@@ -1,5 +1,11 @@
-import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, FlatList, I18nManager} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  I18nManager,
+} from 'react-native';
 import MyStatusBar from '../../Component/MyStatusBar';
 import colorConstant from '../../constant/colorConstant';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,24 +16,43 @@ import {Rating, AirbnbRating} from 'react-native-ratings';
 import review from '../../utils/review';
 import imageConstant from '../../constant/imageConstant';
 import ReviewFilterModal from '../../modal/ReviewFiltermodal';
-import { useTranslation } from 'react-i18next';
+import {useTranslation} from 'react-i18next';
+import {findDaysDiffrent, getInitials} from '../../Helper/helper';
 
-const ReviewScreen = props => {
+const ReviewScreen = ({navigation, route}) => {
   const [visibale, setVisibale] = useState(false);
+  const [ratingData, setRatingData] = useState([]);
+  const [ratingSummary, setRatingSummary] = useState('');
+  const [ratingCount, setRatingCount] = useState(0);
   const {t, i18n} = useTranslation();
-  handleRating = rating => {
-  };
-  const ratingCompleted = rating => {
-  };
+  handleRating = rating => {};
+  useEffect(() => {
+    console.log(route?.params?.reviewData);
+    if (route?.params?.reviewData) {
+      setRatingData(route?.params?.reviewData);
+    }
+    if (route?.params?.rating_summary) {
+      setRatingSummary(route?.params?.rating_summary);
+    }
+    if (route?.params?.review_count) {
+      setRatingCount(route?.params?.review_count);
+    }
+  }, []);
   const reviewItem = ({item}) => {
     return (
       <View style={{width: '100%', marginTop: '5%', flexDirection: 'row'}}>
-        <View style={{width: '20%'}}>
-          <Image
-            source={item.image}
-            style={{width: 50, height: 50}}
-            resizeMode="contain"
-          />
+        <View
+          style={{
+            width: '20%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: colorConstant.BROWN_CUSTOM,
+            borderRadius: 100,
+            height: 50,
+            width: 50,
+            marginEnd: 10,
+          }}>
+          <Text style={{}}>{getInitials(item.nickname)}</Text>
         </View>
         <View style={{width: '80%'}}>
           <View
@@ -36,22 +61,41 @@ const ReviewScreen = props => {
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}>
-            <Text style={style.review_user_name}>{item.name}</Text>
+            <Text style={style.review_user_name}>{item.nickname}</Text>
             <Text
               style={[style.review_text, {color: colorConstant.LIGHT_GREY}]}>
-              {item.time}
+              {findDaysDiffrent(item.created_at)}
             </Text>
           </View>
-          <Rating
+          {/* <Airb
+            ratingCount={item?.average_rating / 20}
             type="custom"
             ratingBackgroundColor={colorConstant.DARK_PRIMARY}
             ratingColor={colorConstant.DARK_PRIMARY}
             imageSize={15}
             onFinishRating={ratingCompleted}
             style={{alignItems: 'flex-start', marginTop: 10}}
-          />
+          /> */}
+          <View
+            style={{
+              alignItems: 'flex-start',
+            }}>
+            <AirbnbRating
+              count={5}
+              showRating={false}
+              size={15}
+              defaultRating={item?.average_rating / 20}
+              isDisabled
+              selectedColor={colorConstant.DARK_PRIMARY}
+              ratingContainerStyle={{
+                borderColor: colorConstant.DARK_PRIMARY,
+                marginTop: '2%',
+              }}
+            />
+          </View>
+
           <Text style={[style.review_text, {color: '#2B2826', marginTop: 5}]}>
-            {item.review}
+            {item.text ?? item.summary}
           </Text>
         </View>
       </View>
@@ -66,9 +110,9 @@ const ReviewScreen = props => {
           size={22}
           color={colorConstant.BLACK}
           onPress={() => {
-            props.navigation.goBack();
+            navigation.goBack();
           }}
-          style={{ transform:[{scaleX:I18nManager.isRTL? -1 : 1}]}}
+          style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}]}}
         />
         <Text
           style={{
@@ -76,10 +120,11 @@ const ReviewScreen = props => {
             fontSize: fontConstant.TEXT_15_SIZE_REGULAR,
             fontWeight: fontConstant.WEIGHT_REGULAR,
             color: colorConstant.BLACK,
-            marginLeft: '5%',
+            marginRight: '5%',
             textAlign: 'center',
+            flex: 1,
           }}>
-          {t('Review')}(54)
+          {t('Review')}({ratingCount})
         </Text>
       </View>
       <View
@@ -93,7 +138,7 @@ const ReviewScreen = props => {
 
           backgroundColor: colorConstant.WHITE,
         }}>
-        <TouchableOpacity
+        <View
           style={{
             width: '50%',
             flexDirection: 'row',
@@ -103,20 +148,22 @@ const ReviewScreen = props => {
           onPress={() => {}}>
           <Text
             style={{
-              marginLeft: 10,
+              marginLeft: 20,
               fontFamily: fontConstant.satoshi,
               fontStyle: 'normal',
+              alignSelf: 'center',
               fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
               fontWeight: fontConstant.WEIGHT_REGULAR,
               color: colorConstant.BLACK,
             }}>
-            4.5
+            {ratingSummary / 20}
           </Text>
           <AirbnbRating
             count={5}
             showRating={false}
             size={20}
-            defaultRating={4}
+            defaultRating={ratingSummary / 20}
+            isDisabled
             onFinishRating={handleRating}
             selectedColor={colorConstant.DARK_PRIMARY}
             ratingContainerStyle={{
@@ -124,7 +171,7 @@ const ReviewScreen = props => {
               marginTop: '2%',
             }}
           />
-        </TouchableOpacity>
+        </View>
         <TouchableOpacity
           style={{
             width: 1,
@@ -133,7 +180,7 @@ const ReviewScreen = props => {
             alignSelf: 'center',
             marginLeft: 10,
           }}></TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             width: '40%',
             flexDirection: 'row',
@@ -148,10 +195,10 @@ const ReviewScreen = props => {
             source={imageConstant.filters}
             style={{width: 20, height: 20}}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <FlatList
-        data={review}
+        data={ratingData}
         renderItem={reviewItem}
         style={{width: '90%', alignSelf: 'center'}}
       />

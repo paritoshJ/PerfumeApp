@@ -12,7 +12,7 @@ import {
   Alert,
   SafeAreaView,
 } from 'react-native';
-import React, { useRef, useState, useEffect } from 'react';
+import React, {useRef, useState, useEffect} from 'react';
 import style from './style';
 import colorConstant from '../../constant/colorConstant';
 import stringConstant from '../../constant/stringConstant';
@@ -23,34 +23,35 @@ import ProductCard from '../../Component/ProducCard';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { SliderBox } from 'react-native-image-slider-box';
+import {SliderBox} from 'react-native-image-slider-box';
 import carddata from '../../utils/carddata';
 // import Searchbar from '../../Component/Searchbar';
 import PremiumCard from '../../Component/PremiumCard';
 import premiumdata from '../../utils/premiumdata';
 import Metrics from '../../Helper/metrics';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import ProductModal from '../../modal/productmodal';
-import { useTranslation } from 'react-i18next';
-import { GET_PRODUCTS } from '../../api/getProduct';
-import { GET_SLIDER_PRODUCTS } from '../../api/getHomeSliderProduct';
-import { GET_HOME_DATA } from '../../api/getHomeData';
+import {useTranslation} from 'react-i18next';
+import {GET_PRODUCTS} from '../../api/getProduct';
+import {GET_SLIDER_PRODUCTS} from '../../api/getHomeSliderProduct';
+import {GET_HOME_DATA} from '../../api/getHomeData';
 import alertMsgConstant from '../../constant/alertMsgConstant';
 import Swiper from 'react-native-swiper';
-import { navigationRef } from '../../Navigator/utils';
-import { isStringNotNull } from '../../Helper/helper';
+import {navigationRef} from '../../Navigator/utils';
+import {isStringNotNull} from '../../Helper/helper';
 
 import {
   GET_CATEGORY_LIST,
   GET_CATEGORY_LIST_HOME,
-  Add_CATEGORY_LIST_CARD, ADD_WISH_LST_API
+  Add_CATEGORY_LIST_CARD,
+  ADD_WISH_LST_API,
 } from '../../api/getCategoryList';
-import { getRandomColor, isObjectNullOrUndefined } from '../../Helper/helper';
-import { GET_HOME_CONFIG_DATA } from '../../api/getHomeConfigData';
-import { isNonNullObject } from '@apollo/client/utilities';
+import {getRandomColor, isObjectNullOrUndefined} from '../../Helper/helper';
+import {GET_HOME_CONFIG_DATA} from '../../api/getHomeConfigData';
+import {isNonNullObject} from '@apollo/client/utilities';
 import Loader from '../../Component/Loader';
-import { EMPTY_CART } from '../../api/getEmptyCart';
+import {EMPTY_CART} from '../../api/getEmptyCart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MainScreen = props => {
@@ -75,7 +76,7 @@ const MainScreen = props => {
   //   {id: 3, name: 'xyz'},
   // ];
   const [text, setText] = useState('');
-  const { t, i18n } = useTranslation();
+  const {t, i18n} = useTranslation();
 
   useEffect(() => {
     // getCategory();
@@ -146,8 +147,7 @@ const MainScreen = props => {
   const AddItemTowishlist = async (id, item) => {
     let res = await ADD_WISH_LST_API(id, item);
     console.log('GET_CATEGORY_LIST_HOME aasaasdasas', res);
-
-  }
+  };
   // const getPro = async () => {
   //   let res = await GET_PRODUCTS();
   //   setProductData(res.products.items);
@@ -156,17 +156,17 @@ const MainScreen = props => {
 
   const renderBannerInnerList = item => {
     return (
-      <Image resizeMode="contain" style={{ flex: 1 }} source={{ uri: item }} />
+      <Image resizeMode="contain" style={{flex: 1}} source={{uri: item}} />
     );
   };
 
-  const renderItemProduct = ({ item, index }) => {
+  const renderItemProduct = ({item, index}) => {
     return (
       <ProductCard
         isHome={true}
         item={item}
         offer={false}
-        onSizeSelect={data => { }}
+        onSizeSelect={data => {}}
         onFullItemPress={() => {
           setSelectedProduct(item);
           setonOpenDailog(true);
@@ -174,13 +174,13 @@ const MainScreen = props => {
       />
     );
   };
-  const renderItem = ({ item, index }) => {
+  const renderItem = ({item, index}) => {
     return (
       <ProductCard
         isHome={true}
         item={item}
         offer={true}
-        onSizeSelect={data => { }}
+        onSizeSelect={data => {}}
         onFullItemPress={() => {
           setSelectedProduct(item);
           setonOpenDailog(true);
@@ -189,14 +189,14 @@ const MainScreen = props => {
     );
   };
 
-  const renderSaleItem = ({ item }) => {
+  const renderSaleItem = ({item}) => {
     return (
       <View key={item}>
         <ProductCard
           isHome={true}
           item={item}
           offer={true}
-          onSizeSelect={data => { }}
+          onSizeSelect={data => {}}
           onFullItemPress={() => {
             setSelectedProduct(item);
             setonOpenDailog(true);
@@ -228,17 +228,17 @@ const MainScreen = props => {
           style={{
             alignSelf: 'center',
             marginLeft: 10,
-            transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+            transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
           }}
         />
       </View>
     );
   }
 
-  const cardrenderItem = ({ item }) => {
+  const cardrenderItem = ({item}) => {
     return (
       <ImageBackground
-        source={{ uri: 'https://mcstaging.ajmal.com/' + item?.app_banner }}
+        source={{uri: 'https://mcstaging.ajmal.com/' + item?.app_banner}}
         key={item}
         resizeMode="cover"
         style={{
@@ -269,10 +269,10 @@ const MainScreen = props => {
 
   const renderFooterCard = () => {
     return (
-      <View style={{ marginLeft: 20, marginRight: 15 }}>
+      <View style={{marginLeft: 20, marginRight: 15}}>
         <Image
           source={imageConstant.catfive}
-          style={{ width: 100, height: 100 }}
+          style={{width: 100, height: 100}}
           resizeMode="contain"
         />
       </View>
@@ -302,7 +302,7 @@ const MainScreen = props => {
   const closeDialog = () => {
     setonOpenDailog(false);
   };
-  const renderItemPreminum = ({ item, index }) => {
+  const renderItemPreminum = ({item, index}) => {
     const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
 
     function getRandomColor() {
@@ -322,12 +322,14 @@ const MainScreen = props => {
         }}
         onPress={() => {
           console.log('item?.sku', item?.sku);
-          navigationRef.navigate('ProductPage', { skuID: item?.sku });
+          navigationRef.navigate('ProductPage', {skuID: item?.sku});
         }}>
         <View
           style={{
             width: '100%',
-            justifyContent: isStringNotNull(item?.discount_percent) ? 'space-between' : 'flex-end',
+            justifyContent: isStringNotNull(item?.discount_percent)
+              ? 'space-between'
+              : 'flex-end',
             flexDirection: 'row',
           }}>
           {isStringNotNull(item?.discount_percent) && (
@@ -352,14 +354,14 @@ const MainScreen = props => {
               </Text>
             </View>
           )}
-          <View style={{ padding: 10 }}>
+          <View style={{padding: 10}}>
             <MaterialIcons
               name="favorite-border"
               size={22}
               color={colorConstant.BLACK}
               onPress={async () => {
-                console.log('selected OItem', item)
-                console.log('selected OItem', item.sku)
+                console.log('selected OItem', item);
+                console.log('selected OItem', item.sku);
                 let objNew = {
                   sku: item.sku,
                   quantity: 1,
@@ -375,8 +377,8 @@ const MainScreen = props => {
         </View>
 
         <Image
-          source={{ uri: item.image }}
-          style={{ width: '50%', height: 150, alignSelf: 'center' }}
+          source={{uri: item.image}}
+          style={{width: '50%', height: 150, alignSelf: 'center'}}
           resizeMode="contain"
         />
         <View
@@ -396,35 +398,37 @@ const MainScreen = props => {
             }}>
             {item.name}
           </Text>
-          <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-            <Text style={{
-              color: colorConstant.DARK_PRIMARY,
-              fontStyle: 'normal',
-              fontSize: fontConstant.TEXT_20_SIZE_BOLD,
-              fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
-            }}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
-            {finalPrice?.value < regularPrice?.value && <Text
-              style={[
-
-                {
-                  color: colorConstant.DARK_PRIMARY,
-                  fontStyle: 'normal',
-                  fontSize: fontConstant.TEXT_20_SIZE_BOLD,
-                  fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
-                  marginLeft: 10,
-                  color: colorConstant.LIGHT_GREY,
-                  textDecorationLine: 'line-through',
-                },
-              ]}>
-              {`${regularPrice?.value} ${regularPrice?.currency}`}
-            </Text>}
+          <View style={{flexDirection: 'row', marginTop: '2%'}}>
+            <Text
+              style={{
+                color: colorConstant.DARK_PRIMARY,
+                fontStyle: 'normal',
+                fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+                fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+              }}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+            {finalPrice?.value < regularPrice?.value && (
+              <Text
+                style={[
+                  {
+                    color: colorConstant.DARK_PRIMARY,
+                    fontStyle: 'normal',
+                    fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+                    fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+                    marginLeft: 10,
+                    color: colorConstant.LIGHT_GREY,
+                    textDecorationLine: 'line-through',
+                  },
+                ]}>
+                {`${regularPrice?.value} ${regularPrice?.currency}`}
+              </Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{flex: 1}}>
       <ScrollView style={style.container}>
         <StatusBar
           translucent
@@ -474,10 +478,10 @@ const MainScreen = props => {
               data={bannerData}
               paginationDefaultColor={colorConstant.WHITE}
               paginationActiveColor={colorConstant.DARK_PRIMARY}
-              paginationStyleItemActive={{ width: 30, height: 5 }}
-              paginationStyleItemInactive={{ width: 5, height: 5 }}
+              paginationStyleItemActive={{width: 30, height: 5}}
+              paginationStyleItemInactive={{width: 5, height: 5}}
               paginationStyle={style.paginationContain}
-              renderItem={({ item }) => (
+              renderItem={({item}) => (
                 <View style={style.child}>
                   <View style={style.shop_view}>
                     <Text style={style.ajmal_text}>{item?.title}</Text>
@@ -502,14 +506,18 @@ const MainScreen = props => {
               color={colorConstant.LIGHT_GREY}
             />
           </View>
-          <View style={style.TextInput_row_Contain}>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('SearchScreen')}
+            style={style.TextInput_row_Contain}>
             <TextInput
               value={text}
+              editable={false}
+              pointerEvents="none"
               onChangeText={setText}
               placeholder={t('Search for perfume')}
               style={style.textinputContain}
             />
-          </View>
+          </TouchableOpacity>
           <View style={style.micIcon_Contain}></View>
           <TouchableOpacity style={style.micContain}>
             <MaterialIcons
@@ -533,7 +541,7 @@ const MainScreen = props => {
                 ItemSeparatorComponent={(item, index) => {
                   return (
                     <View
-                      style={{ marginHorizontal: index === 0 ? 0 : 8 }}></View>
+                      style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                   );
                 }}
                 keyExtractor={(item, index) => index.toString()}
@@ -557,7 +565,7 @@ const MainScreen = props => {
                 ItemSeparatorComponent={(item, index) => {
                   return (
                     <View
-                      style={{ marginHorizontal: index === 0 ? 0 : 8 }}></View>
+                      style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                   );
                 }}
               />
@@ -591,14 +599,14 @@ const MainScreen = props => {
                     style={{
                       alignSelf: 'center',
                       marginLeft: 10,
-                      transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+                      transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
                     }}
                   />
                 </View>
 
                 <FlatList
                   data={premiumCollection?.items}
-                  contentContainerStyle={{ paddingHorizontal: 16 }}
+                  contentContainerStyle={{paddingHorizontal: 16}}
                   // renderItem={({item}) => {
                   //   console.log(item);
                   //   return <PremiumCard item={item} offer={true} />;
@@ -611,7 +619,7 @@ const MainScreen = props => {
                   ItemSeparatorComponent={(item, index) => {
                     return (
                       <View
-                        style={{ marginHorizontal: index === 0 ? 0 : 8 }}></View>
+                        style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                     );
                   }}
                 />
@@ -644,7 +652,7 @@ const MainScreen = props => {
                       style={{
                         alignSelf: 'center',
                         marginLeft: 10,
-                        transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+                        transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
                       }}
                     />
                   </View>
@@ -655,7 +663,7 @@ const MainScreen = props => {
                   ItemSeparatorComponent={(item, index) => {
                     return (
                       <View
-                        style={{ marginHorizontal: index === 0 ? 0 : 8 }}></View>
+                        style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                     );
                   }}
                   data={shopWomens?.items}
@@ -693,7 +701,7 @@ const MainScreen = props => {
                       color={colorConstant.WHITE}
                       style={[
                         style.arrowrightIcon,
-                        { transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] },
+                        {transform: [{scaleX: I18nManager.isRTL ? -1 : 1}]},
                       ]}
                     />
                   </View>
@@ -708,7 +716,7 @@ const MainScreen = props => {
                   ItemSeparatorComponent={(item, index) => {
                     return (
                       <View
-                        style={{ marginHorizontal: index === 0 ? 0 : 8 }}></View>
+                        style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                     );
                   }}
                   ListFooterComponent={renderFooter}
@@ -719,7 +727,7 @@ const MainScreen = props => {
           )}
 
           {!isObjectNullOrUndefined(sales) && (
-            <View style={{ marginTop: Metrics.rfp(-15) }}>
+            <View style={{marginTop: Metrics.rfp(-15)}}>
               <Text style={style.sale_text}>{t('Sale')}</Text>
 
               <FlatList
@@ -729,7 +737,7 @@ const MainScreen = props => {
                 ItemSeparatorComponent={(item, index) => {
                   return (
                     <View
-                      style={{ marginHorizontal: index === 0 ? 0 : 8 }}></View>
+                      style={{marginHorizontal: index === 0 ? 0 : 8}}></View>
                   );
                 }}
                 keyExtractor={item => item.id}

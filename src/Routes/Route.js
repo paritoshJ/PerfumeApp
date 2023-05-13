@@ -93,6 +93,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Payment from '../Screens/Payment/Payment';
 import OrderCart from '../Screens/OrderCart';
 import AddressBookList from '../Screens/Profile/AddressBookList';
+import FAQList from '../Screens/ProductPage/FAQList';
 
 const ProfileStack = () => {
   return (
@@ -217,6 +218,8 @@ const MainStack = () => {
       <Stack.Screen name="MainScreen" component={MainScreen} />
       <Stack.Screen name="ProductPage" component={ProductPage} />
       <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
+      <Stack.Screen name="SearchScreen" component={SearchScreen} />
+      <Stack.Screen name="FAQList" component={FAQList} />
     </Stack.Navigator>
   );
 };

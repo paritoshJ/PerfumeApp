@@ -33,10 +33,17 @@ import AddReviewModal from '../../modal/Addreviewmodal';
 import {useTranslation} from 'react-i18next';
 import {GET_PRODUCT_DETAILS} from '../../api/getProductDetails';
 import Loader from '../../Component/Loader';
-import {isObjectNullOrUndefined, removeHtmlTags} from '../../Helper/helper';
+import {
+  dateFromNow,
+  findDaysDiffrent,
+  getInitials,
+  isObjectNullOrUndefined,
+  removeHtmlTags,
+} from '../../Helper/helper';
 import UIStepperView from '../../Component/UiStepper';
 import {ADD_ITEM_TO_CART} from '../../api/addToCart';
 import {ADD_TO_CART_DATA} from '../../api/getAddToCartData';
+import {GET_PRODUCTS_FAQ} from '../../api/getProduct';
 
 const ProductPage = props => {
   const [selected, setSelected] = useState('50 ml');
@@ -48,6 +55,8 @@ const ProductPage = props => {
   const [productDetail, setProductDetail] = useState({});
   const [productType, setProductType] = useState(null);
   const [productVariant, setProductVariant] = useState([]);
+  const [faqList, setFaqList] = useState([]);
+  const [faqListClipped, setFaqListClipped] = useState([]);
   const [value, setValue] = useState(1);
   const [skuValue, setSkuValue] = useState('');
 
@@ -62,6 +71,7 @@ const ProductPage = props => {
       console.log(props?.route.params.skuID);
       setSkuValue(props?.route.params.skuID);
       callProductDetailApi();
+      getFaqList();
     }
   }, []);
 
@@ -81,6 +91,25 @@ const ProductPage = props => {
       })
       .catch(error => {
         setLoading(false);
+        console.log('error', error);
+      });
+  };
+
+  const getFaqList = async () => {
+    const obj = {product_sku: props?.route.params.skuID};
+    // const obj = {sku: {eq: 'ETIQUETTE-config'}};
+    await GET_PRODUCTS_FAQ('', obj)
+      .then(res => {
+        console.log('GET_PRODUCTS_FAQ', res);
+        let arraySliced = [];
+        // setFaqList(res?.faqQuestionList?.items);
+        setFaqList(res?.faqQuestionList?.items);
+        setFaqListClipped(res?.faqQuestionList?.items);
+        if (faqList.length > 3) {
+          setFaqListClipped(faqList.slice(0, 3));
+        }
+      })
+      .catch(error => {
         console.log('error', error);
       });
   };
@@ -136,14 +165,14 @@ const ProductPage = props => {
   const body = item => {
     return (
       <View style={{padding: 10}}>
-        <Text style={{textAlign: 'center', color: colorConstant.BLACK}}>
-          {item.body}
+        <Text style={{textAlign: 'left', color: colorConstant.BLACK}}>
+          {removeHtmlTags(item.answer)}
         </Text>
       </View>
     );
   };
 
-  const head = item => {
+  const head = (item, index, isExpanded) => {
     return (
       <View
         style={{
@@ -161,23 +190,35 @@ const ProductPage = props => {
             fontFamily: fontConstant.satoshi,
             fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
             fontWeight: fontConstant.WEIGHT_REGULAR,
+            flex: 1,
           }}>
           {item.title}
         </Text>
-        <AntDesign name="plus" size={20} color={colorConstant.BLACK} />
+        <AntDesign
+          name={isExpanded ? 'minus' : 'plus'}
+          size={20}
+          color={colorConstant.BLACK}
+        />
       </View>
     );
   };
 
   const reviewItem = ({item}) => {
+    console.warn(item, '---d');
     return (
       <View style={{width: '100%', marginTop: '5%', flexDirection: 'row'}}>
-        <View style={{width: '20%'}}>
-          <Image
-            source={item.image}
-            style={{width: 50, height: 50}}
-            resizeMode="contain"
-          />
+        <View
+          style={{
+            width: '20%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backgroundColor: colorConstant.BROWN_CUSTOM,
+            borderRadius: 100,
+            height: 50,
+            width: 50,
+            marginEnd: 10,
+          }}>
+          <Text style={{}}>{getInitials(item.nickname)}</Text>
         </View>
         <View style={{width: '80%'}}>
           <View
@@ -186,13 +227,14 @@ const ProductPage = props => {
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}>
-            <Text style={style.review_user_name}>{item.name}</Text>
+            <Text style={style.review_user_name}>{item.nickname}</Text>
             <Text
               style={[style.review_text, {color: colorConstant.LIGHT_GREY}]}>
-              {item.time}
+              {findDaysDiffrent(item.created_at)}
             </Text>
           </View>
           <Rating
+            ratingCount={item?.average_rating / 20}
             type="custom"
             ratingBackgroundColor={colorConstant.DARK_PRIMARY}
             ratingColor={colorConstant.DARK_PRIMARY}
@@ -201,7 +243,7 @@ const ProductPage = props => {
             style={{alignItems: 'flex-start', marginTop: 10}}
           />
           <Text style={[style.review_text, {color: '#2B2826', marginTop: 5}]}>
-            {item.review}
+            {item.text ?? item.summary}
           </Text>
         </View>
       </View>
@@ -538,66 +580,98 @@ const ProductPage = props => {
                 )}
               </View>
 
-              <View style={style.border}></View>
-
               {/* <View style={style.des_title_text}>
           <Text style={[style.des_titile, {color: colorConstant.BLACK}]}>
             {t('fragrance details')}
           </Text>
           <AntDesign name="plus" size={20} color={colorConstant.BLACK} />
         </View> */}
-              <View style={[style.des_title_text, {marginTop: '8%'}]}>
-                <Text style={[style.des_titile]}>{t('reviews')}</Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}>
-                  <Rating
-                    type="custom"
-                    ratingBackgroundColor={colorConstant.DARK_PRIMARY}
-                    ratingColor={colorConstant.DARK_PRIMARY}
-                    ratingCount={productDetail?.review_count}
-                    imageSize={20}
-                    onFinishRating={ratingCompleted}
-                    style={{paddingVertical: 10, marginRight: 10}}
-                  />
-                  <View
-                    style={{
-                      width: 40,
-                      height: 25,
-                      borderRadius: 25,
-                      borderWidth: 1,
-                      borderColor: colorConstant.LIGHT_PRIMARY,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={[
-                        style.des_titile,
-                        {color: colorConstant.DARK_PRIMARY},
-                      ]}>
-                      {productDetail?.reviews?.items?.length}
-                    </Text>
-                  </View>
+              {productDetail?.reviews?.items?.length > 0 && (
+                <View>
+                  <View style={style.border}></View>
+                  <View style={[style.des_title_text, {marginTop: '8%'}]}>
+                    <Text style={[style.des_titile]}>{t('Reviews')}</Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                      <Rating
+                        type="custom"
+                        ratingBackgroundColor={colorConstant.DARK_PRIMARY}
+                        ratingColor={colorConstant.DARK_PRIMARY}
+                        ratingCount={productDetail?.review_count}
+                        imageSize={20}
+                        onFinishRating={ratingCompleted}
+                        style={{paddingVertical: 10, marginRight: 10}}
+                      />
+                      <View
+                        style={{
+                          width: 40,
+                          height: 25,
+                          borderRadius: 25,
+                          borderWidth: 1,
+                          borderColor: colorConstant.LIGHT_PRIMARY,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}>
+                        <Text
+                          style={[
+                            style.des_titile,
+                            {color: colorConstant.DARK_PRIMARY},
+                          ]}>
+                          {productDetail?.reviews?.items?.length}
+                        </Text>
+                      </View>
 
-                  <AntDesign
-                    name={reviewshow ? 'minus' : 'plus'}
-                    size={30}
-                    color={colorConstant.DARK_PRIMARY}
-                    onPress={() => {
-                      setreviewshow(!reviewshow);
-                    }}
-                  />
+                      <AntDesign
+                        name={reviewshow ? 'minus' : 'plus'}
+                        size={30}
+                        color={colorConstant.DARK_PRIMARY}
+                        onPress={() => {
+                          setreviewshow(!reviewshow);
+                        }}
+                      />
+                    </View>
+                  </View>
                 </View>
-              </View>
+              )}
 
               {reviewshow && productDetail?.reviews?.items?.length > 0 && (
                 <>
-                  <FlatList data={review} renderItem={reviewItem} />
+                  <FlatList
+                    data={productDetail?.reviews?.items}
+                    renderItem={reviewItem}
+                  />
 
-                  {productDetail?.reviews?.items?.length > 3 && (
+                  {productDetail?.reviews?.items?.length <= 3 && (
+                    <View
+                      style={{
+                        flex: 1,
+                        alignItems: 'center',
+                        marginTop: 10,
+                      }}>
+                      <TouchableOpacity
+                        style={[
+                          style.review_add_view,
+                          {backgroundColor: colorConstant.DARK_PRIMARY},
+                        ]}
+                        onPress={() => {
+                          setvisibale(true);
+                        }}>
+                        <Text
+                          style={[
+                            style.text_viewall,
+                            {color: colorConstant.WHITE},
+                          ]}>
+                          {t('Add review')}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
+                  {productDetail?.reviews?.items?.length == 3 && (
                     <View
                       style={{
                         width: '100%',
@@ -615,7 +689,11 @@ const ProductPage = props => {
                           },
                         ]}
                         onPress={() => {
-                          props.navigation.navigate('ReviewScreen');
+                          props.navigation.navigate('ReviewScreen', {
+                            reviewData: productDetail?.reviews?.items,
+                            rating_summary: productDetail?.rating_summary,
+                            review_count: productDetail?.review_count,
+                          });
                         }}>
                         <Text style={style.text_viewall}>{t('View all')}</Text>
                       </TouchableOpacity>
@@ -652,25 +730,33 @@ const ProductPage = props => {
                 </Text>
               </View>
               <AccordionList
-                list={faq}
+                list={faqListClipped}
                 header={head}
                 body={body}
                 keyExtractor={item => `${item.id}`}
               />
 
-              <TouchableOpacity
-                style={{
-                  width: '100%',
-                  height: 40,
-                  borderRadius: 50,
-                  borderWidth: 1,
-                  borderColor: colorConstant.DARK_PRIMARY,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: '8%',
-                }}>
-                <Text style={style.text_viewall}>{t('View all')}</Text>
-              </TouchableOpacity>
+              {faqList.length > 3 && (
+                <TouchableOpacity
+                  style={{
+                    width: '100%',
+                    height: 40,
+                    borderRadius: 50,
+                    borderWidth: 1,
+                    borderColor: colorConstant.DARK_PRIMARY,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: '8%',
+                  }}
+                  onPress={() =>
+                    props.navigation.navigate('FAQList', {
+                      sku: skuValue,
+                      faqList: faqList,
+                    })
+                  }>
+                  <Text style={style.text_viewall}>{t('View all')}</Text>
+                </TouchableOpacity>
+              )}
 
               <View
                 style={{
@@ -840,6 +926,10 @@ const ProductPage = props => {
           <AddReviewModal
             onOpenDailog={visibale}
             setOnOpenDailog={setvisibale}
+            submitRating={data => {
+              setvisibale(false);
+              console.log(data, '--rate data');
+            }}
           />
         )}
       </ScrollView>
