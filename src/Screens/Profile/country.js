@@ -11,6 +11,8 @@ import {
 import MyStatusBar from '../../Component/MyStatusBar';
 import Metrics from '../../Helper/metrics';
 import {useTranslation} from 'react-i18next';
+import { GET_COUNTRY_LIST } from '../../api/getCountry';
+import { isArrayNullOrEmpty } from '../../Helper/helper';
 
 const DATA = [
   {
@@ -47,6 +49,17 @@ const DATA = [
 export default function Country({navigation}) {
   const [selectedCountry, setSelectedCountry] = useState('UAE (AED)');
   const {t} = useTranslation();
+
+  useEffect(async () => {
+  const res =  await GET_COUNTRY_LIST();
+ 
+  let arr = res?.countries?.filter(obj => {
+  return !isArrayNullOrEmpty(obj?.available_regions);
+});
+ console.log(arr);
+  
+  }, [])
+  
 
   const onSelectSwitch = e => {
     setSelectedCountry(e);

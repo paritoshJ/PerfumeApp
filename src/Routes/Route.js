@@ -174,6 +174,7 @@ const ProfileStack = () => {
       <Stack.Screen name="AddGiftBoxMessage" component={AddGiftBoxMessage} />
       <Stack.Screen name="GiftCardBox" component={GiftCardBox} />
       <Stack.Screen name="ReviewGiftCode" component={ReviewGiftCode} />
+      <Stack.Screen name="WishList" component={WishList} />
     </Stack.Navigator>
   );
 };
