@@ -1,25 +1,35 @@
 import React from 'react';
 import {gql} from '@apollo/client';
-import {ApolloClient, InMemoryCache} from '@apollo/client';
+import {ApolloClient, createHttpLink,InMemoryCache} from '@apollo/client';
 import Constants from '../Comman/Constants';
 import { getAuthTokenHeaders } from '../Helper/helper';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setContext } from '@apollo/client/link/context';
+
 
 console.log('ASSADASD', getAuthTokenHeaders());
 
+const httpLink = createHttpLink({
+  uri: Constants.BASE_GRAPH_QL,
+});
 
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  const token = getAuthTokenHeaders();
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `${token}`: "",
+    }
+  }
+});
 
-export const GET_WISHLIST_PRODUCTS = () => {
-    var token = getAuthTokenHeaders();
+export const GET_WISHLIST_PRODUCTS = (token) => {
     console.log('token', token);
     const client = new ApolloClient({
-        uri: Constants.BASE_GRAPH_QL,
+        link: authLink.concat(httpLink),
         cache: new InMemoryCache(),
         connectToDevTools: true,
-        headers: {
-            // authorization: "Bearer " + getAuthTokenHeaders(),
-            authorization: "Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM3OTc5OTksImV4cCI6MTY4MzgwMTU5OX0.yG_cgt8S9QVZzjP154zWErBTG4lYEYDVrXWfeHhsEZk",
-        }
     });
     console.log('asd', client);
   return new Promise(async (resolve, reject) => {
