@@ -40,6 +40,7 @@ import alertMsgConstant from '../../constant/alertMsgConstant';
 import Swiper from 'react-native-swiper';
 import { navigationRef } from '../../Navigator/utils';
 import { isStringNotNull } from '../../Helper/helper';
+import Constants from '../../Comman/Constants';
 
 import {
   GET_CATEGORY_LIST,
@@ -52,6 +53,7 @@ import { isNonNullObject } from '@apollo/client/utilities';
 import Loader from '../../Component/Loader';
 import { EMPTY_CART } from '../../api/getEmptyCart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuthTokenHeaders } from '../../Helper/helper';
 
 const MainScreen = props => {
   const [loading, setLoading] = useState(false);
@@ -83,11 +85,24 @@ const MainScreen = props => {
     getConfigData();
     getCategoryHome();
     handleCartId();
+    try {
+      AsyncStorage.getItem('token').then((value) => {
+        console.log('totken==>', value)
+        Constants.Token = "Bearer " + value;
+      }).catch((error) => {
+
+      })
+    } catch (error) {
+      console.log(error);
+    }
+
+
+
     // getHomeData();
   }, []);
   const handleCartId = async () => {
     let res = await EMPTY_CART();
-    console.log(res);
+    console.log('get cart id', res);
     if (res && res?.createEmptyCart) {
       try {
         await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);

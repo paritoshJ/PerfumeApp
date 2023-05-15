@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   I18nManager,
+  DeviceEventEmitter
 } from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import Metrics from '../../Helper/metrics';
@@ -20,6 +21,10 @@ import {
   isNotPasswordSame,
   showDefaultAlert,
 } from '../../Helper/helper';
+import { ADD_CREDIT_CARD_API } from '../../api/ChangePassword';
+import Loader from '../../Component/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function ChnagePassword({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
@@ -31,6 +36,7 @@ export default function ChnagePassword({navigation}) {
   const [hideCurrentPassword, setHideCurrentPassword] = useState(true);
   const [hideNewPassword, setHideNewPassword] = useState(true);
   const [hideRepeatPassword, setHideRepeatPassword] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const {t} = useTranslation();
 
@@ -42,18 +48,10 @@ export default function ChnagePassword({navigation}) {
       showDefaultAlert('Please enter new password');
       return false;
     }
-    // else if (inValidPassword(newPass)) {
-    //   showDefaultAlert('Please enter a valid new password');
-    //   return false;
-    // }
     else if (isEmpty(repeatPassword)) {
       showDefaultAlert('Please re-enter password');
       return false;
     }
-    // else if (inValidPassword(newPass)) {
-    //   showDefaultAlert('Please enter a valid new password');
-    //   return false;
-    // }
     else if (isNotPasswordSame(newPassword, repeatPassword)) {
       showDefaultAlert("Passwords doesn't match");
       return false;
@@ -64,7 +62,39 @@ export default function ChnagePassword({navigation}) {
 
   const handleSave = () => {
     if (validateFields()) {
-      //password change request
+      console.log('Enter')
+      setLoading(true)
+      ADD_CREDIT_CARD_API(currentPassword, newPassword).then(async (Response) => {
+        console.log('Response', Response)
+        setLoading(false)
+        try {
+          DeviceEventEmitter.emit('event.logout', {});
+          await AsyncStorage.setItem('token', '');
+          createEmptyCartForLogout();
+        } catch (error) {
+          console.log(error);
+        }
+
+        setTimeout(() => {
+          navigation.replace('LoadingPage');
+        }, 500);
+        // navigation.goBack();
+      }).catch((error) => {
+        setLoading(false)
+        // showDefaultAlert("Passwords doesn't match");
+
+      });
+    }
+  };
+  const createEmptyCartForLogout = async () => {
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
   return (
@@ -160,6 +190,7 @@ export default function ChnagePassword({navigation}) {
           textStyle={{fontSize: Metrics.rfv(15), fontWeight: '400'}}
         />
       </KeyboardAwareScrollView>
+      <Loader loading={loading} />
     </>
   );
 }

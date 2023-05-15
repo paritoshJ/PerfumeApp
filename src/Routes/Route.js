@@ -93,7 +93,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Payment from '../Screens/Payment/Payment';
 import OrderCart from '../Screens/OrderCart';
 import AddressBookList from '../Screens/Profile/AddressBookList';
-
+import Constants from '../Comman/Constants';
+import { getAuthTokenHeaders } from '../Helper/helper';
 const ProfileStack = () => {
   return (
     <Stack.Navigator
@@ -276,6 +277,8 @@ const BottomTabsData = [
 
 const Route = navigation => {
   const {navigate} = useNavigation();
+
+  Constants.Token = getAuthTokenHeaders();
 
   return (
     <TabsNavigator.Navigator
