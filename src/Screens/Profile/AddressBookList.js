@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   StatusBar,
@@ -16,7 +16,7 @@ import PhoneInput from 'react-native-phone-number-input';
 import Input from '../../Component/Input';
 import CustomSwitch from '../../Component/toggleSwitch';
 import MyStatusBar from '../../Component/MyStatusBar';
-import { useTranslation } from 'react-i18next'
+import {useTranslation} from 'react-i18next';
 
 import EmptyPageView from '../../Component/EmptyPageView';
 import AddressBookSVG from '../../assets/svg/AddressBookSVG';
@@ -32,42 +32,51 @@ import PlusSVG from '../../assets/svg/PlusSVG';
 export default function AddressBookList({route, navigation}) {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
-  
+  const [allShops, setAllShops] = useState([]);
+
   const [data, setData] = useState([]);
-  const { t } = useTranslation()
+  const {t} = useTranslation();
 
-  const onSelectSwitch = index => {
-  };
-  
+  const onSelectSwitch = index => {};
+
   useEffect(() => {
-    if(route?.params?.selectedAddress)
-    setSelectedItem(route?.params?.selectedAddress)
-  }, [])
-  
+    if (route?.params?.selectedAddress) {
+      setSelectedItem(route?.params?.selectedAddress);
+    }
+    if (route?.params?.storeList) {
+      console.warn('dfsfsf', route?.params?.storeList);
+      setAllShops(route?.params?.storeList);
+    }
+  }, []);
 
-  const onAddAddress = (items) =>{
+  const onAddAddress = items => {
     // let arr = [...data];
     // arr.push(item);
     setData(items);
     // setSelectedItem(item);
-  }
-  const addAddress = (isEdit=false) =>{
+  };
+  const addAddress = (isEdit = false) => {
     // AddressBook
-    navigation.navigate('AddressBook',{
-      selectedAddress:isEdit ? selectedAddress : {},
-      onAddAddress:onAddAddress,
-    })
-  }
-  const renderEmptyAndNoLogin = () =>{
-  return <EmptyPageView 
-          icon={<AddressBookSVG/>}
-          title={t("You don't have address yet")}
-          message={t('Add a address for further quick purchases')}
-          hideAddButton={false}
-          onButtonPress={()=>{addAddress()}}
-          buttonTitle={t('Add address')}
-          />
-  }
+    navigation.navigate('AddressBook', {
+      selectedAddress: isEdit ? selectedAddress : {},
+      onAddAddress: onAddAddress,
+      storeList: allShops,
+    });
+  };
+  const renderEmptyAndNoLogin = () => {
+    return (
+      <EmptyPageView
+        icon={<AddressBookSVG />}
+        title={t("You don't have address yet")}
+        message={t('Add a address for further quick purchases')}
+        hideAddButton={false}
+        onButtonPress={() => {
+          addAddress();
+        }}
+        buttonTitle={t('Add address')}
+      />
+    );
+  };
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -77,8 +86,8 @@ export default function AddressBookList({route, navigation}) {
             style={{
               width: Metrics.rfv(15),
               height: Metrics.rfv(15),
-               resizeMode: 'contain',
-              transform: I18nManager.isRTL ? [{ rotate: '180deg' }] : '',
+              resizeMode: 'contain',
+              transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
             }}
             source={require('../../../assets/Back-Arrow.png')}
           />
@@ -88,76 +97,138 @@ export default function AddressBookList({route, navigation}) {
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={{flexGrow:1,}}>
-      {data.length > 0  ?
-              data.map(e => {
-                return (
-                  <Swipeout
-                    right={[
-                      {
-                        component: (
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-evenly',
-                              alignItems:'center',
-                              flex:1,
-                              marginVertical: 16,
-                            }}>
-                            <TouchableOpacity style={{height:36,width:36, borderRadius:18, justifyContent:'center', alignItems:'center', backgroundColor:COLORS_NEW.black}}>
-                              <EditPencilSVG color={COLORS_NEW.white}/>
-                            </TouchableOpacity>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        {data.length > 0 ? (
+          data.map(e => {
+            return (
+              <Swipeout
+                right={[
+                  {
+                    component: (
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-evenly',
+                          alignItems: 'center',
+                          flex: 1,
+                          marginVertical: 16,
+                        }}>
+                        <TouchableOpacity
+                          style={{
+                            height: 36,
+                            width: 36,
+                            borderRadius: 18,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: COLORS_NEW.black,
+                          }}>
+                          <EditPencilSVG color={COLORS_NEW.white} />
+                        </TouchableOpacity>
 
-                            <TouchableOpacity style={{height:36,width:36, borderRadius:18,justifyContent:'center', alignItems:'center', backgroundColor:COLORS_NEW.systemRed}}
-                              onPress={() => {}}>
-                              <TrashIconSVG />
-                            </TouchableOpacity>
-                          </View>
-                        ),
-                        backgroundColor: COLORS_NEW.white,
-                      },
-                    ]}
-                    backgroundColor={COLORS_NEW.white}
-                    buttonWidth={120}>
-                    <TouchableOpacity 
-                    onPress={()=>{setSelectedItem(e)
-                    if(route?.params?.onAddressFetch){
+                        <TouchableOpacity
+                          style={{
+                            height: 36,
+                            width: 36,
+                            borderRadius: 18,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: COLORS_NEW.systemRed,
+                          }}
+                          onPress={() => {}}>
+                          <TrashIconSVG />
+                        </TouchableOpacity>
+                      </View>
+                    ),
+                    backgroundColor: COLORS_NEW.white,
+                  },
+                ]}
+                backgroundColor={COLORS_NEW.white}
+                buttonWidth={120}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setSelectedItem(e);
+                    if (route?.params?.onAddressFetch) {
                       route?.params?.onAddressFetch(e);
                       navigation.goBack();
                     }
-                    }}
-                    style={{borderRadius:8,borderWidth:1, margin:16, padding:16, borderColor:'rgba(43, 40, 38, 0.1)',flexDirection:'row'}}>
-                      {selectedItem?.telephone === e?.telephone ? <CheckedRadioSVG/> : <UnCheckedRadioSVG/> }
-                      <View style={{flexDirection:'column', marginHorizontal:16}}>
-                      <Text style={{fontWeight:'500', fontFamily: fontConstant.satoshi, fontSize: 14, color:COLORS_NEW.mainBlack, letterSpacing:0.4}}>{`${e?.firstname}`}</Text>
-                      <Text style={{marginTop:6,fontWeight:'400', fontFamily: fontConstant.satoshi, fontSize: 14, color:COLORS_NEW.mainBlack,}}>{`${e?.street?.toString()} ${e?.postcode}`}</Text>
-                      <Text style={{marginTop:6,fontWeight:'400', fontFamily: fontConstant.satoshi, fontSize: 14, color:COLORS_NEW.mainBlack,}}>{`${t('PHONE :')} ${e?.telephone}`}</Text>
-                      </View>
-                      
-                    </TouchableOpacity>
-                  </Swipeout>
-                );
-              }) : <View style={{flex:1,justifyContent:'center'}}>{renderEmptyAndNoLogin()}</View> }
-              {data.length > 0 && <TouchableOpacity 
-                    onPress={()=>{addAddress(false)}}
-                    style={{borderRadius:8,borderWidth:1,
-                     margin:16, padding:16,
-                      borderColor:'rgba(43, 40, 38, 0.1)',
-                      justifyContent:'center',
-                      alignItems:'center',
-                      flexDirection:'row'}}>
-                      <Text style={{marginTop:6,fontWeight:'500',
-                       fontFamily: fontConstant.satoshi,
-                        fontSize: 16, 
-                        marginRight:10,
-                        color:COLORS_NEW.mainBlack,
-                        textAlign:'center',
-                        }}>{`${t('Add new address')}`}</Text>
-                        <PlusSVG/>
-                      
-                    </TouchableOpacity>}
-
-              </ScrollView>
+                  }}
+                  style={{
+                    borderRadius: 8,
+                    borderWidth: 1,
+                    margin: 16,
+                    padding: 16,
+                    borderColor: 'rgba(43, 40, 38, 0.1)',
+                    flexDirection: 'row',
+                  }}>
+                  {selectedItem?.telephone === e?.telephone ? (
+                    <CheckedRadioSVG />
+                  ) : (
+                    <UnCheckedRadioSVG />
+                  )}
+                  <View style={{flexDirection: 'column', marginHorizontal: 16}}>
+                    <Text
+                      style={{
+                        fontWeight: '500',
+                        fontFamily: fontConstant.satoshi,
+                        fontSize: 14,
+                        color: COLORS_NEW.mainBlack,
+                        letterSpacing: 0.4,
+                      }}>{`${e?.firstname}`}</Text>
+                    <Text
+                      style={{
+                        marginTop: 6,
+                        fontWeight: '400',
+                        fontFamily: fontConstant.satoshi,
+                        fontSize: 14,
+                        color: COLORS_NEW.mainBlack,
+                      }}>{`${e?.street?.toString()} ${e?.postcode}`}</Text>
+                    <Text
+                      style={{
+                        marginTop: 6,
+                        fontWeight: '400',
+                        fontFamily: fontConstant.satoshi,
+                        fontSize: 14,
+                        color: COLORS_NEW.mainBlack,
+                      }}>{`${t('PHONE :')} ${e?.telephone}`}</Text>
+                  </View>
+                </TouchableOpacity>
+              </Swipeout>
+            );
+          })
+        ) : (
+          <View style={{flex: 1, justifyContent: 'center'}}>
+            {renderEmptyAndNoLogin()}
+          </View>
+        )}
+        {data.length > 0 && (
+          <TouchableOpacity
+            onPress={() => {
+              addAddress(false);
+            }}
+            style={{
+              borderRadius: 8,
+              borderWidth: 1,
+              margin: 16,
+              padding: 16,
+              borderColor: 'rgba(43, 40, 38, 0.1)',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                marginTop: 6,
+                fontWeight: '500',
+                fontFamily: fontConstant.satoshi,
+                fontSize: 16,
+                marginRight: 10,
+                color: COLORS_NEW.mainBlack,
+                textAlign: 'center',
+              }}>{`${t('Add new address')}`}</Text>
+            <PlusSVG />
+          </TouchableOpacity>
+        )}
+      </ScrollView>
     </>
   );
 }

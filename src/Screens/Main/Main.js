@@ -45,7 +45,8 @@ import Constants from '../../Comman/Constants';
 import {
   GET_CATEGORY_LIST,
   GET_CATEGORY_LIST_HOME,
-  Add_CATEGORY_LIST_CARD, ADD_WISH_LST_API
+  Add_CATEGORY_LIST_CARD,
+  ADD_WISH_LST_API,
 } from '../../api/getCategoryList';
 import { getRandomColor, isObjectNullOrUndefined } from '../../Helper/helper';
 import { GET_HOME_CONFIG_DATA } from '../../api/getHomeConfigData';
@@ -161,8 +162,7 @@ const MainScreen = props => {
   const AddItemTowishlist = async (id, item) => {
     let res = await ADD_WISH_LST_API(id, item);
     console.log('GET_CATEGORY_LIST_HOME aasaasdasas', res);
-
-  }
+  };
   // const getPro = async () => {
   //   let res = await GET_PRODUCTS();
   //   setProductData(res.products.items);
@@ -342,7 +342,9 @@ const MainScreen = props => {
         <View
           style={{
             width: '100%',
-            justifyContent: isStringNotNull(item?.discount_percent) ? 'space-between' : 'flex-end',
+            justifyContent: isStringNotNull(item?.discount_percent)
+              ? 'space-between'
+              : 'flex-end',
             flexDirection: 'row',
           }}>
           {isStringNotNull(item?.discount_percent) && (
@@ -373,8 +375,8 @@ const MainScreen = props => {
               size={22}
               color={colorConstant.BLACK}
               onPress={async () => {
-                console.log('selected OItem', item)
-                console.log('selected OItem', item.sku)
+                console.log('selected OItem', item);
+                console.log('selected OItem', item.sku);
                 let objNew = {
                   sku: item.sku,
                   quantity: 1,
@@ -412,32 +414,34 @@ const MainScreen = props => {
             {item.name}
           </Text>
           <View style={{ flexDirection: 'row', marginTop: '2%' }}>
-            <Text style={{
-              color: colorConstant.DARK_PRIMARY,
-              fontStyle: 'normal',
-              fontSize: fontConstant.TEXT_20_SIZE_BOLD,
-              fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
-            }}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
-            {finalPrice?.value < regularPrice?.value && <Text
-              style={[
-
-                {
-                  color: colorConstant.DARK_PRIMARY,
-                  fontStyle: 'normal',
-                  fontSize: fontConstant.TEXT_20_SIZE_BOLD,
-                  fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
-                  marginLeft: 10,
-                  color: colorConstant.LIGHT_GREY,
-                  textDecorationLine: 'line-through',
-                },
-              ]}>
-              {`${regularPrice?.value} ${regularPrice?.currency}`}
-            </Text>}
+            <Text
+              style={{
+                color: colorConstant.DARK_PRIMARY,
+                fontStyle: 'normal',
+                fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+                fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+              }}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+            {finalPrice?.value < regularPrice?.value && (
+              <Text
+                style={[
+                  {
+                    color: colorConstant.DARK_PRIMARY,
+                    fontStyle: 'normal',
+                    fontSize: fontConstant.TEXT_20_SIZE_BOLD,
+                    fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+                    marginLeft: 10,
+                    color: colorConstant.LIGHT_GREY,
+                    textDecorationLine: 'line-through',
+                  },
+                ]}>
+                {`${regularPrice?.value} ${regularPrice?.currency}`}
+              </Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>
     );
-  }
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={style.container}>
@@ -517,14 +521,18 @@ const MainScreen = props => {
               color={colorConstant.LIGHT_GREY}
             />
           </View>
-          <View style={style.TextInput_row_Contain}>
+          <TouchableOpacity
+            onPress={() => props.navigation.navigate('SearchScreen')}
+            style={style.TextInput_row_Contain}>
             <TextInput
               value={text}
+              editable={false}
+              pointerEvents="none"
               onChangeText={setText}
               placeholder={t('Search for perfume')}
               style={style.textinputContain}
             />
-          </View>
+          </TouchableOpacity>
           <View style={style.micIcon_Contain}></View>
           <TouchableOpacity style={style.micContain}>
             <MaterialIcons

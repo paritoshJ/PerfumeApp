@@ -7,7 +7,7 @@ import {
   View,
   Image,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import style from './style';
 import colorConstant from '../../constant/colorConstant';
@@ -17,26 +17,29 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import imageConstant from '../../constant/imageConstant';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
-import {GET_CATEGORY} from '../../api/getCategory';
+import { GET_CATEGORY, GET_CATEGORY1 } from '../../api/getCategory';
 import { useNavigation } from '@react-navigation/native';
 
 const CatalogScreen = props => {
   const [text, setText] = useState('');
   const [categoryData, setcategoryData] = useState([]);
-  const {t, i18n} = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigation = useNavigation()
 
-  useEffect (() => {
+  useEffect(() => {
     getCategory()
-  },[])
-  
-  const onChangeText = () =>{
-    
+  }, [])
+
+  const onChangeText = () => {
+
   }
   const getCategory = async () => {
-    let res = await GET_CATEGORY();
-    setcategoryData(res.category.children)
-    console.log(":::::Res Chuildren ::::", res.category.children);
+    // let res = await GET_CATEGORY();
+    let res1 = await GET_CATEGORY1();
+
+    setcategoryData(res1.amMegaMenuTree.items)
+    console.log(":::::Res Chuildren ::::", res1.amMegaMenuTree.items);
+    // console.log(":::::Res Chuildren ::::", res);
   }
 
   const categorydata = categoryData && categoryData.map((item) => (
@@ -45,11 +48,11 @@ const CatalogScreen = props => {
       image: item.image,
       ...item
     }
-    ),
-    )
+  ),
+  )
 
-  const renderItem = ({item}) => {
-    console.log(":::: item :::", item)
+  const renderItem = ({ item }) => {
+    // console.log(":::: item :::", item)
     return (
       <TouchableOpacity
         onPress={() => {
@@ -61,42 +64,42 @@ const CatalogScreen = props => {
       </TouchableOpacity>
     );
   };
-  const renderFooter = () =>{
+  const renderFooter = () => {
     return (<View
-          style={{
-            width: '100%',
-            height: 50,
-            justifyContent: 'space-between',
-            flexDirection: 'row',
-          }}>
-          <View style={style.about_view}>
-            <Image
-              source={imageConstant.about}
-              style={{width: 15, height: 15, marginLeft: 5}}
-              resizeMode="contain"
-            />
-            <Text style={{marginLeft: 10}}>{t('About us')}</Text>
-          </View>
-          <View style={style.about_view}>
-            <Image
-              source={imageConstant.bus}
-              style={{width: 15, height: 15, marginLeft: 5}}
-              resizeMode="contain"
-            />
-            <Text style={{marginLeft: 10}}>{t('Delivery')}</Text>
-          </View>
-          <View style={style.about_view}>
-            <Image
-              source={imageConstant.addcontact}
-              style={{width: 15, height: 15, marginLeft: 5}}
-              resizeMode="contain"
-            />
-            <Text style={{marginLeft: 10}}>{t('Contacts')}</Text>
-          </View>
-        </View>)
+      style={{
+        width: '100%',
+        height: 50,
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+      }}>
+      <View style={style.about_view}>
+        <Image
+          source={imageConstant.about}
+          style={{ width: 15, height: 15, marginLeft: 5 }}
+          resizeMode="contain"
+        />
+        <Text style={{ marginLeft: 10 }}>{t('About us')}</Text>
+      </View>
+      <View style={style.about_view}>
+        <Image
+          source={imageConstant.bus}
+          style={{ width: 15, height: 15, marginLeft: 5 }}
+          resizeMode="contain"
+        />
+        <Text style={{ marginLeft: 10 }}>{t('Delivery')}</Text>
+      </View>
+      <View style={style.about_view}>
+        <Image
+          source={imageConstant.addcontact}
+          style={{ width: 15, height: 15, marginLeft: 5 }}
+          resizeMode="contain"
+        />
+        <Text style={{ marginLeft: 10 }}>{t('Contacts')}</Text>
+      </View>
+    </View>)
   }
-  const renderHeader = () =>{
-    return ( <><View style={{ alignItems: 'flex-start' }}>
+  const renderHeader = () => {
+    return (<><View style={{ alignItems: 'flex-start' }}>
       <Text style={style.header_title}>{t('New')}</Text>
     </View><View style={style.border}></View></>)
   }
@@ -130,7 +133,7 @@ const CatalogScreen = props => {
         </View>
       </View>
 
-      <FlatList contentContainerStyle={style.new_Contain} data={categorydata} renderItem={renderItem} ListFooterComponent={renderFooter} ListHeaderComponent={renderHeader}/>
+      <FlatList contentContainerStyle={style.new_Contain} data={categorydata} renderItem={renderItem} ListFooterComponent={renderFooter} ListHeaderComponent={renderHeader} />
 
     </View>
   );
