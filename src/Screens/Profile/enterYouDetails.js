@@ -38,6 +38,7 @@ import Loader from '../../Component/Loader';
 import {TapGestureHandler} from 'react-native-gesture-handler';
 import {EMPTY_CART} from '../../api/getEmptyCart';
 import {MERGE_CART} from '../../api/getMergeCart';
+import Constants from '../../Comman/Constants';
 
 export default function EnterYourDetails({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
@@ -142,6 +143,11 @@ export default function EnterYourDetails({navigation}) {
       await USER_LOGIN_MOBILE(inputDetail, password, 1)
         .then(async res => {
           setLoading(false);
+          console.log('login called ...', res?.token);
+
+          Constants.Token = "Bearer " + res?.token;
+          console.log('login called ...', Constants.Token);
+
           await AsyncStorage.setItem('token', res?.token);
           handleCartId();
           navigation.replace('Profile');
@@ -155,6 +161,10 @@ export default function EnterYourDetails({navigation}) {
         .then(async res => {
           setLoading(false);
           handleCartId();
+          console.log('login called ...', res);
+
+          Constants.Token = "Bearer " + res;
+          console.log('login called ...', Constants.Token);
 
           navigation.replace('Profile');
           await AsyncStorage.setItem('token', res);

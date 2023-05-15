@@ -13,9 +13,37 @@ import {AppButton} from '../../Component/button/app-button';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import Loader from '../../Component/Loader';
+import { useFocusEffect } from '@react-navigation/native';
+import { GET_CREDIT_CARD_API } from '../../api/AddCreditCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function NoCreditCard({navigation}) {
+  const [loading, setLoading] = useState(false);
+
   const { t } = useTranslation()
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(false);
+      AsyncStorage.getItem('CART_ID').then((cartid) => {
+        console.log('get Cartid', cartid)
+        GetCreditCard(cartid);
+      }).catch((error) => {
+
+      });
+
+      return () => { };
+    }, []),
+  );
+  const GetCreditCard = (cartid) => {
+    GET_CREDIT_CARD_API(cartid).then((res) => {
+      setLoading(false);
+    }).catch((err) => {
+      setLoading(false);
+
+      console.log('GET_WISHLIST_ERROR', err);
+    })
+  }
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />

@@ -21,11 +21,17 @@ import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
 import {EMPTY_CART} from '../../api/getEmptyCart';
+import Loader from '../../Component/Loader';
+import { useFocusEffect } from '@react-navigation/native';
+import { GET_PROFILE_DETAIL } from '../../api/getProfiledetail';
+
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(!isEnabled);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
+  const [loading, setLoading] = useState(false);
+  const [getProfileData, setProfileDAta] = useState();
 
   const {t} = useTranslation();
 
@@ -91,6 +97,14 @@ export default function ProfilePage({navigation}) {
       navigation: 'ReferFriend',
     },
   ];
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getProfileDetail();
+
+      return () => { };
+    }, []),
+  );
   const changeLanguage = value => {
     i18n
       .changeLanguage(value)
@@ -125,6 +139,18 @@ export default function ProfilePage({navigation}) {
       }
     }
   };
+  const getProfileDetail = () => {
+    GET_PROFILE_DETAIL().then((res) => {
+      setLoading(false);
+      setProfileDAta(res.customerExtraData)
+      console.log('GET_WISHLIST_PRODUCTS', getProfileData);
+    }).catch((err) => {
+      setLoading(false);
+
+      console.log('GET_WISHLIST_ERROR', err);
+    })
+  }
+
 
   return (
     <>
@@ -168,13 +194,13 @@ export default function ProfilePage({navigation}) {
                   style={{
                     marginTop: Metrics.rfv(15),
                   }}>
-                  <Text style={styles.loginPageComponentview2}>Nathalie</Text>
+                  <Text style={styles.loginPageComponentview2}>{getProfileData?.firstname + ' ' + getProfileData?.lastname}</Text>
                   <Text
                     style={{
                       marginLeft: Metrics.rfv(15),
                       color: COLORS_NEW.black,
                     }}>
-                    nat@gmail.com
+                    {getProfileData?.email}
                   </Text>
                 </View>
               </View>
@@ -366,6 +392,7 @@ export default function ProfilePage({navigation}) {
           </View>
         </ScrollView>
         <View style={styles.mainView} />
+        <Loader loading={loading} />
       </View>
       {/* Modal */}
       <Modal isVisible={isModalVisible}>

@@ -28,6 +28,10 @@ import {showDefaultAlert} from '../../Helper/helper';
 import {chooseFromCamera, openImagePicker} from '../../Helper/ImageHelper';
 import ImageModal from '../../modal/ImageModal/ImageModal';
 import fontConstant from '../../constant/fontConstant';
+import { GET_PROFILE_DETAIL, ADD_PROFILE_API, UPDATE_PROFILE_PICTURE_API } from '../../api/getProfiledetail';
+import Loader from '../../Component/Loader';
+import { useFocusEffect } from '@react-navigation/native';
+import RNFS from 'react-native-fs';
 
 export default function PersonalInfo({navigation}) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -37,7 +41,36 @@ export default function PersonalInfo({navigation}) {
   const [image, setImage] = useState('');
   const [showMenu, setShowMenu] = useState(false);
   const {t} = useTranslation();
+  const [loading, setLoading] = useState(false);
+  const [getProfileData, setProfileDAta] = useState();
+  const [getfirstName, SetFirstName] = useState();
+  const [getLastName, SetLastname] = useState();
+  const [getemailaddress, setEmailAddress] = useState();
+  const [getPhonenumber, setPhonenumber] = useState();
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getProfileDetail();
+
+      return () => { };
+    }, []),
+  );
+  const getProfileDetail = () => {
+    GET_PROFILE_DETAIL().then((res) => {
+      setLoading(false);
+      setProfileDAta(res.customerExtraData)
+      SetFirstName(res.customerExtraData?.firstname);
+      SetLastname(res.customerExtraData?.lastname);
+      setEmailAddress(res.customerExtraData?.email);
+      setPhonenumber(res.customerExtraData?.phone_number);
+      console.log('GET_WISHLIST_PRODUCTS', res.customerExtraData);
+    }).catch((err) => {
+      setLoading(false);
+
+      console.log('GET_WISHLIST_ERROR', err);
+    })
+  }
   const openCamera = () => {
     if (Platform.OS === 'android') {
       PermissionsAndroid.requestMultiple([
@@ -99,7 +132,18 @@ export default function PersonalInfo({navigation}) {
         });
     } else {
       openImagePicker('photo').then(({isPicked, data}) => {
+        console.log('UpdateProfile', new Date().toLocaleString(), data.uri);
+
         if (isPicked) {
+          // const base64 = FileSystem.readAsStringAsync(photo.uri, { encoding: 'base64' });
+          // console.log(base64);
+
+          RNFS.readFile(data.uri, 'base64')
+            .then(res => {
+              UPDATE_PROFILE_PICTURE_API(res, new Date().toLocaleString())
+            });
+
+
           setImage(data);
         }
       });
@@ -108,6 +152,7 @@ export default function PersonalInfo({navigation}) {
 
   return (
     <>
+      <View>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -153,30 +198,46 @@ export default function PersonalInfo({navigation}) {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.userName}>Nathalie</Text>
+            <Text style={styles.userName}>{getProfileData?.firstname}</Text>
           <View>
             <TextInput
               style={styles.TextInput}
               placeholder="First Name"
+                value={getfirstName}
               placeholderTextColor="gray"
+                onChangeText={(text) => {
+
+                  SetFirstName(text);
+                }}
+
             />
             <TextInput
               style={styles.TextInput}
               placeholder="Last Name"
+                value={getLastName}
               placeholderTextColor="gray"
+                onChangeText={(text) => {
+
+                  SetLastname(text);
+                }}
             />
             <TextInput
               style={styles.TextInput}
               placeholder={t('Email')}
               placeholderTextColor="gray"
+                value={getemailaddress}
+                onChangeText={(text) => {
+
+                  setEmailAddress(text);
+                }}
             />
             <View style={styles.TextInput}>
               <PhoneInput
-                defaultValue={value}
+                  defaultValue={getPhonenumber}
                 // defaultCode="DM"
                 layout="first"
                 onChangeText={text => {
-                  setValue(text);
+                  setPhonenumber(text);
                 }}
                 onChangeFormattedText={text => {
                   setFormattedValue(text);
@@ -193,12 +254,27 @@ export default function PersonalInfo({navigation}) {
           style={{
             marginTop: Metrics.rfv(16),
             marginBottom: Metrics.rfv(10),
-            // margin: Metrics.rfv(16),
           }}
-          onPress={() => handleLogin()}
+            onPress={async () => {
+              setLoading(true);
+
+              ADD_PROFILE_API(getfirstName, getLastName).then((res) => {
+                console.log('GET_WISHLIST_ERROR', res);
+                // setLoading(false);
+                navigation.goBack();
+
+              }).catch((err) => {
+                setLoading(false);
+
+              });
+
+
+
+            }}
         />
       </View>
-
+        <Loader loading={loading} />
+      </View>
       {/* Modal */}
       <Modal isVisible={isModalVisible}>
         <View style={styles.ModalView}>

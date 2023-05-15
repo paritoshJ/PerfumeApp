@@ -16,9 +16,17 @@ import {AppButton} from '../../Component/button/app-button';
 import Input from '../../Component/Input';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
+import { FORGOT_PASSWORD_API } from '../../api/ChangePassword';
+import Loader from '../../Component/Loader';
 
+import {
+  isEmpty,
+  isNotPasswordSame,
+  showDefaultAlert,
+} from '../../Helper/helper';
 export default function ResetPassword({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
+  const [loading, setLoading] = useState(false);
 
   return (
     <>
@@ -53,9 +61,25 @@ export default function ResetPassword({navigation}) {
           preset="primary"
           text="Reset password"
           style={{marginTop: Metrics.rfv(20)}}
+          onPress={() => {
+            console.log('inputDetail', inputDetail);
+            setLoading(true);
+            FORGOT_PASSWORD_API(inputDetail).then((Repsonse) => {
+              console.log('response', Repsonse);
+              setLoading(false);
+              showDefaultAlert('Your reset password link has been sent to registered email address. ');
+
+            }).catch((error) => {
+              setLoading(false);
+
+              console.log('error', error);
+
+            })
+          }}
           textStyle={{fontSize: Metrics.rfv(15), fontWeight: '400'}}
         />
       </KeyboardAwareScrollView>
+      <Loader loading={loading} />
     </>
   );
 }

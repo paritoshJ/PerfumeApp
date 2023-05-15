@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {BottomTabs} from 'rn-animated-tabbar';
-import {Image, DeviceEventEmitter} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabs } from 'rn-animated-tabbar';
+import { Image, DeviceEventEmitter } from 'react-native';
 import {
   Search_ic,
   Search_ic_active,
@@ -33,7 +33,7 @@ import WishlistScreen from '../Screens/Wishlist/Wishlist';
 import MainScreen from '../Screens/Main/Main';
 import MyCartScreen from '../Screens/MyCart/MyCart';
 import OrderDetails from '../Screens/Profile/orderDetails';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import NoCredirCard from '../Screens/Profile/NoCreditCard';
 import AddCreditCard from '../Screens/Profile/Creditcard';
 import Returns from '../Screens/Profile/NoReturns';
@@ -93,6 +93,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Payment from '../Screens/Payment/Payment';
 import OrderCart from '../Screens/OrderCart';
 import AddressBookList from '../Screens/Profile/AddressBookList';
+import Constants from '../Comman/Constants';
+import { getAuthTokenHeaders } from '../Helper/helper';
 import FAQList from '../Screens/ProductPage/FAQList';
 
 const ProfileStack = () => {
@@ -100,7 +102,7 @@ const ProfileStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#ffff'},
+        cardStyle: { backgroundColor: '#ffff' },
       }}
       initialRouteName={'LoadingPage'}>
       <Stack.Screen name="LoadingPage" component={LoadingPage} />
@@ -184,7 +186,7 @@ const CatalogStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#ffff'},
+        cardStyle: { backgroundColor: '#ffff' },
       }}>
       <Stack.Screen name="CatalogScreen" component={CatalogScreen} />
       <Stack.Screen name="Collection" component={Collection} />
@@ -201,7 +203,7 @@ const WishlistStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#ffff'},
+        cardStyle: { backgroundColor: '#ffff' },
       }}>
       {/* <Stack.Screen name="WishlistScreen" component={WishlistScreen} /> */}
       <Stack.Screen name="WishList" component={WishList} />
@@ -214,7 +216,7 @@ const MainStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#ffff'},
+        cardStyle: { backgroundColor: '#ffff' },
       }}>
       <Stack.Screen name="MainScreen" component={MainScreen} />
       <Stack.Screen name="ProductPage" component={ProductPage} />
@@ -230,7 +232,7 @@ const MyCartStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#ffff'},
+        cardStyle: { backgroundColor: '#ffff' },
       }}>
       <Stack.Screen name="MyCartScreen" component={MyCartScreen} />
       <Stack.Screen name="Checkout" component={Checkout} />
@@ -279,7 +281,9 @@ const BottomTabsData = [
 ];
 
 const Route = navigation => {
-  const {navigate} = useNavigation();
+  const { navigate } = useNavigation();
+
+  Constants.Token = getAuthTokenHeaders();
 
   return (
     <TabsNavigator.Navigator
@@ -298,7 +302,7 @@ const Route = navigation => {
           {...props}
         />
       )}
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
       // tabBarOptions={{}}
       initialRouteName="Main">
       <TabsNavigator.Screen name="Catalog" component={CatalogStack} />

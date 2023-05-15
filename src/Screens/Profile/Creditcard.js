@@ -16,12 +16,34 @@ import {
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import Loader from '../../Component/Loader';
+import { useFocusEffect } from '@react-navigation/native';
+import { AppButton } from '../../Component/button/app-button';
+import { ADD_CREDIT_CARD_API } from '../../api/AddCreditCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreditCard({navigation}) {
   const [creditCardInput, setCreditCardInput] = useState();
+  const [loading, setLoading] = useState(false);
+  const [getCartID, SetCartid] = useState();
+
    const { t } = useTranslation()
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(false);
+      AsyncStorage.getItem('CART_ID').then((Data) => {
+        console.log('get Cartid', Data)
+        SetCartid(Data)
+      }).catch((error) => {
+
+      });
+
+
+      return () => { };
+    }, []),
+  );
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -53,8 +75,27 @@ export default function CreditCard({navigation}) {
           onChange={form => setCreditCardInput(form)}
         />
       </View>
-      {/* <LiteCreditCardInput onChange={''} /> */}
-    </>
+      <View style={{ marginHorizontal: Metrics.rfv(16) }}>
+        <AppButton
+          disabled={false}
+          tx={t('Save')}
+          style={{
+            marginTop: Metrics.rfv(16),
+            marginBottom: Metrics.rfv(10),
+          }}
+          onPress={async () => {
+            setLoading(true);
+            var Response = await ADD_CREDIT_CARD_API(creditCardInput.values.cvc, creditCardInput.values.name, creditCardInput.values.number, getCartID, creditCardInput.values.expiry)
+            console.log('Response', Response)
+            if (Response?.SetCardDetail.card_deatil.status == true) {
+              navigation.goBack();
+            }
+          }}
+        />
+      </View>
+      <Loader loading={loading} />
+    </View>
+
   );
 }
 
