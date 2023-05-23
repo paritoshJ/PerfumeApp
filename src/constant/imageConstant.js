@@ -42,8 +42,12 @@ export default {
   viewall:require('../assets/images/viewall.png'),
   egift:require('../assets/images/egift.png'),
   short:require('../assets/icon/short.png'),
+  shortase: require('../assets/icon/shortasc.png'),
+  shortdes: require('../assets/icon/shortdesc.png'),
   filters:require('../assets/icon/filters.png'),
   button:require('../assets/icon/Button.png'),
   citrus:require('../assets/images/citrus.png'),
-  fruity:require('../assets/images/fruity.png')
+  fruity: require('../assets/images/fruity.png'),
+  Checkboxselected: require('../../assets/selectedcheckbox.png'),
+  Checkboxunselected: require('../../assets/checkbox.png')
 };

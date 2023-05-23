@@ -206,7 +206,6 @@ export default function PersonalInfo({navigation}) {
                 value={getfirstName}
               placeholderTextColor="gray"
                 onChangeText={(text) => {
-
                   SetFirstName(text);
                 }}
 

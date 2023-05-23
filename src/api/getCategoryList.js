@@ -119,14 +119,44 @@ export const GET_CATEGORY_LIST = async () => {
   });
 };
 
-export const ADD_WISH_LST_API = async (id, item) => {
-  console.log([item]);
+export const ADD_WISH_LST_API = async (wishlistId, wishlistItems) => {
+  console.log(wishlistId)
+  console.log([wishlistItems]);
+  console.log(Constants.Token);
+  const client = new ApolloClient({
+    uri: Constants.BASE_GRAPH_QL,
+    cache: new InMemoryCache(),
+    connectToDevTools: true,
+    headers: {
+      authorization: Constants.Token,
+    }
+  });
   try {
-    const {data, error} = await client1.mutate({
-      mutation: ADD_ITEAM_WLIST,
+    const { data, error } = await client.mutate({
+      mutation: gql`
+      mutation addProductsToWishlist($wishlistId: ID!, $wishlistItems: [WishlistItemInput!]!) {
+        addProductsToWishlist(
+          wishlistId: $wishlistId
+          wishlistItems: $wishlistItems
+        ){
+          user_errors {
+            code
+            message
+          }
+          wishlist {
+            id
+            items_count
+            name
+            sharing_code
+            updated_at
+            visibility
+          }
+        }
+      }
+    `,
       variables: {
-        wishlistId: id,
-        wishlistItems: [item],
+        wishlistId: wishlistId,
+        wishlistItems: [wishlistItems],
       },
     });
     if (error) {
@@ -143,12 +173,9 @@ export const ADD_WISH_LST_API = async (id, item) => {
   }
 };
 export const ADD_ITEAM_WLIST = gql`
-  mutation addProductsToWishlist(
-    $wishlistId: String!
-    $wishlistItems: [wishlistItems]!
-  ) {
+  mutation addProductsToWishlist($wishlistId: String!,$wishlistItems: WishlistItemInput!) {
     addProductsToWishlist(
-      input: {wishlist_Id: $wishlistId, wishlist_Items: $wishlistItems}
+      input: {wishlistId: $wishlistId, wishlistItems: $wishlistItems}
     ) {
       user_errors {
         code

@@ -41,7 +41,6 @@ export default function NoCreditCard({navigation}) {
     }).catch((err) => {
       setLoading(false);
 
-      console.log('GET_WISHLIST_ERROR', err);
     })
   }
   return (

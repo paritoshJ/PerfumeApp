@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   I18nManager,
+  Alert
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
@@ -17,7 +18,10 @@ import Input from '../../Component/Input';
 import CustomSwitch from '../../Component/toggleSwitch';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
-
+import {
+  GET_ADDRESS_LIST,
+  DELETE_ADDRESS
+} from '../../api/SaveAddress';
 import EmptyPageView from '../../Component/EmptyPageView';
 import AddressBookSVG from '../../assets/svg/AddressBookSVG';
 import SwiperFlatList from 'react-native-swiper-flatlist';
@@ -28,41 +32,58 @@ import CheckedRadioSVG from '../../assets/svg/CheckedRadio';
 import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 import fontConstant from '../../constant/fontConstant';
 import PlusSVG from '../../assets/svg/PlusSVG';
+import Loader from '../../Component/Loader';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AddressBookList({route, navigation}) {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [allShops, setAllShops] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
   const {t} = useTranslation();
 
   const onSelectSwitch = index => {};
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      getaddresslist()
 
-  useEffect(() => {
-    if (route?.params?.selectedAddress) {
-      setSelectedItem(route?.params?.selectedAddress);
-    }
-    if (route?.params?.storeList) {
-      console.warn('dfsfsf', route?.params?.storeList);
-      setAllShops(route?.params?.storeList);
-    }
-  }, []);
+      return () => { };
+    }, []),
+  );
+
+  const getaddresslist = () => {
+    GET_ADDRESS_LIST().then((Response) => {
+      setData(Response.customer.addresses);
+      setLoading(false);
+
+    }).catch((error) => {
+      setLoading(false);
+
+    })
+  }
 
   const onAddAddress = items => {
-    // let arr = [...data];
-    // arr.push(item);
-    setData(items);
-    // setSelectedItem(item);
   };
   const addAddress = (isEdit = false) => {
-    // AddressBook
     navigation.navigate('AddressBook', {
       selectedAddress: isEdit ? selectedAddress : {},
       onAddAddress: onAddAddress,
       storeList: allShops,
     });
   };
+
+  const DeleteAddress = (item) => {
+    setLoading(true);
+    DELETE_ADDRESS(item.id).then((Respopnse) => {
+      console.log('Response', Respopnse);
+      getaddresslist();
+    }).catch((error) => {
+      setLoading(false);
+    })
+  }
   const renderEmptyAndNoLogin = () => {
     return (
       <EmptyPageView
@@ -100,8 +121,11 @@ export default function AddressBookList({route, navigation}) {
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         {data.length > 0 ? (
           data.map(e => {
+            console.log('enter')
             return (
               <Swipeout
+                autoClose={true}
+                close={true}
                 right={[
                   {
                     component: (
@@ -114,6 +138,9 @@ export default function AddressBookList({route, navigation}) {
                           marginVertical: 16,
                         }}>
                         <TouchableOpacity
+                          onPress={() => {
+                            navigation.navigate('AddressBook', { id: e })
+                          }}
                           style={{
                             height: 36,
                             width: 36,
@@ -134,7 +161,16 @@ export default function AddressBookList({route, navigation}) {
                             alignItems: 'center',
                             backgroundColor: COLORS_NEW.systemRed,
                           }}
-                          onPress={() => {}}>
+                          onPress={() => {
+                            Alert.alert('Delete Address', 'Are you sure want to delete this address?', [
+                              {
+                                text: 'Cancel',
+                                onPress: () => console.log('Cancel Pressed'),
+                                style: 'cancel',
+                              },
+                              { text: 'OK', onPress: () => DeleteAddress(e) },
+                            ])
+                          }}>
                           <TrashIconSVG />
                         </TouchableOpacity>
                       </View>
@@ -146,11 +182,8 @@ export default function AddressBookList({route, navigation}) {
                 buttonWidth={120}>
                 <TouchableOpacity
                   onPress={() => {
-                    setSelectedItem(e);
-                    if (route?.params?.onAddressFetch) {
-                      route?.params?.onAddressFetch(e);
-                      navigation.goBack();
-                    }
+                    console.log('eeeeee', e)
+                    setSelectedItem(e.id);
                   }}
                   style={{
                     borderRadius: 8,
@@ -160,7 +193,7 @@ export default function AddressBookList({route, navigation}) {
                     borderColor: 'rgba(43, 40, 38, 0.1)',
                     flexDirection: 'row',
                   }}>
-                  {selectedItem?.telephone === e?.telephone ? (
+                  {selectedItem == e.id ? (
                     <CheckedRadioSVG />
                   ) : (
                     <UnCheckedRadioSVG />
@@ -192,6 +225,7 @@ export default function AddressBookList({route, navigation}) {
                       }}>{`${t('PHONE :')} ${e?.telephone}`}</Text>
                   </View>
                 </TouchableOpacity>
+
               </Swipeout>
             );
           })
@@ -229,6 +263,8 @@ export default function AddressBookList({route, navigation}) {
           </TouchableOpacity>
         )}
       </ScrollView>
+      <Loader loading={loading} />
+
     </>
   );
 }

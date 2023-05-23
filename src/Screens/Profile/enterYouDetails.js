@@ -40,6 +40,7 @@ import {EMPTY_CART} from '../../api/getEmptyCart';
 import {MERGE_CART} from '../../api/getMergeCart';
 import Constants from '../../Comman/Constants';
 
+
 export default function EnterYourDetails({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
   const [password, setPassword] = useState('');
