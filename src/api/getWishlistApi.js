@@ -27,15 +27,19 @@ const authLink = setContext((_, { headers }) => {
 export const GET_WISHLIST_PRODUCTS = (token) => {
     console.log('token', token);
     const client = new ApolloClient({
-        link: authLink.concat(httpLink),
+        uri: Constants.BASE_GRAPH_QL,
         cache: new InMemoryCache(),
         connectToDevTools: true,
+        headers: {
+            authorization: Constants.Token,
+        }
     });
     console.log('asd', client);
   return new Promise(async (resolve, reject) => {
      try {
       let {data} = await client.query({
-          query: gql`query {
+          query: gql`
+          query {
             wishlist {
                 items_count
                 name
@@ -179,6 +183,7 @@ export const GET_WISHLIST_PRODUCTS = (token) => {
                 }
             }
           }
+          
            `,
       });
          if (data) {

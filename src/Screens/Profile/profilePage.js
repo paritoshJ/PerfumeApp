@@ -24,6 +24,7 @@ import {EMPTY_CART} from '../../api/getEmptyCart';
 import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import { GET_PROFILE_DETAIL } from '../../api/getProfiledetail';
+import { GET_WISHLIST_PRODUCTS } from '../../api/getWishlistApi';
 
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
@@ -52,7 +53,7 @@ export default function ProfilePage({navigation}) {
       id: 3,
       name: t('address-book'),
       image: require('../../../assets/Address-book.png'),
-      navigation: 'AddressBook',
+      navigation: 'AddressBookList',
     },
     {
       id: 4,
@@ -142,12 +143,23 @@ export default function ProfilePage({navigation}) {
   const getProfileDetail = () => {
     GET_PROFILE_DETAIL().then((res) => {
       setLoading(false);
+
       setProfileDAta(res.customerExtraData)
-      console.log('GET_WISHLIST_PRODUCTS', getProfileData);
+
+
     }).catch((err) => {
       setLoading(false);
+    });
+    GET_WISHLIST_PRODUCTS().then(async (res) => {
+      console.log('Add wishlist', res);
+      try {
+        await AsyncStorage.setItem('wishlist', JSON.stringify(res.wishlist.items));
+      } catch (e) {
+        console.log(e);
+      }
 
-      console.log('GET_WISHLIST_ERROR', err);
+    }).catch((error) => {
+
     })
   }
 

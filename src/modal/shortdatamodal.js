@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {StyleSheet, TouchableOpacity} from 'react-native';
+import { StyleSheet, TouchableOpacity, FlatList, Alert } from 'react-native';
 import {View, Text, Modal} from 'react-native';
 import MyStatusBar from '../Component/MyStatusBar';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -8,23 +8,50 @@ import fontConstant from '../constant/fontConstant';
 import CheckBox from '@react-native-community/checkbox';
 import colorConstant from '../constant/colorConstant';
 import { useTranslation } from 'react-i18next';
+import index from '../Navigator';
 
 const ShortDataModal = props => {
   const {t, i18n} = useTranslation();
-  const {onOpenDailog, setOnOpenDailog} = props;
+  const { onOpenDailog, setOnOpenDailog, getvalue, func1, SortList, Searchcategory } = props;
   const [isSelected, setSelection] = useState(false);
+  const [isSelectedValue, setSelectedValue] = useState(Searchcategory);
+  console.log('SortList', SortList);
+  var array = [{ name: 'Popularity' }, { name: 'Discount' }, { name: 'Name' }, { name: 'Customer Top Rated' }, { name: 'Price: High To Low' }, { name: 'Price: High To Low' }]
+  const renderItem = ({ item, index }) => (
+    <View style={style.checkboxContainer}>
+      <CheckBox
+        onFillColor={colorConstant.DARK_PRIMARY}
+        onCheckColor='white'
+        onTintColor={colorConstant.DARK_PRIMARY}
+        animationDuration={0}
+        style={{ height: 24, width: 24, alignSelf: 'center' }}
+        boxType="circle"
+        value={isSelectedValue == item.value ? true : false}
+        onValueChange={() => {
 
+          if (isSelectedValue == item.value) {
+            setSelectedValue('Sort');
+          } else {
+            setSelectedValue(item.value);
+          }
+        }}
+      />
+      <Text style={style.label}>{item.label}</Text>
+    </View>
+  );
   return (
     <Modal
       backdropColor="rgba(0, 0, 0, 0.6)"
       backdropOpacity={1}
       animationType="slide"
       transparent={true}
-      isVisible={onOpenDailog}
+      isVisible={true}
       onRequestClose={() => {
+
         setOnOpenDailog(false);
       }}
       onBackdropPress={() => {
+
         setOnOpenDailog(false);
       }}>
       <MyStatusBar backgroundColor={'rgba(0, 0, 0, 0.6)'} />
@@ -32,7 +59,7 @@ const ShortDataModal = props => {
         <View
           style={{
             width: '100%',
-            height: 450,
+            // height: 450,
             backgroundColor: 'rgba(255, 255, 255, 1)',
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
@@ -66,104 +93,33 @@ const ShortDataModal = props => {
           </View>
           <View>
           <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>Popularity</Text>
-      </View>
-      <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>Discount</Text>
-      </View>
-      <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>Name</Text>
-      </View>
-      <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>Customer Top Rated</Text>
-      </View>
-      <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>New Arrivals</Text>
-      </View>
-      <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>Price: High To Low</Text>
-      </View>
-      <View style={style.checkboxContainer}>
-        <CheckBox
-          tintColors={{
-            true: colorConstant.DARK_PRIMARY,
-            false: 'rgba(200, 200, 200, 1)',
-          }}
-          style={{height: 24, width: 24, alignSelf: 'center'}}
-          boxType="circle"
-          value={isSelected}
-          onValueChange={setSelection}
-        />
-        <Text style={style.label}>Price: Low To High</Text>
-      </View>
+              <FlatList
+                style={{ marginLeft: '4%', marginRight: '4%', }}
+                data={SortList.options}
+                renderItem={renderItem}
+                contentContainerStyle={{ marginBottom: '15%', }}
+                keyExtractor={item => item.id}
+                showsHorizontalScrollIndicator={false}
+              />
 
-      <TouchableOpacity
+      </View>
+            <TouchableOpacity
+              onPress={() => {
+                if (isSelectedValue == '') {
+                  Alert.alert('Please select at least one')
+                }
+                else {
+                  props.func1(isSelectedValue);
+                  setOnOpenDailog(false);
+                }
+              }}
         style={{
           width: '90%',
           height: 50,
           backgroundColor: colorConstant.DARK_PRIMARY,
           alignSelf: 'center',
-          marginTop: '5%',
+          marginTop: '1%',
+          marginBottom: '10%',
           borderRadius: 50,
           alignItems: 'center',
           justifyContent: 'center',
@@ -195,16 +151,17 @@ const style = StyleSheet.create({
   checkboxContainer: {
     flexDirection: 'row',
     paddingLeft:10,
-    marginTop:"2%"
+    marginTop: "5%"
   },
   checkbox: {
     alignSelf: 'center',
   },
   label: {
-    margin: 8,
+    marginLeft: '5%',
+    marginTop: '1.5%',
     fontFamily:fontConstant.satoshi,
     fontStyle:"normal",
-    fontSize:fontConstant.TEXT_14_SIZE_REGULAR,
+    fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
     fontWeight:fontConstant.WEIGHT_REGULAR,
     color:colorConstant.BLACK
   },

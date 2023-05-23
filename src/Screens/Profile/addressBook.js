@@ -25,12 +25,17 @@ import {
   SAVE_BILLING_ADDRESS,
   SAVE_GUEST_EMAIL,
   SAVE_SHIPPING_ADDRESS,
+  GET_REGION_COUNTRY,
+  SAVE_BOOK_ADDRESS
 } from '../../api/SaveAddress';
 import Loader from '../../Component/Loader';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import AddAddressModal from './../../modal/AddAddressModal';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Lens from '../../assets/svg/Lens';
+import { Dropdown } from 'react-native-element-dropdown';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AddressBook({route, navigation}) {
   const mapRef = useRef(null);
@@ -44,20 +49,25 @@ export default function AddressBook({route, navigation}) {
   const [lastName, setLastName] = useState('');
   const [mobile, setMobile] = useState('');
   const [zipCode, setZipCode] = useState('');
-  const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
   const [address, setAddress] = useState('');
   const [buildingName, setBuildingName] = useState('');
-  const [inputDetail, setinputDetail] = useState();
   const [value, setValue] = useState('');
   const [markerData, setMarkerData] = useState({});
   const [showMap, setShowMap] = useState(false);
   const [markers, setMarkers] = useState([]);
-  const [countryCode, setCountryCode] = useState('AE');
-  const [countryPhoneCode, setCountryPhoneCode] = useState('+971');
-  // const [country, setCountry] = useState(null);
+  const [getcountry, setCountrylist] = useState([])
+  const [countryCode, setCountryCode] = useState('');
+  const [getCountryname, setCountyrname] = useState('');
+  const [countryPhoneCode, setCountryPhoneCode] = useState('');
   const {t} = useTranslation();
   const [formattedValue, setFormattedValue] = useState('');
+  const [getRegion, setRegion] = useState('');
+  const [getRegioncode, setRegioncode] = useState('');
+  const [getRegionId, setRegionId] = useState('');
+  const [getRegionArray, setRegionArray] = useState([]);
+  const [getCountrycodeslect, setCountrycodeselect] = useState('');
+
 
   const onSelectSwitch = index => {
     if (index == 1) {
@@ -67,13 +77,45 @@ export default function AddressBook({route, navigation}) {
     }
   };
   useEffect(() => {
-    console.log(route?.params, '-----params');
-    if (route?.params?.storeList) {
-      console.warn('dfsfsf', route?.params?.storeList);
-      setMarkers(route?.params?.storeList);
-    }
+    console.log('Response', route, navigation);
+    if (route.params.id) {
+      console.log('if id');
+      setFirstName(route.params.id.firstname);
+      setLastName(route.params.id.lastname);
+      setMobile(route.params.id.telephone);
+      setZipCode(route.params.id.postcode);
+      setCity(route.params.id.city);
+      setCountrycodeselect(route.params.id.country_code)
+      setRegioncode(route.params.id.region.region_code);
+      setRegionId(route.params.id.region.region_id);
+      setAddress(route.params.id.street[1]);
+      setBuildingName(route.params.id.street[0]);
+      setRegion(route.params.id.region.region);
+      setCountryCode(route.params.id.country_code);
+    } 
+    setLoading(true);
+    GET_REGION_COUNTRY().then((Data) => {
+      console.log('Response', Data, getCountrycodeslect);
+      if (route.params.id) {
+        var Countryname = Data.countries.filter((iteam) => {
+          return iteam.id == route.params.id.country_code;
+        });
+        console.log('Countryname', Countryname);
+        setCountrylist(Data.countries);
+        setCountyrname(Countryname[0].full_name_locale);
+        setRegionArray(Countryname[0].available_regions);
+
+      } else {
+        setCountryCode(Data.countries[0].id)
+        setCountrylist(Data.countries);
+      }
+      setLoading(false);
+    }).catch((error) => {
+      setLoading(false);
+    });
   }, []);
   const onSelect = country => {
+    console.log(country.cca2)
     setCountryCode(country.cca2);
     setCountryPhoneCode(country.callingCode[0]);
     // setCountry(country);
@@ -81,36 +123,33 @@ export default function AddressBook({route, navigation}) {
   };
 
   const onSaveAddress = async () => {
-    let obj = {
-      address: {
-        city: city,
-        country_code: countryCode,
-        firstname: firstname,
-        lastname: lastName,
-        postcode: zipCode,
-        telephone: mobile,
-        street: [`${buildingName} ${address}`],
-      },
-    };
-
     setLoading(true);
-    const res = await SAVE_SHIPPING_ADDRESS([obj]);
-    setLoading(false);
-    if (res) {
-      if (route?.params.onAddAddress)
-        route?.params?.onAddAddress(
-          res?.setShippingAddressesOnCart?.cart?.shipping_addresses,
-        );
+    let Region = {};
+    console.log('getRegionArray', getRegionArray)
+    if (getRegionArray == null) {
+      Region = {
+        region: getRegion,
+      };
+    }
+    else {
+      Region = {
+        region: getRegion,
+        region_code: getRegioncode,
+        region_id: getRegionId
+      };
+    }
+    var stree = [];
+    stree.push(buildingName)
+    stree.push(address)
+    console.log('Region,', Region);
+
+    SAVE_BOOK_ADDRESS(Region, getCountrycodeslect, stree, mobile, zipCode, city, firstname, lastName, true, false, countryCode).then((response) => {
+      console.log('response,', response);
+      setLoading(false);
       navigation.goBack();
-    }
-    const res1 = await SAVE_BILLING_ADDRESS(obj);
-    if (res1) {
-      console.log('SAVE_BILLING_ADDRESS', res1);
-    }
-    const resEmail = await SAVE_GUEST_EMAIL(email);
-    if (resEmail) {
-      console.log(resEmail);
-    }
+    }).catch((error) => {
+      setLoading(false);
+    });
   };
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -206,7 +245,9 @@ export default function AddressBook({route, navigation}) {
                 autoFocus={true}
                 onPress={(data, details = null) => {
                   let location = details?.geometry?.location;
-                  console.warn(location, '---location');
+                  console.warn(data, '---location');
+                  setAddress(data.description);
+                  setShowMap(false)
                   let region = {
                     latitude: location?.lat,
                     longitude: location?.lng,
@@ -361,14 +402,90 @@ export default function AddressBook({route, navigation}) {
               placeholder={t('Zip code (optional)')}
               placeholderTextColor="gray"
               value={zipCode}
-              onChangeText={e => setZipCode(e)}
-            />
-            <Input
+                  onChangeText={e => setZipCode(e)} />
+                <Dropdown
+                  style={{
+                    backgroundColor: 'white',
+                    height: Metrics.rfv(45),
+                    width: '100%',
+                    borderRadius: Metrics.rfv(100),
+                    borderColor: '#EEEDE7',
+                    borderWidth: 1,
+                    marginTop: Metrics.rfv(16),
+                    alignSelf: 'center',
+                    color: 'black',
+                    paddingLeft: Metrics.rfv(15),
+                    paddingRight: Metrics.rfv(10),
+                  }}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  data={getcountry}
+                  search
+                  maxHeight={300}
+                  labelField="full_name_locale"
+                  valueField="value"
+                  placeholder={getCountryname}
+                  searchPlaceholder="Search..."
+                  value={getCountryname}
+                  onChange={(item) => {
+                    console.log(item)
+                    setCountrycodeselect(item.id);
+                    setRegionArray(item.available_regions);
+                    if (item.available_regions != null) {
+                      console.log('enter not null', item.available_regions[0].name)
+                      setRegion(item.available_regions[0].name)
+                      setRegionId(item.available_regions[0].id)
+                      setRegioncode(item.available_regions[0].code)
+
+                    } else {
+                      console.log('enter  null',)
+                      setRegionArray(null)
+                    }
+                  }}
+
+                />
+                {
+                  getRegionArray == null || getRegionArray == '' ? <View /> : <Dropdown
+                    style={{
+                      backgroundColor: 'white',
+                      height: Metrics.rfv(45),
+                      width: '100%',
+                      borderRadius: Metrics.rfv(100),
+                      borderColor: '#EEEDE7',
+                      borderWidth: 1,
+                      marginTop: Metrics.rfv(16),
+                      alignSelf: 'center',
+                      color: 'black',
+                      paddingLeft: Metrics.rfv(15),
+                      paddingRight: Metrics.rfv(10),
+                    }}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    data={getRegionArray}
+                    search
+                    maxHeight={300}
+                    labelField="name"
+                    valueField="value"
+                    placeholder={getRegion}
+                    searchPlaceholder="Search..."
+                    value={getRegion}
+                    onChange={(item) => {
+                      console.log(item)
+                      setRegion(item.name)
+                      setRegionId(item.id)
+                      setRegioncode(item.code)
+                    }}
+
+                  /> 
+                }
+                {/* <Input
               placeholder={t('Country')}
               placeholderTextColor="gray"
               value={country}
               onChangeText={e => setCountry(e)}
-            />
+            /> */}
             <Input
               placeholder={t('City')}
               placeholderTextColor="gray"

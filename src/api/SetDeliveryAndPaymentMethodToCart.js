@@ -71,6 +71,7 @@ export const SAVE_PAYMENT_METHOD = async payment_method => {
 };
 
 export const CONFIRM_PAYMENT_METHOD = async () => {
+  console.log(AsyncStorage.getItem('CART_ID'), "asasd")
   try {
     const cartId = await AsyncStorage.getItem('CART_ID');
     const {data, error} = await client.mutate({

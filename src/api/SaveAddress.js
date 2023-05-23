@@ -10,12 +10,14 @@ export const client = new ApolloClient({
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers:{
-      authorization: getAuthTokenHeaders(),
+      authorization: Constants.Token,
     }
   });
 
 
   export const SAVE_SHIPPING_ADDRESS= async (shipping_addresses) => {
+    console.log(shipping_addresses)
+    console.log(AsyncStorage.getItem('CART_ID'))
   try {
     const cartId = await AsyncStorage.getItem('CART_ID');
     const {data, error} = await client.mutate({
@@ -39,7 +41,180 @@ export const client = new ApolloClient({
   }
 };
 
+export const GET_REGION_COUNTRY = async () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { data } = await client.mutate({
+        mutation: gql` query {
+      countries {
+        id
+        full_name_locale
+        available_regions {
+          id
+          name
+          code
+        }
+      }
+    }`});
+      if (data) {
+        resolve(data);
+      }
+    } catch (error) {
+      alert(`error => ${JSON.stringify(error)}`);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};
 
+export const GET_ADDRESS_LIST = async () => {
+  const client = new ApolloClient({
+    uri: Constants.BASE_GRAPH_QL,
+    cache: new InMemoryCache(),
+    connectToDevTools: true,
+    headers: {
+      authorization: Constants.Token,
+    }
+  });
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { data } = await client.mutate({
+        mutation: gql` 
+        query {
+          customer {
+            firstname
+            lastname
+            suffix
+            email
+            addresses {
+              firstname
+              lastname
+              street
+              id
+              city
+              country_id
+              region {
+                region_code
+                region
+                region_id
+              }
+              postcode
+              country_code
+              telephone
+            }
+          }
+        }
+        `});
+      if (data) {
+        console.log('data', JSON.stringify(data));
+
+        resolve(data);
+      }
+    } catch (error) {
+      alert(`error => ${JSON.stringify(error)}`);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};
+export const DELETE_ADDRESS = async (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { data } = await client.mutate({
+        mutation: gql` 
+        mutation deleteCustomerAddress($id:Int!){
+          deleteCustomerAddress(id: $id)
+        }
+        `, variables: {
+          id: id
+        }
+      });
+      if (data) {
+        console.log('data', JSON.stringify(data));
+        resolve(data);
+      }
+    } catch (error) {
+      alert(`error => ${JSON.stringify(error)}`);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};
+export const SAVE_BOOK_ADDRESS = async (region, country_code, street, telephone, postcode, city, firstname, lastname, default_shipping, default_billing, country_id) => {
+  return new Promise(async (resolve, reject) => {
+    console.log('enter value', region, country_code, street, telephone, postcode, city, firstname, lastname, default_shipping, default_billing, country_id)
+    try {
+      let { data } = await client.mutate({
+        mutation: gql` 
+        mutation createCustomerAddress(
+          $region:CustomerAddressRegionInput!, 
+          $country_code:CountryCodeEnum!, 
+          $street:[String]!,
+          $telephone:String!,
+          $postcode:String!, 
+          $city:String!, 
+          $firstname:String!, 
+          $lastname:String!, 
+          $default_shipping: Boolean!, 
+          $default_billing: Boolean!,
+          $country_id:CountryCodeEnum!) {
+          createCustomerAddress(
+              input: {
+              region:$region,
+              country_code: $country_code,
+              street: $street,
+              telephone: $telephone,
+              postcode:$postcode,
+              city:$city,
+              firstname: $firstname,
+              lastname: $lastname,
+              default_shipping: $default_shipping,
+              default_billing: $default_billing,
+              country_id:$country_id
+            }
+          ){
+            id
+            region{
+              region
+              region_code
+            }
+            country_code
+            street
+            telephone
+            postcode
+            city
+            firstname
+            lastname
+            default_shipping
+            default_billing
+          }
+        }
+        `,
+        variables: {
+          region: region,
+          country_code: country_code,
+          street: street,
+          telephone: telephone,
+          postcode: postcode,
+          city: city,
+          firstname: firstname,
+          lastname: lastname,
+          default_shipping: default_shipping,
+          default_billing: default_billing,
+          country_id: country_id
+        }
+      });
+      if (data) {
+        resolve(data);
+      }
+    } catch (error) {
+      alert(`error => ${JSON.stringify(error)}`);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};
  export const SAVE_BILLING_ADDRESS= async (billing_address) => {
   try {
     const cartId = await AsyncStorage.getItem('CART_ID');
