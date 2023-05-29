@@ -41,6 +41,7 @@ import Swiper from 'react-native-swiper';
 import { navigationRef } from '../../Navigator/utils';
 import { isStringNotNull } from '../../Helper/helper';
 import Constants from '../../Comman/Constants';
+import { GET_COUNTRY_LIST, GET_COUNTRY_API, GET_TRANSLATION_JSON } from '../../api/getCountry';
 
 import {
   GET_CATEGORY_LIST,
@@ -81,6 +82,34 @@ const MainScreen = props => {
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
+    GET_TRANSLATION_JSON().then((Responce) => {
+      console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
+
+    }).catch((error) => {
+
+    });
+    AsyncStorage.getItem('Country').then((data) => {
+      console.log('country', data);
+      if (data == null || data == '') {
+        GET_COUNTRY_API().then((Responsce) => {
+          console.log('Responsce', Responsce.allStoreConfigData[0].store_code)
+          AsyncStorage.setItem('Country', Responsce.allStoreConfigData[0].store_code);
+          Constants.StoreCode = Responsce.allStoreConfigData[0].store_code;
+
+        }).catch((error) => {
+          setLoading(false)
+
+        });
+      } else {
+        Constants.StoreCode = data;
+      }
+    });
+    GET_TRANSLATION_JSON().then((Responce) => {
+      console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
+
+    }).catch((error) => {
+
+    });
     // getCategory();
     getCategory();
     getConfigData();
@@ -206,7 +235,7 @@ const MainScreen = props => {
 
   const renderSaleItem = ({ item }) => {
     return (
-      <View key={item}>
+      <View >
         <ProductCard
           isHome={true}
           item={item}

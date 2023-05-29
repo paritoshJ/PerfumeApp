@@ -35,6 +35,7 @@ export default function CreditCard({navigation}) {
         console.log('get Cartid', Data)
         SetCartid(Data)
       }).catch((error) => {
+        setLoading(false);
 
       });
 
@@ -85,8 +86,10 @@ export default function CreditCard({navigation}) {
           }}
           onPress={async () => {
             setLoading(true);
-            var Response = await ADD_CREDIT_CARD_API(creditCardInput.values.cvc, creditCardInput.values.name, creditCardInput.values.number, getCartID, creditCardInput.values.expiry)
+            var Response = await ADD_CREDIT_CARD_API(creditCardInput.values.cvc, creditCardInput.values.name, creditCardInput.values.number, creditCardInput.values.expiry)
             console.log('Response', Response)
+            setLoading(false);
+
             if (Response?.SetCardDetail.card_deatil.status == true) {
               navigation.goBack();
             }

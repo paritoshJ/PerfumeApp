@@ -11,58 +11,69 @@ import {
 import MyStatusBar from '../../Component/MyStatusBar';
 import Metrics from '../../Helper/metrics';
 import {useTranslation} from 'react-i18next';
-import { GET_COUNTRY_LIST } from '../../api/getCountry';
+import { GET_COUNTRY_LIST, GET_COUNTRY_API, GET_TRANSLATION_JSON } from '../../api/getCountry';
 import { isArrayNullOrEmpty } from '../../Helper/helper';
+import RNRestart from 'react-native-restart';
+import Loader from '../../Component/Loader';
+import { ScrollView } from 'react-native-gesture-handler';
+import CountryFlag from "react-native-country-flag";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from '../../Comman/Constants';
 
-const DATA = [
-  {
-    id: 1,
-    name: 'UAE (AED)',
-    image: require('../../../assets/UAE.png'),
-  },
-  {
-    id: 2,
-    name: 'KSA (SAR)',
-    image: require('../../../assets/KSA.png'),
-  },
-  {
-    id: 3,
-    name: 'Kuwait (KWD)',
-    image: require('../../../assets/Kuwait.png'),
-  },
-  {
-    id: 4,
-    name: 'Bahrain (BHD)',
-    image: require('../../../assets/Bahrain.png'),
-  },
-  {
-    id: 5,
-    name: 'Quatar (QAR)',
-    image: require('../../../assets/Quatar.png'),
-  },
-  {
-    id: 6,
-    name: 'Oman (OMR)',
-    image: require('../../../assets/Oman.png'),
-  },
-];
+
 export default function Country({navigation}) {
-  const [selectedCountry, setSelectedCountry] = useState('UAE (AED)');
-  const {t} = useTranslation();
+  const [selectedCountry, setSelectedCountry] = useState(Constants.StoreCode);
+  const { t, i18n } = useTranslation();
+  const [loading, setLoading] = useState(false);
+  const [getcountry, setCountry] = useState([]);
 
-  useEffect(async () => {
-  const res =  await GET_COUNTRY_LIST();
- 
-  let arr = res?.countries?.filter(obj => {
-  return !isArrayNullOrEmpty(obj?.available_regions);
-});
- console.log(arr);
-  
+  useEffect(() => {
+    console.log(Constants.StoreCode)
+    console.log(selectedCountry)
+    setLoading(true)
+    GET_COUNTRY_API().then((Responsce) => {
+      console.log(Responsce)
+      setCountry(Responsce.allStoreConfigData);
+      setLoading(false)
+
+    }).catch((error) => {
+      setLoading(false)
+
+    });
+    // GET_TRANSLATION_JSON().then((Responce) => {
+    //   console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
+
+    // }).catch((error) => {
+
+    // });
   }, [])
   
-
-  const onSelectSwitch = e => {
-    setSelectedCountry(e);
+  // const changeLanguage = value => {
+  //   i18n
+  //     .changeLanguage(value)
+  //     .then(() => {
+  //       console.log('========>', value);
+  //       AsyncStorage.setItem('CURRENT_LANGUAGE', value);
+  //     })
+  //     .catch(err => console.log(err));
+  // };
+  // const languageChange = async () => {
+  //   //changing language based on what was chosen
+  //   console.log('::: rtl called');
+  //   if (I18nManager.isRTL) {
+  //     changeLanguage('en');
+  //     await I18nManager.forceRTL(false);
+  //   } else {
+  //     changeLanguage('ar');
+  //     await I18nManager.forceRTL(true);
+  //   }
+  //   RNRestart.Restart();
+  // };
+  const onSelectSwitch = (e) => {
+    console.log(e)
+    AsyncStorage.setItem('Country', e.store_code);
+    // languageChange();
+    setSelectedCountry(e.store_code);
   };
   return (
     <>
@@ -83,18 +94,21 @@ export default function Country({navigation}) {
         <Image style={styles.navBarImage1} source={''} />
       </View>
       <View style={styles.mainView}>
-        {DATA.map((item, index) => {
+        <ScrollView>
+          {getcountry.map((item, index) => {
           return (
+            <View>{item.store_name == 'English' ?
             <TouchableOpacity
               style={styles.loginPageComponentView}
-              onPress={() => onSelectSwitch(item.name)}>
+                onPress={() => onSelectSwitch(item)}>
+
               <View style={styles.loginPageComponentview1}>
                 <View>
                   <Image style={styles.countryLogo} source={item.image} />
                 </View>
-                <Text style={styles.countryText}>{t(item.name)}</Text>
+                  <Text style={styles.countryText}>{t(item.store_group_code + ' (' + item.base_currency_code + ')')}</Text>
               </View>
-              {selectedCountry === item.name && (
+                {selectedCountry === item.store_code && (
                 <View style={styles.loginPageComponentView}>
                   <Image
                     style={styles.countryLogo}
@@ -102,10 +116,13 @@ export default function Country({navigation}) {
                   />
                 </View>
               )}
-            </TouchableOpacity>
+              </TouchableOpacity> : null}
+            </View>
           );
         })}
+        </ScrollView>
       </View>
+      <Loader loading={loading} />
     </>
   );
 }
@@ -157,5 +174,6 @@ const styles = StyleSheet.create({
   countryText: {
     marginTop: Metrics.rfv(2),
     marginLeft: Metrics.rfv(10),
+    textTransform: 'uppercase'
   },
 });

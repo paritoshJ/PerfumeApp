@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   ScrollView,
   I18nManager,
-  Alert
+  Alert,
+  DeviceEventEmitter,
+  RefreshControl
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
@@ -34,12 +36,14 @@ import fontConstant from '../../constant/fontConstant';
 import PlusSVG from '../../assets/svg/PlusSVG';
 import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AddressBookList({route, navigation}) {
   const [open, setOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [allShops, setAllShops] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [getRefrash, setRefresh] = useState(false);
 
   const [data, setData] = useState([]);
   const {t} = useTranslation();
@@ -61,10 +65,43 @@ export default function AddressBookList({route, navigation}) {
 
     }).catch((error) => {
       setLoading(false);
+      if (error == "ApolloError: The current customer isn't authorized.") {
+        Alert.alert('Session Expired', 'Your session has expired. Please login again to continue working.', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK', onPress: async () => {
 
+              try {
+                DeviceEventEmitter.emit('event.logout', {});
+                await AsyncStorage.setItem('token', '');
+                createEmptyCartForLogout();
+              } catch (error) {
+                console.log(error);
+              }
+              setTimeout(() => {
+                navigation.replace('LoadingPage');
+              }, 500);
+            }
+          },
+        ]);
+      }
     })
   }
-
+  const createEmptyCartForLogout = async () => {
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
   const onAddAddress = items => {
   };
   const addAddress = (isEdit = false) => {
@@ -118,14 +155,32 @@ export default function AddressBookList({route, navigation}) {
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
       </View>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView refreshControl={
+        <RefreshControl
+          refreshing={getRefrash}
+          onRefresh={() => {
+            console.log('refrash')
+            setRefresh(false)
+
+          }}
+        />
+      }
+        contentContainerStyle={{ flexGrow: 1 }}>
         {data.length > 0 ? (
-          data.map(e => {
+          data.map((e, index) => {
             console.log('enter')
             return (
               <Swipeout
                 autoClose={true}
-                close={true}
+                close={index == selectedItem ? false : true}
+                onOpen={(data) => {
+                  console.log('oper', data);
+                  console.log('oper', index);
+                  setSelectedItem(index);
+                  setRefresh(true)
+                  setRefresh(false)
+
+                }}
                 right={[
                   {
                     component: (

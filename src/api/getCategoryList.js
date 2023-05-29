@@ -14,6 +14,7 @@ const client1 = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true,
   headers: {
+    store: Constants.StoreCode,
     // authorization: "Bearer " + getAuthTokenHeaders(),
     authorization:
       'Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM3OTc5OTksImV4cCI6MTY4MzgwMTU5OX0.yG_cgt8S9QVZzjP154zWErBTG4lYEYDVrXWfeHhsEZk',
@@ -128,6 +129,7 @@ export const ADD_WISH_LST_API = async (wishlistId, wishlistItems) => {
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers: {
+      store: Constants.StoreCode,
       authorization: Constants.Token,
     }
   });
@@ -199,7 +201,7 @@ export const Add_CATEGORY_LIST_CARD = async (wishlistid, arr) => {
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers: {
-      // authorization: "Bearer " + getAuthTokenHeaders(),
+      store: Constants.StoreCode,
       authorization:
         'Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM3ODQ1NDMsImV4cCI6MTY4Mzc4ODE0M30.Y6bT8kaJ77yIhiEoU_WpDNc121RQ9PoEPTbo5c3gmqM',
     },

@@ -23,6 +23,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
+
       authorization: token ? `${token}`: "",
     }
   }
@@ -84,3 +85,89 @@ export const GET_REGION_BY_COUNTRY = gql`
         }
     }
 `;
+
+export const GET_COUNTRY_API = (token) => {
+    console.log('token', token);
+    const client = new ApolloClient({
+        link: authLink.concat(httpLink),
+        cache: new InMemoryCache(),
+        connectToDevTools: true,
+    });
+    return new Promise(async (resolve, reject) => {
+        try {
+            let { data } = await client.query({
+                query: gql`
+                query {
+                    allStoreConfigData {
+                        store_code
+                       store_group_code
+                       store_group_name
+                       store_name
+                       store_sort_order
+                       timezone
+                       use_store_in_url
+                       website_code
+                       website_id
+                       website_name
+                       is_default_store
+                       store_group_code
+                       is_default_store_group
+                       locale
+                       base_currency_code
+                       default_display_currency_code
+                       timezone
+                       weight_unit
+                       base_url
+                       base_link_url
+                       base_static_url
+                       base_media_url
+                       secure_base_url
+                       secure_base_link_url
+                       secure_base_static_url
+                       secure_base_media_url
+                     }
+                  }
+                `,
+            });
+            if (data) {
+                // alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
+                console.log('data', JSON.stringify(data));
+                resolve(data);
+            }
+        } catch (error) {
+            //   alert(`error => ${JSON.stringify(error)}`);
+            console.log('error', `${JSON.stringify(error)}`);
+            reject(error);
+        }
+    });
+};
+
+export const GET_TRANSLATION_JSON = (token) => {
+    console.log('token', token);
+    const client = new ApolloClient({
+        link: authLink.concat(httpLink),
+        cache: new InMemoryCache(),
+        connectToDevTools: true,
+    });
+    return new Promise(async (resolve, reject) => {
+        try {
+            let { data } = await client.query({
+                query: gql`
+          query AllTranslationsData {
+            AllTranslationsData {
+                Translations
+            }
+        }`,
+            });
+            if (data) {
+                // alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
+                console.log('data', JSON.stringify(data));
+                resolve(data);
+            }
+        } catch (error) {
+            //   alert(`error => ${JSON.stringify(error)}`);
+            console.log('error', `${JSON.stringify(error)}`);
+            reject(error);
+        }
+    });
+};

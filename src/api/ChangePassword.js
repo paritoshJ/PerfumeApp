@@ -11,6 +11,7 @@ export const ADD_CREDIT_CARD_API = async (currentPassword, newPassword) => {
         cache: new InMemoryCache(),
         connectToDevTools: true,
         headers: {
+            store: Constants.StoreCode,
             authorization: Constants.Token,
         }
     });
@@ -91,6 +92,7 @@ export const FORGOT_PASSWORD_API = async (email) => {
         cache: new InMemoryCache(),
         connectToDevTools: true,
         headers: {
+            store: Constants.StoreCode,
             authorization: Constants.Token,
         }
     });

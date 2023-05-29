@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {
   StyleSheet,
-  StatusBar,
   View,
   Text,
   Image,
@@ -12,8 +11,7 @@ import {
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
-import {AppButton} from '../../Component/button/app-button';
-import PhoneInput from 'react-native-phone-number-input';
+import { AppButton } from '../../Component/button/app-button';
 import Input from '../../Component/Input';
 import CustomSwitch from '../../Component/toggleSwitch';
 import MyStatusBar from '../../Component/MyStatusBar';
@@ -22,9 +20,6 @@ import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
 import {isStringNotNull} from '../../Helper/helper';
 import {
-  SAVE_BILLING_ADDRESS,
-  SAVE_GUEST_EMAIL,
-  SAVE_SHIPPING_ADDRESS,
   GET_REGION_COUNTRY,
   SAVE_BOOK_ADDRESS
 } from '../../api/SaveAddress';
@@ -40,6 +35,7 @@ import { useFocusEffect } from '@react-navigation/native';
 export default function AddressBook({route, navigation}) {
   const mapRef = useRef(null);
   const googlePlaceAutoCompleteRef = useRef(null);
+  const Lastnamer = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [visibale, setvisibale] = useState(false);
@@ -67,8 +63,6 @@ export default function AddressBook({route, navigation}) {
   const [getRegionId, setRegionId] = useState('');
   const [getRegionArray, setRegionArray] = useState([]);
   const [getCountrycodeslect, setCountrycodeselect] = useState('');
-
-
   const onSelectSwitch = index => {
     if (index == 1) {
       setShowMap(true);
@@ -77,9 +71,7 @@ export default function AddressBook({route, navigation}) {
     }
   };
   useEffect(() => {
-    console.log('Response', route, navigation);
     if (route.params.id) {
-      console.log('if id');
       setFirstName(route.params.id.firstname);
       setLastName(route.params.id.lastname);
       setMobile(route.params.id.telephone);
@@ -95,16 +87,13 @@ export default function AddressBook({route, navigation}) {
     } 
     setLoading(true);
     GET_REGION_COUNTRY().then((Data) => {
-      console.log('Response', Data, getCountrycodeslect);
       if (route.params.id) {
         var Countryname = Data.countries.filter((iteam) => {
           return iteam.id == route.params.id.country_code;
         });
-        console.log('Countryname', Countryname);
         setCountrylist(Data.countries);
         setCountyrname(Countryname[0].full_name_locale);
         setRegionArray(Countryname[0].available_regions);
-
       } else {
         setCountryCode(Data.countries[0].id)
         setCountrylist(Data.countries);
@@ -115,17 +104,13 @@ export default function AddressBook({route, navigation}) {
     });
   }, []);
   const onSelect = country => {
-    console.log(country.cca2)
     setCountryCode(country.cca2);
     setCountryPhoneCode(country.callingCode[0]);
-    // setCountry(country);
-    console.log(country);
   };
 
   const onSaveAddress = async () => {
     setLoading(true);
     let Region = {};
-    console.log('getRegionArray', getRegionArray)
     if (getRegionArray == null) {
       Region = {
         region: getRegion,
@@ -141,10 +126,7 @@ export default function AddressBook({route, navigation}) {
     var stree = [];
     stree.push(buildingName)
     stree.push(address)
-    console.log('Region,', Region);
-
     SAVE_BOOK_ADDRESS(Region, getCountrycodeslect, stree, mobile, zipCode, city, firstname, lastName, true, false, countryCode).then((response) => {
-      console.log('response,', response);
       setLoading(false);
       navigation.goBack();
     }).catch((error) => {
@@ -206,11 +188,7 @@ export default function AddressBook({route, navigation}) {
                   longitudeDelta: 0.003,
                 }}
                 onRegionChangeComplete={region => {
-                  // console.warn(region);
-                  // fetchVehiclesNearby();
-                }}
-                // showsScale
-              >
+                  }}>
                 {markers.map((marker, index) => (
                   <Marker
                     key={index}
@@ -222,22 +200,15 @@ export default function AddressBook({route, navigation}) {
                     title={marker.name}
                     description={address}
                     onPress={() => {
-                      console.warn(marker, '---##3#######');
                       setvisibale(true);
                       setMarkerData(marker);
                       setAddress(marker.address);
                     }}
-                    // description={marker}
                   ></Marker>
                 ))}
               </MapView>
             </View>
-            <View
-              style={
-                {
-                  // alignItems: 'center',
-                }
-              }>
+              <View>
               <GooglePlacesAutocomplete
                 ref={googlePlaceAutoCompleteRef}
                 placeholder="Enter address"
@@ -245,7 +216,6 @@ export default function AddressBook({route, navigation}) {
                 autoFocus={true}
                 onPress={(data, details = null) => {
                   let location = details?.geometry?.location;
-                  console.warn(data, '---location');
                   setAddress(data.description);
                   setShowMap(false)
                   let region = {
@@ -255,9 +225,6 @@ export default function AddressBook({route, navigation}) {
                     longitudeDelta: 0.0706259161233902,
                   };
                   mapRef.current.animateToRegion(region);
-
-                  // setSearchLats(location?.lat);
-                  // setSearchLngs(location?.lng);
                 }}
                 fetchDetails={true}
                 query={{
@@ -295,10 +262,7 @@ export default function AddressBook({route, navigation}) {
                   },
                 }}
                 textInputProps={{
-                  onFocus: () => {
-                    // setVehicleData('');
-                    // setVehicleData('');
-                  },
+                  onFocus: () => { },
                 }}
                 keepResultsAfterBlur
                 debounce={200}
@@ -312,8 +276,7 @@ export default function AddressBook({route, navigation}) {
                       {data?.description}
                     </Text>
                   </View>
-                )} // custom description render
-              />
+                  )} />
               <View style={{paddingHorizontal: 15}}>
                 <CustomSwitch
                   selectionMode={1}
@@ -328,8 +291,7 @@ export default function AddressBook({route, navigation}) {
           </View>
         </>
       ) : (
-        <ScrollView style={styles.scrollView}>
-          {/* Toggle Switch */}
+            <ScrollView style={styles.scrollView}>
           <View style={{alignItems: 'center', marginVertical: 20}}>
             <CustomSwitch
               selectionMode={2}
@@ -339,20 +301,26 @@ export default function AddressBook({route, navigation}) {
               onSelectSwitch={onSelectSwitch}
               selectionColor={COLORS_NEW.blue}
             />
-          </View>
-          {/* Input Fields */}
+              </View>
           <Text style={styles.addressHeading}>{t('Main information')}</Text>
           <View>
             <Input
               placeholder={t('First Name')}
               placeholderTextColor="gray"
               value={firstname}
+
+
+                  onSubmitEditing={() => {
+                    Lastnamer.current().focus();
+                  }}
               onChangeText={e => setFirstName(e)}
             />
             <Input
               placeholder={t('Last Name')}
               placeholderTextColor="gray"
               value={lastName}
+                  ref={Lastnamer}
+                  // ref={"Lastname"}
               onChangeText={e => setLastName(e)}
             />
             <Input
@@ -429,17 +397,13 @@ export default function AddressBook({route, navigation}) {
                   searchPlaceholder="Search..."
                   value={getCountryname}
                   onChange={(item) => {
-                    console.log(item)
                     setCountrycodeselect(item.id);
                     setRegionArray(item.available_regions);
                     if (item.available_regions != null) {
-                      console.log('enter not null', item.available_regions[0].name)
                       setRegion(item.available_regions[0].name)
                       setRegionId(item.available_regions[0].id)
                       setRegioncode(item.available_regions[0].code)
-
                     } else {
-                      console.log('enter  null',)
                       setRegionArray(null)
                     }
                   }}
@@ -472,7 +436,6 @@ export default function AddressBook({route, navigation}) {
                     searchPlaceholder="Search..."
                     value={getRegion}
                     onChange={(item) => {
-                      console.log(item)
                       setRegion(item.name)
                       setRegionId(item.id)
                       setRegioncode(item.code)
@@ -480,12 +443,6 @@ export default function AddressBook({route, navigation}) {
 
                   /> 
                 }
-                {/* <Input
-              placeholder={t('Country')}
-              placeholderTextColor="gray"
-              value={country}
-              onChangeText={e => setCountry(e)}
-            /> */}
             <Input
               placeholder={t('City')}
               placeholderTextColor="gray"
