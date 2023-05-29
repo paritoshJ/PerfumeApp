@@ -10,6 +10,7 @@ export const client = new ApolloClient({
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers:{
+      store: Constants.StoreCode,
       authorization: Constants.Token,
     }
   });
@@ -73,6 +74,7 @@ export const GET_ADDRESS_LIST = async () => {
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers: {
+      store: Constants.StoreCode,
       authorization: Constants.Token,
     }
   });

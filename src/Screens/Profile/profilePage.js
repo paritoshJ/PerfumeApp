@@ -11,6 +11,7 @@ import {
   Switch,
   I18nManager,
   DeviceEventEmitter,
+  Alert
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AccordionList} from 'accordion-collapse-react-native';
@@ -149,6 +150,31 @@ export default function ProfilePage({navigation}) {
 
     }).catch((err) => {
       setLoading(false);
+      console.log('error', err)
+      if (err == "ApolloError: The current customer isn't authorized.") {
+        Alert.alert('Session Expired', 'Your session has expired. Please login again to continue working.', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'OK', onPress: async () => {
+
+              try {
+                DeviceEventEmitter.emit('event.logout', {});
+                await AsyncStorage.setItem('token', '');
+                createEmptyCartForLogout();
+              } catch (error) {
+                console.log(error);
+              }
+              setTimeout(() => {
+                navigation.replace('LoadingPage');
+              }, 500);
+            }
+          },
+        ]);
+      }
     });
     GET_WISHLIST_PRODUCTS().then(async (res) => {
       console.log('Add wishlist', res);
@@ -157,7 +183,6 @@ export default function ProfilePage({navigation}) {
       } catch (e) {
         console.log(e);
       }
-
     }).catch((error) => {
 
     })

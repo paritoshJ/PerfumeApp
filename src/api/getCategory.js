@@ -261,6 +261,7 @@ export const GET_CATEGORY_PRODUCT = async (search, filter, pageSize, currentPage
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers: {
+      store: Constants.StoreCode,
       authorization: Constants.Token,
     }
   });

@@ -16,41 +16,52 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import {AppButton} from '../../Component/button/app-button';
 import {useTranslation} from 'react-i18next';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Moment from 'moment';
+import { useFocusEffect } from '@react-navigation/native';
 
-const ImageData = [
-  {
-    id: 1,
-    name: 'img1',
-    image: require('../../../assets/per-1.png'),
-    title: 'Amber Wood Noir',
-    disc: 'EAU DE PARFUME / 75ML / WOMAN',
-    price: '24',
-    discountPrice: '12',
-  },
-  {
-    id: 2,
-    name: 'img2',
-    image: require('../../../assets/per-2.png'),
-    title: 'Amber Wood Noir',
-    disc: 'EAU DE PARFUME / 75ML / WOMAN',
-    price: '24',
-    discountPrice: '12',
-  },
-  {
-    id: 3,
-    name: 'img3',
-    image: require('../../../assets/per-3.png'),
-    title: 'Amber Wood Noir',
-    disc: 'EAU DE PARFUME / 75ML / WOMAN',
-    price: '24',
-    discountPrice: '12',
-  },
-];
+
+// const ImageData = [
+//   {
+//     id: 1,
+//     name: 'img1',
+//     image: require('../../../assets/per-1.png'),
+//     title: 'Amber Wood Noir',
+//     disc: 'EAU DE PARFUME / 75ML / WOMAN',
+//     price: '24',
+//     discountPrice: '12',
+//   },
+//   {
+//     id: 2,
+//     name: 'img2',
+//     image: require('../../../assets/per-2.png'),
+//     title: 'Amber Wood Noir',
+//     disc: 'EAU DE PARFUME / 75ML / WOMAN',
+//     price: '24',
+//     discountPrice: '12',
+//   },
+//   {
+//     id: 3,
+//     name: 'img3',
+//     image: require('../../../assets/per-3.png'),
+//     title: 'Amber Wood Noir',
+//     disc: 'EAU DE PARFUME / 75ML / WOMAN',
+//     price: '24',
+//     discountPrice: '12',
+//   },
+// ];
 export default function OrderDetails({route, navigation}) {
-  const {page} = route.params;
+  const { page, items } = route.params;
   const {t} = useTranslation();
   const [orderClick, setOrderClick] = useState(false);
   const [refund, setRefund] = useState(true);
+  useFocusEffect(
+    React.useCallback(() => {
+      Moment.locale('en');
+      console.log('itemss', items);
+
+      return () => { };
+    }, []),
+  );
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -78,32 +89,32 @@ export default function OrderDetails({route, navigation}) {
             <TouchableOpacity
               style={styles.orderView}
               onPress={() => setOrderClick(!orderClick)}>
-              <Text style={styles.orderNumberText}>{t('orders')} #4562378</Text>
+              <Text style={styles.orderNumberText}>{t('orders')} #{items.increment_id}</Text>
             </TouchableOpacity>
           </View>
           {/* Order Detail View */}
           <View style={styles.orderDetailView}>
             <View style={styles.dateView}>
               <Text style={styles.orderDetailViewLabel}>{t('DATE')}</Text>
-              <Text style={styles.orderDetailViewText}>December 10, 2022</Text>
+              <Text style={styles.orderDetailViewText}>{Moment(items.created_at).format('MMM d, yyyy')}</Text>
             </View>
             <View style={styles.statusView}>
               <Text style={styles.orderDetailViewLabel}>{t('Status')}</Text>
-              <Badge style={styles.badge}>{t('Courier accepted')}</Badge>
+              <Badge style={styles.badge}>{items.is_guest_customer == true ? 'Courier accepted' : 'Courier processing'}</Badge>
             </View>
             <View style={styles.customerView}>
               <Text style={styles.orderDetailViewLabel}>{t('Customer')}</Text>
-              <Text style={styles.orderDetailViewText}>Ms. Anna Lin</Text>
+              <Text style={styles.orderDetailViewText}>{items.customer_name}</Text>
             </View>
             <View style={styles.addressView}>
               <Text style={styles.orderDetailViewLabel}>{t('Address')}</Text>
               <Text style={styles.orderDetailViewText}>
-                Apt 403, Biulding 7, Design Disctrict, Dubai, UAE
+                {items.shipping[0].street + ', ' + items.shipping[0].city + ', ' + items.shipping[0].postcode}
               </Text>
             </View>
             <View style={styles.phoneView}>
               <Text style={styles.orderDetailViewLabel}>{t('Phone')}</Text>
-              <Text style={styles.orderDetailViewText}>+971 56787904</Text>
+              <Text style={styles.orderDetailViewText}>{items.shipping[0].telephone}</Text>
             </View>
           </View>
           {/* Refund View */}
@@ -222,7 +233,7 @@ export default function OrderDetails({route, navigation}) {
               borderBottomColor: COLORS_NEW.lightGray,
               borderBottomWidth: 1,
             }}>
-            {ImageData.map(item => {
+            {items.items.map((item) => {
               return (
                 <View style={styles.productView}>
                   <View
@@ -234,7 +245,8 @@ export default function OrderDetails({route, navigation}) {
                     }}>
                     <Image
                       style={styles.productViewImage}
-                      source={item.image}
+                      source={{ uri: item.image_url }
+                      }
                     />
                   </View>
                   <View
@@ -257,7 +269,7 @@ export default function OrderDetails({route, navigation}) {
                           fontSize: Metrics.rfv(14),
                           opacity: 0.5,
                         }}>
-                        {item.disc}
+                        {item.display_category}
                       </Text>
                     </View>
                     <View style={styles.productViewPrice}>
@@ -267,9 +279,9 @@ export default function OrderDetails({route, navigation}) {
                           color: COLORS_NEW.blue,
                           fontWeight: '700',
                         }}>
-                        {item.discountPrice} {t('AED')}
+                        {item.price} 
                       </Text>
-                      <Text
+                      {/* <Text
                         style={{
                           marginHorizontal: Metrics.rfv(10),
                           textDecorationLine: 'line-through',
@@ -279,7 +291,7 @@ export default function OrderDetails({route, navigation}) {
                           color: COLORS_NEW.black,
                         }}>
                         {item.price} {t('AED')}
-                      </Text>
+                      </Text> */}
                     </View>
                   </View>
                 </View>
@@ -347,11 +359,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FCF9E8',
     color: '#E0BC00',
     height: Metrics.rfv(25),
-    width: Metrics.rfv(100),
+    width: Metrics.rfv(150),
     fontSize: Metrics.rfv(14),
     marginTop: Metrics.rfv(24),
     position: 'absolute',
     left: 0,
+    paddingTop: 5
   },
   orderDetailView: {
     marginTop: Metrics.rfv(10),

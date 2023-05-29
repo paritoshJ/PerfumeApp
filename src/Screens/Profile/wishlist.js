@@ -10,7 +10,8 @@ import {
   TouchableOpacity,
   I18nManager,
   SafeAreaView,
-  FlatList
+  FlatList, Alert,
+  DeviceEventEmitter
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AppButton} from '../../Component/button/app-button';
@@ -30,8 +31,13 @@ import Loader from '../../Component/Loader';
 import colorConstant from '../../constant/colorConstant';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import fontConstant from '../../constant/fontConstant';
+import { EMPTY_CART } from '../../api/getEmptyCart';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 export default function WishList({navigation}) {
+  const navigationn = useNavigation();
+
   const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
@@ -61,10 +67,42 @@ export default function WishList({navigation}) {
       console.log('GET_WISHLIST_PRODUCTS',res);
     }).catch((err)=>{
       setLoading(false);
+      console.log('err==>', err)
+      if (err == "ApolloError: The current user cannot perform operations on wishlist") {
+        Alert.alert('Session Expired', 'Your session has expired. Please login again to continue working.', [
 
-       console.log('GET_WISHLIST_ERROR',err);
+          {
+            text: 'OK', onPress: async () => {
+
+              try {
+                DeviceEventEmitter.emit('event.logout', {});
+                await AsyncStorage.setItem('token', '');
+                createEmptyCartForLogout();
+                navigationn.replace('LoadingPage');
+
+              } catch (error) {
+                console.log(error);
+              }
+              setTimeout(() => {
+
+              }, 500);
+            }
+          },
+        ]);
+      }
     })
   }
+  const createEmptyCartForLogout = async () => {
+    let res = await EMPTY_CART();
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
   const renderEmptyAndNoLogin = () =>{
   return <EmptyPageView 
           icon={<HeartSVG/>}
@@ -104,7 +142,7 @@ export default function WishList({navigation}) {
     return (
       <TouchableOpacity
         key={item}
-        onPress={() => props?.onFullItemPress()}
+        // onPress={() => props?.onFullItemPress()}
         style={{
           // flex: 1,
           marginLeft: '1.2%',

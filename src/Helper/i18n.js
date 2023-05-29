@@ -14,7 +14,6 @@ export const resources = {
     translation: arabic,
   },
 };
-
 i18n.use(initReactI18next).init({
   resources,
   lng: I18nManager.isRTL ? 'ar' : 'en',

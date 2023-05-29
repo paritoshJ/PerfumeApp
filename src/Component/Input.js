@@ -25,6 +25,8 @@ export default function Input(props) {
     hidePassword,
     maxLength,
     editable,
+    ref,
+    onSubmitEditing
   } = props;
 
   return (
@@ -41,6 +43,9 @@ export default function Input(props) {
         keyboardType={keyboardType}
         secureTextEntry={hidePassword}
         maxLength={maxLength}
+        ref={ref}
+        returnKeyType={"next"}
+        onSubmitEditing={e => { onSubmitEditing(e) }}
         editable={editable ?? true}
       />
       {showRightIcon && (
