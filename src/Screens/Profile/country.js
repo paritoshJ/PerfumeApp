@@ -16,7 +16,6 @@ import { isArrayNullOrEmpty } from '../../Helper/helper';
 import RNRestart from 'react-native-restart';
 import Loader from '../../Component/Loader';
 import { ScrollView } from 'react-native-gesture-handler';
-import CountryFlag from "react-native-country-flag";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from '../../Comman/Constants';
 
