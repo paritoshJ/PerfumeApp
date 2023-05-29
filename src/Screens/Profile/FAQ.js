@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -26,94 +26,104 @@ import fontConstant from '../../constant/fontConstant';
 import {useTranslation} from 'react-i18next';
 
 import MyStatusBar from '../../Component/MyStatusBar';
+import { GET_FAQ_API } from '../../api/getFaqFilter';
+import { GET_PRODUCTS_FAQ } from '../../api/getProduct';
+import {FlatGrid} from 'react-native-super-grid';
+import FaqSVG from '../../assets/svg/FAQ';
+import EmptyPageView from '../../Component/EmptyPageView';
+import { SafeAreaView } from 'react-native';
+import Loader from '../../Component/Loader';
+
 export default function FAQ({navigation}) {
   const [open, setOpen] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const plusImg = require('../../../assets/plus-sign.png');
   const minusImg = require('../../../assets/minus-color-sign.png');
   const {t} = useTranslation();
   const onSelectSwitch = index => {};
+  const [faqList, setFaqList] = useState([])
+  const [mainfaqList, setMainFaqList] = useState([])
 
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const faqList = [
-    {
-      id: 1,
-      title: t('ONLINE ORDERS'),
-      src: require('./../../assets/icon/Box.png'),
-    },
-    {
-      id: 2,
-      title: t('SHIPPING'),
-      src: require('./../../assets/icon/Delivery.png'),
-    },
-    {
-      id: 3,
-      title: t('CUSTOMER SERVICE'),
-      src: require('./../../assets/icon/Gear.png'),
-    },
-    {
-      id: 4,
-      title: t('RETURN'),
-      src: require('./../../assets/icon/Returns.png'),
-    },
-    {
-      id: 5,
-      title: t('PAYMENT'),
-      src: require('./../../assets/icon/Credit.png'),
-    },
-    {
-      id: 6,
-      title: '',
-      src: '',
-    },
-  ];
+  const handleSearch = (text) => {
+   if(text.trim().length > 0){
+      let arr = [...mainfaqList]
+      let newArrr = arr.filter((item)=>{
+        return item.title.includes(text);
+      })
+      setFaqList(newArrr)
+   }else{
+    setFaqList(mainfaqList)
+   }
+  };
+const getIcons = (item) =>{
+  if(item?.identifier === 'online-order'){
+   return require('./../../assets/icon/Box.png')
+  }else if(item?.identifier === 'shipping'){
+   return require('./../../assets/icon/Delivery.png')
+  }else if(item?.identifier === 'return'){
+   return require('./../../assets/icon/Returns.png')
+  }else if(item?.identifier === 'payment'){
+   return require('./../../assets/icon/Credit.png')
+  }else if(item?.identifier === 'customer-service'){
+   return require('./../../assets/icon/Gear.png')
+  }else{
+    return {uri:item?.image}
+  }
 
-  const List = [
-    {
-      id: 1,
-      title: 'Does it reduce ageing symptoms?',
-      body: 'A veritable masterpiece from the W Series of our Signature Collection. The Amber Wood perfume, is imbued with deep and intricate fruity-floral and spicy notes that have been judiciously entwined with cedar, amber wood and patchouli; to give you a sense of inimitable power.',
-    },
-    {
-      id: 2,
-      title: 'Does it reduce ageing symptoms?',
-      body: 'A veritable masterpiece from the W Series of our Signature Collection. The Amber Wood perfume, is imbued with deep and intricate fruity-floral and spicy notes that have been judiciously entwined with cedar, amber wood and patchouli; to give you a sense of inimitable power.',
-    },
-    {
-      id: 3,
-      title: 'Does it reduce ageing symptoms?',
-      body: 'A veritable masterpiece from the W Series of our Signature Collection. The Amber Wood perfume, is imbued with deep and intricate fruity-floral and spicy notes that have been judiciously entwined with cedar, amber wood and patchouli; to give you a sense of inimitable power.',
-    },
-  ];
+}
+
+useEffect(async () => {
+  setLoading(true)
+  let search = '';
+  let filter = {
+    // category_id:{eq:''},
+    // title: {eq:'return'},
+  };
+  const res =  await GET_FAQ_API(search,filter);
+  setLoading(false)
+  console.log(res);
+  if(res?.faqCategoryList?.items){
+   setFaqList(res?.faqCategoryList?.items);
+   setMainFaqList(res?.faqCategoryList?.items);
+  }
+  
+  
+  }, [])
 
   const renderItemProduct = ({ item,index }) => {
-    if (index==5) {
-      
-      return (
-        <View
-          style={styles.loginPageComponentViewBlank}>
-        </View>
-        
-      )
-    } else {
       return <TouchableOpacity
       style={styles.loginPageComponentView}
-      onPress={() => navigation.navigate('OnlineOrder')}>
+      onPress={() => navigation.navigate('OnlineOrder',{
+        title:item?.title,
+        questions:item?.questions?.items,
+      })}>
       <View style={styles.loginPageComponentview1}>
         <View>
-          <Image style={styles.loginPageComponent} source={item.src} />
+          <Image style={styles.loginPageComponent} source={getIcons(item)} />
         </View>
-        <Text style={styles.loginPageComponentview2}>{item.title}</Text>
+        <Text style={styles.loginPageComponentview2}>{item?.title.toUpperCase()}</Text>
       </View>
     </TouchableOpacity>
-    }
   
   
   };
+  const renderEmptyAndNoLogin = () =>{
+  return <EmptyPageView 
+          icon={<FaqSVG/>}
+          title={t("FAQ Not found")}
+          message={t('FAQ seems to be empty.')}
+          hideAddButton={true}
+          onButtonPress={()=>{}}
+          buttonTitle={''}
+          />
+  }
   return (
-    <View style={{flex: 1}}>
+    <SafeAreaView style={{flex: 1}}>
+    {!isLoading && <View style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <ImageBackground
         style={styles.header_container}
@@ -142,256 +152,30 @@ export default function FAQ({navigation}) {
           <Text style={styles.navBarText}>{t('FAQ')}</Text>
         </View>
       </ImageBackground>
-      <View style={{bottom: '8%'}}>
+      {faqList.length > 0 && <View style={{bottom: '8%'}}>
         <CustomSwitch
           selectionMode={2}
           roundCorner={true}
           option1={'Sort'}
           option2={'Filters'}
+          onSearch={(text)=>{handleSearch(text)}}
           onSelectSwitch={onSelectSwitch}
           selectionColor={COLORS_NEW.lightGray}
         />
-      </View>
-      {/* <ImageBackground
-        source={require('../../../assets/FAQ-back.png')}
-        resizeMode="stretch"
-        style={styles.img}>
-        <View style={styles.navBarView}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image
-              style={styles.navBarImage1}
-              source={require('../../../assets/back-white.png')}
-            />
-          </TouchableOpacity>
-
-          <Text style={styles.navBarText}>FAQs</Text>
-          <TouchableOpacity>
-            <Image style={styles.navBarImage1} source={''} />
-          </TouchableOpacity>
-        </View>
-        <View
-          style={{
-            marginHorizontal: Metrics.rfv(20),
-            alignItems: 'center',
-            justifyContent: 'center',
-            top: 20,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-        />
-        <CustomSwitch
-          selectionMode={2}
-          roundCorner={true}
-          option1={'Sort'}
-          option2={'Filters'}
-          onSelectSwitch={onSelectSwitch}
-          selectionColor={COLORS_NEW.lightGray}
-        />
-      </ImageBackground> */}
-      <ScrollView style={styles.scrollView}>
-        {/* Fist View Component */}
+      </View>}
+      
         <View style={styles.FirstView}>
-          <FlatList
-            data={faqList}
-            renderItem={renderItemProduct}
-            numColumns={2}
-            ItemSeparatorComponent={(item, index)=>{return (<View style={{marginHorizontal :  index === 0 ? 0 : 8}}></View>)}}
-
-          //  contentContainerStyle={{justifyContent:'space-between'}}
-            keyExtractor={(item, index) => index.toString()}
-            // ListFooterComponent={renderFooter}
-          />
-          {/* <TouchableOpacity
-            style={styles.loginPageComponentView}
-            onPress={() => navigation.navigate('OnlineOrder')}>
-            <View style={styles.loginPageComponentview1}>
-              <View>
-                <Image
-                  style={styles.loginPageComponent}
-                  source={require('../../../assets/online-order.png')}
-                />
-              </View>
-              <Text style={styles.loginPageComponentview2}>
-                {t('ONLINE ORDERS')}
-              </Text>
-            </View>
-            <View style={styles.loginPageComponentText}>
-              <Image
-                style={{
-                  width: Metrics.rfv(10),
-                  height: Metrics.rfv(10),
-                  marginTop: Metrics.rfv(5),
-                  resizeMode: 'contain',
-                  transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
-                }}
-                source={require('../../../assets/arrow.png')}
-              />
-            </View>
-          </TouchableOpacity> */}
-
-          {/* <TouchableOpacity
-            style={styles.loginPageComponentView}
-            onPress={() => navigation.navigate('')}>
-            <View style={styles.loginPageComponentview1}>
-              <View>
-                <Image
-                  style={styles.loginPageComponent}
-                  source={require('../../../assets/shipping.png')}
-                />
-              </View>
-              <Text style={styles.loginPageComponentview2}>
-                {t('SHIPPING')}
-              </Text>
-            </View>
-            <View style={styles.loginPageComponentText}>
-              <Image
-                style={{
-                  width: Metrics.rfv(10),
-                  height: Metrics.rfv(10),
-                  marginTop: Metrics.rfv(5),
-                  resizeMode: 'contain',
-                  transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
-                }}
-                source={require('../../../assets/arrow.png')}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.loginPageComponentView}
-            onPress={() => navigation.navigate('')}>
-            <View style={styles.loginPageComponentview1}>
-              <View>
-                <Image
-                  style={styles.loginPageComponent}
-                  source={require('../../../assets/setting.png')}
-                />
-              </View>
-              <Text style={styles.loginPageComponentview2}>
-                {t('CUSTOMER SERVICE')}
-              </Text>
-            </View>
-            <View style={styles.loginPageComponentText}>
-              <Image
-                style={{
-                  width: Metrics.rfv(10),
-                  height: Metrics.rfv(10),
-                  marginTop: Metrics.rfv(5),
-                  resizeMode: 'contain',
-                  transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
-                }}
-                source={require('../../../assets/arrow.png')}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.loginPageComponentView}
-            onPress={() => navigation.navigate('')}>
-            <View style={styles.loginPageComponentview1}>
-              <View>
-                <Image
-                  style={styles.loginPageComponent}
-                  source={require('../../../assets/Return.png')}
-                />
-              </View>
-              <Text style={styles.loginPageComponentview2}>{t('RETURN')}</Text>
-            </View>
-            <View style={styles.loginPageComponentText}>
-              <Image
-                style={{
-                  width: Metrics.rfv(10),
-                  height: Metrics.rfv(10),
-                  marginTop: Metrics.rfv(5),
-                  resizeMode: 'contain',
-                  transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
-                }}
-                source={require('../../../assets/arrow.png')}
-              />
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.loginPageComponentView}>
-            <View style={styles.loginPageComponentview1}>
-              <View>
-                <Image
-                  style={styles.loginPageComponent}
-                  source={require('../../../assets/Payment.png')}
-                />
-              </View>
-              <Text style={styles.loginPageComponentview2}>{t('PAYMENT')}</Text>
-            </View>
-            <View style={styles.loginPageComponentText}>
-              <Image
-                style={{
-                  width: Metrics.rfv(10),
-                  height: Metrics.rfv(10),
-                  marginTop: Metrics.rfv(5),
-                  resizeMode: 'contain',
-                  transform: I18nManager.isRTL ? [{rotate: '180deg'}] : '',
-                }}
-                source={require('../../../assets/arrow.png')}
-              />
-            </View>
-          </TouchableOpacity> */}
+         {faqList.length > 0 ? <FlatGrid
+          itemDimension={130}
+          data={faqList}
+          renderItem={renderItemProduct}
+        /> : <View style={{flex:1,alignItems:'center',}}>
+                {renderEmptyAndNoLogin()}
+        </View>}
         </View>
-        {/* Second View */}
-        <View style={{paddingHorizontal: Metrics.rfv(15)}}>
-         
-          <View style={styles.ListView}>
-          <Text
-            style={{
-              fontSize: Metrics.rfv(18),
-              marginVertical: Metrics.rfv(20),
-              fontFamily: fontConstant.gambetta,
-              fontStyle: 'italic',
-              color: colorConstant.BLACK,
-            }}>
-            {t('Popular FAQs')}
-          </Text>
-            {List.map(item => {
-              return (
-                <Collapse index={item.id} onToggle={handleClick}>
-                  <CollapseHeader
-                    style={{
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      paddingVertical: Metrics.rfv(15),
-                      // borderBottomColor: COLORS_NEW.gray,
-                      // borderBottomWidth: open ? 0 : 1,
-                      alignItems: 'center',
-                    }}>
-                    <Text
-                      style={{
-                        color: open ? COLORS_NEW.blue : COLORS_NEW.black,
-                        // marginBottom: Metrics.rfv(10),
-                        fontSize: Metrics.rfv(15),
-                        fontFamily: fontConstant.satoshi,
-                        fontStyle: 'normal',
-                      }}>
-                      {t(item.title)}
-                    </Text>
-                    <Image
-                      style={styles.navBarImage1}
-                      source={open ? minusImg : plusImg}
-                    />
-                  </CollapseHeader>
-                  <CollapseBody
-                    style={{
-                      borderBottomColor: COLORS_NEW.gray,
-                      borderBottomWidth: 1,
-                    }}>
-                    <Text style={styles.bodyText}>{item.body}</Text>
-                  </CollapseBody>
-                </Collapse>
-              );
-            })}
-          </View>
-        </View>
-      </ScrollView>
-      <View style={styles.mainView} />
-    </View>
+    </View>}
+    <Loader loading={isLoading}/>
+    </SafeAreaView>
   );
 }
 
@@ -428,14 +212,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Gambetta-BoldItalic',
   },
   loginPageComponentView: {
-    marginHorizontal: Metrics.rfv(15),
     borderColor: COLORS_NEW.lightGray,
-    borderRadius: Metrics.rfv(10),
-    borderWidth: Metrics.rfv(1),
-    paddingVertical: Metrics.rfv(20),
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingVertical: 20,
     alignItems: 'center',
-    flex: 1,
-    marginBottom: Metrics.rfv(15),
+    flex: 0.5,
+    marginBottom: 16,
   },
   loginPageComponentViewBlank: {
     marginHorizontal: Metrics.rfv(15),
@@ -454,6 +237,7 @@ const styles = StyleSheet.create({
   },
   loginPageComponentview1: {
     // flexDirection: 'row',
+    flex:1,
     justifyContent: 'space-around',
     alignItems: 'center',
   },
@@ -486,7 +270,9 @@ const styles = StyleSheet.create({
     textAlign:'center'
   },
   FirstView: {
-    marginTop: Metrics.rfv(10),
+    marginVertical: Metrics.rfv(10),
+    marginHorizontal:20,
+    flex:1,
   },
   img: {
     height: Metrics.rfv(120),

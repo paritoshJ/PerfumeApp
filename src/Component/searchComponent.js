@@ -5,7 +5,7 @@ import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import {COLORS_NEW} from '../Helper/colors.new';
 import Metrics from '../Helper/metrics';
 import SearchBar from 'react-native-dynamic-search-bar';
-const CustomSwitch = ({onSelectSwitch, selectionColor}) => {
+const CustomSwitch = ({onSelectSwitch, selectionColor,onSearch}) => {
   const updatedSwitchData = val => {
     setSelectionMode(val);
     onSelectSwitch(val);
@@ -39,8 +39,7 @@ const CustomSwitch = ({onSelectSwitch, selectionColor}) => {
           }}>
           <SearchBar
             placeholder="Search here"
-            onPress={() => alert('onPress')}
-            onChangeText={text => console.log(text)}
+            onChangeText={text => onSearch(text)}
             clearIconImageSource=""
             style={{backgroundColor:'transparent'}}
           />
