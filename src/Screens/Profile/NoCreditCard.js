@@ -20,7 +20,6 @@ import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import { GET_CREDIT_CARD_API, DELETE_CREDIT_CARD_API } from '../../api/AddCreditCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import Swipeout from 'react-native-swipeout';
 import EditPencilSVG from '../../assets/svg/EditPencil';
 import TrashIconSVG from '../../assets/svg/TrashIconSVG';
