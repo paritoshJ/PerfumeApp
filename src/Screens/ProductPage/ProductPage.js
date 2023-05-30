@@ -87,7 +87,10 @@ const ProductPage = props => {
         setProductDetail(deatil);
         setLoading(false);
         setProductVariant(deatil?.variants);
-        setSelected(deatil?.variants[0]);
+        if(deatil?.variants && deatil?.variants.length>0){
+           setSelected(deatil?.variants[0]);
+        }
+        
       })
       .catch(error => {
         setLoading(false);
@@ -120,7 +123,7 @@ const ProductPage = props => {
     if (productDetail?.__typename === 'SimpleProduct') {
       productType = {
         image: productDetail?.image?.url,
-        discount_percent: productDetail?.discount_percent,
+        discount_percent: productDetail?.price_range?.minimum_price?.discount?.percent_off,
         media_gallery: productDetail?.media_gallery,
         product_lasting_hours:
           productDetail?.customAttributesAjmalData[0]?.product_lasting_hours,
@@ -132,7 +135,8 @@ const ProductPage = props => {
     } else if (productDetail?.__typename === 'ConfigurableProduct') {
       productType = {
         image: productDetail?.image?.url,
-        discount_percent: productDetail?.discount_percent,
+        // discount_percent: productDetail?.discount_percent,
+        discount_percent: productDetail?.price_range?.minimum_price?.discount?.percent_off,
         media_gallery: productDetail?.media_gallery,
         product_lasting_hours:
           productDetail?.customAttributesAjmalData[0]?.product_lasting_hours,
@@ -356,11 +360,11 @@ const ProductPage = props => {
                       resizeMode="contain"
                     />
                   </View>
-                  {productType?.discount_percent && (
+                  {productType?.discount_percent && productType?.discount_percent>0 && (
                     <View style={style.offer}>
                       <View style={style.offer_view}>
                         <Text style={style.offer_text}>
-                          {productType?.discount_percent}
+                          {`${productType?.discount_percent}%`}
                         </Text>
                       </View>
                     </View>
@@ -723,8 +727,7 @@ const ProductPage = props => {
               <View style={{alignItems: 'flex-start'}}>
                 <Text
                   style={[
-                    style.product_name,
-                    {fontSize: fontConstant.TEXT_20_SIZE_BOLD, paddingTop: 10},
+                    {fontSize: fontConstant.TEXT_20_SIZE_BOLD,},
                   ]}>
                   {t('FAQ')}
                 </Text>
@@ -733,7 +736,7 @@ const ProductPage = props => {
                 list={faqListClipped}
                 header={head}
                 body={body}
-                keyExtractor={item => `${item.id}`}
+                keyExtractor={item => `${item.answer}`}
               />
 
               {faqList.length > 3 && (

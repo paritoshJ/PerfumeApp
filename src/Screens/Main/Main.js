@@ -353,9 +353,12 @@ const MainScreen = props => {
       const colorIndex = Math.floor(Math.random() * COLORS.length);
       return COLORS[colorIndex];
     }
-    let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
-    let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+    // let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+    // let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
 
+   let finalPrice = item?.price_range?.minimum_price?.final_price;
+   let regularPrice = item?.price_range?.minimum_price?.regular_price;
+   let offer =  item?.price_range?.minimum_price?.discount?.percent_off
     return (
       <TouchableOpacity
         style={{
@@ -371,12 +374,12 @@ const MainScreen = props => {
         <View
           style={{
             width: '100%',
-            justifyContent: isStringNotNull(item?.discount_percent)
+            justifyContent: isStringNotNull(offer) && offer > 0
               ? 'space-between'
               : 'flex-end',
             flexDirection: 'row',
           }}>
-          {isStringNotNull(item?.discount_percent) && (
+          {isStringNotNull(offer) && offer > 0 && (
             <View
               style={{
                 width: 35,
@@ -394,7 +397,7 @@ const MainScreen = props => {
                   fontStyle: 'normal',
                   fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
                 }}>
-                {item?.discount_percent}
+                {`${offer}%`}
               </Text>
             </View>
           )}
@@ -493,22 +496,22 @@ const MainScreen = props => {
               selectedProduct?.customAttributesAjmalData[0]?.display_category
             }
             price={
-              selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]
+              selectedProduct?.price_range?.minimum_price?.final_price
                 .value
             }
             offer={
-              // selectedProduct?.price_range?.minimum_price?.discount?.amount_off
-              selectedProduct?.discount_percent
+              selectedProduct?.price_range?.minimum_price?.discount?.percent_off
+              // selectedProduct?.discount_percent
             }
             displaySize1={
               selectedProduct?.customAttributesAjmalData[0]?.display_size
             }
             finalPrice={
-              selectedProduct?.price_range[0]?.minimum_price[0]?.final_price[0]
+              selectedProduct?.price_range?.minimum_price?.final_price
             }
             regularPrice={
-              selectedProduct?.price_range[0]?.minimum_price[0]
-                ?.regular_price[0]
+              selectedProduct?.price_range?.minimum_price
+                ?.regular_price
             }
           />
         )}
@@ -529,7 +532,10 @@ const MainScreen = props => {
                 <View style={style.child}>
                   <View style={style.shop_view}>
                     <Text style={style.ajmal_text}>{item?.title}</Text>
-                    <TouchableOpacity style={style.shop_button}>
+                    <TouchableOpacity style={style.shop_button} onPress={()=>{
+                      // navigationRef.navigate('ProductPage', { skuID: item?.sku });
+                      console.log(item);
+                      }}>
                       <Text style={style.button_text}>{t('Shop now')}</Text>
                     </TouchableOpacity>
                   </View>

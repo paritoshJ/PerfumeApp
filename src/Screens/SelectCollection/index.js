@@ -174,7 +174,7 @@ const SelectCollection = props => {
     if (isHome) {
       finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
       regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
-      image = item?.image;
+      // image = item?.image;
     } else {
       finalPrice = item?.price_range?.minimum_price?.final_price;
       regularPrice = item?.price_range?.minimum_price?.regular_price;
@@ -182,8 +182,8 @@ const SelectCollection = props => {
     }
     // console.log('item.id', item.id)
 
-    var count = getWishlist.filter(function (item1) {
-      return item1.product.id == item.id;
+    var count = getWishlist?.filter(function (item1) {
+      return item1?.product?.id == item?.id;
     });
     if (count != '') {
       Wishlist = true;
@@ -192,6 +192,7 @@ const SelectCollection = props => {
       Wishlist = false;
 
     }
+    console.log('count', isHome,count,item);
     console.log('get value Wishlist', Wishlist);
 
     return (

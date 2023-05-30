@@ -27,6 +27,7 @@ const ProductCard = props => {
   } = props;
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   console.warn(item?.image);
+  console.warn(item);
 
   let name = item?.name;
   let finalPrice = {};
@@ -36,9 +37,12 @@ const ProductCard = props => {
   // let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
 
   if (isHome) {
-    finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
-    regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+    // finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
+    // regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
+    finalPrice = item?.price_range?.minimum_price?.final_price;
+    regularPrice = item?.price_range?.minimum_price?.regular_price;
     image = item?.image;
+    
   } else if (isSearch) {
     finalPrice = item?.price_range?.minimum_price?.final_price;
     regularPrice = item?.price_range?.minimum_price?.regular_price;
@@ -48,7 +52,8 @@ const ProductCard = props => {
     regularPrice = item?.price_range?.minimum_price?.regular_price;
     image = item?.image[0]?.url;
   }
-  // let offers = item?.price_range?.minimum_price?.discount?.amount_off;
+   
+  let offers =  item?.price_range?.minimum_price?.discount?.percent_off
   let size =
     item?.customAttributesAjmalData !== undefined
       ? item?.customAttributesAjmalData[0]?.display_size
@@ -91,10 +96,10 @@ const ProductCard = props => {
         }}>
         <View
           style={{
-            justifyContent: offer ? 'space-between' : 'flex-end',
+            justifyContent: isStringNotNull(offers) && offers > 0 ? 'space-between' : 'flex-end',
             flexDirection: 'row',
           }}>
-          {isStringNotNull(item?.discount_percent) && (
+          {isStringNotNull(offers) && offers > 0 && (
             <View
               style={{
                 width: 35,
@@ -112,7 +117,7 @@ const ProductCard = props => {
                   fontStyle: 'normal',
                   fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
                 }}>
-                {item?.discount_percent}
+                {`${offers}%`}
               </Text>
             </View>
           )}
