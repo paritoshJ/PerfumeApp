@@ -39,11 +39,11 @@ export const GET_SLIDER_PRODUCTS = async (slider_name) => {
             items {
                 id
                 sku
+              special_price
                 name
                 qty
                 type_id
                 stock_status
-                discount_percent
                 attribute_set_id
                 has_options
                 required_options
@@ -93,7 +93,7 @@ export const GET_SLIDER_PRODUCTS = async (slider_name) => {
                     value
                     percent
                 }
-                price
+               
                 price_range {
                     minimum_price {
                         regular_price {
@@ -104,6 +104,10 @@ export const GET_SLIDER_PRODUCTS = async (slider_name) => {
                             value
                             currency
                         }
+                      discount {
+                        amount_off
+                        percent_off
+                      }
                     }
                     maximum_price {
                         regular_price {
@@ -114,15 +118,13 @@ export const GET_SLIDER_PRODUCTS = async (slider_name) => {
                             value
                             currency
                         }
+                      	discount {
+                          amount_off
+                          percent_off
+                        }
                     }
                 }
-                price_tiers {
-                    quantity
-                    final_price {
-                        value
-                        currency
-                    }
-                }
+                
             }
         }
 }`});

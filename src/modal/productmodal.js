@@ -45,6 +45,7 @@ const ProductModal = props => {
   const [value, setValue] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  console.log(offer,finalPrice,regularPrice);
   
   const closeDailog = () => {
     setOnOpenDailog(false);
@@ -109,7 +110,7 @@ const ProductModal = props => {
                 transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
               }}
             />
-            {!isStringNotNull(offer) && (
+            {isStringNotNull(offer) && offer>0 && (
               <View
                 style={{
                   width: 35,
@@ -131,7 +132,7 @@ const ProductModal = props => {
                     fontStyle: 'normal',
                     fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
                   }}>
-                  {'20%'}
+                  {`${offer}%`}
                 </Text>
               </View>
             )}

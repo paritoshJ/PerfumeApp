@@ -109,7 +109,7 @@ export default function FAQList({navigation, route}) {
         list={faqList}
         header={head}
         body={body}
-        keyExtractor={item => `${item.id}`}
+        keyExtractor={item => `${item.answer}`}
       />
       <View style={styles.mainView} />
     </>
