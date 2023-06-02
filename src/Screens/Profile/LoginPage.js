@@ -8,6 +8,7 @@ import {
   Image,
   Switch,
   I18nManager,
+  Platform
 } from 'react-native';
 import {AppButton} from '../../Component/button/app-button';
 import Metrics from '../../Helper/metrics';
@@ -18,12 +19,40 @@ import RNRestart from 'react-native-restart';
 import {useTranslation} from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import colorConstant from '../../constant/colorConstant';
+import { AccessToken, LoginManager, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  NativeModuleError,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function LoginPage({navigation}) {
   const {t, i18n} = useTranslation();
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  useFocusEffect(
+    React.useCallback(() => {
+      GmailConfiguration();
 
+      return () => { };
+    }, []),
+  );
+  const GmailConfiguration = () => {
+    GoogleSignin.configure({
+      // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+      webClientId: '152836859746-krombq3uv01ao08ag211rlhne23m6ai9.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      hostedDomain: '', // specifies a hosted domain restriction
+      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+      accountName: '', // [Android] specifies an account name on the device that should be used
+      iosClientId: '152836859746-krombq3uv01ao08ag211rlhne23m6ai9.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+      googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+      openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
+      profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
+    });
+  }
   const [currentLanguage, setLanguage] = useState('ar');
   const changeLanguage = value => {
     i18n
@@ -47,7 +76,69 @@ export default function LoginPage({navigation}) {
     }
     RNRestart.Restart();
   };
+  const FBGraphRequest = (fields, callback) => {
+    const accessData = AccessToken.getCurrentAccessToken();
+    const request = new GraphRequest('/me',
+      {
+        accessToken: accessData.accessToken,
+        parameters: {
+          fields: {
+            string: fields
+          }
+        }
+      },
+      (error, result) => {
+        if (result) {
+          this.setState({ isLoading: true });
+          this.Facebooklogin(result.email, result.id, result.name)
+        } else {
+          reject(error)
+        }
+      }
+    )
+    new GraphRequestManager().addRequest(request).start();
+  }
+  const FacebookLogin = () => {
+    try {
+      if (Platform.OS == 'ios') {
+        LoginManager.setLoginBehavior('browser');
+      }
+      else {
+        LoginManager.setLoginBehavior('web_only');
+      }
+      LoginManager.logInWithPermissions(['public_profile', 'email']).then((result) => {
+        if (result.isCancelled) {
+        } else {
+          this.FBGraphRequest('id,email,picture.width(1024).height(1024),name', this.FBLoginCallback);
+        }
+      });
+    } catch (nativeError) {
+      try {
+        LoginManager.setLoginBehavior('NATIVE_ONLY');
+      } catch (webError) {
+      }
+    }
+  }
+  const signIn = async () => {
+    try {
+      console.log('if ');
 
+      const userInfo = await GoogleSignin.signInSilently();
+      console.log('if 1');
+
+      this.setState({ userInfo, error: undefined });
+    } catch (error) {
+      console.log('Error', error);
+      // const typedError = error as NativeModuleError;
+      if (typedError.code === statusCodes.SIGN_IN_REQUIRED) {
+        this.setState({
+          error: new Error('User not signed it yet, please sign in :)'),
+        });
+      } else {
+        this.setState({ error: typedError });
+      }
+    }
+  };
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -93,13 +184,15 @@ export default function LoginPage({navigation}) {
           <View style={{flex: 1, height: 1, backgroundColor: '#EEEDE7'}} />
         </View>
         <View style={styles.socialLoginLogo}>
-          <TouchableOpacity style={styles.socialLoginLogoComponent}>
+          <TouchableOpacity onPress={() => { signIn() }} style={styles.socialLoginLogoComponent}>
             <Image
               style={styles.button}
               source={require('../../../assets/Google.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.socialLoginLogoComponent}>
+          <TouchableOpacity onPress={() => {
+            FacebookLogin();
+          }} style={styles.socialLoginLogoComponent}>
             <Image
               style={styles.button}
               source={require('../../../assets/Facebook.png')}

@@ -116,6 +116,8 @@ export default function AddressBookList({route, navigation}) {
     setLoading(true);
     DELETE_ADDRESS(item.id).then((Respopnse) => {
       console.log('Response', Respopnse);
+      setSelectedItem(0)
+
       getaddresslist();
     }).catch((error) => {
       setLoading(false);

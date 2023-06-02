@@ -17,9 +17,9 @@ import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
 import imageConstant from '../../constant/imageConstant';
 import style from './style';
-
 const CollectionDetails = props => {
   const {t, i18n} = useTranslation();
+  console.log('props url', props)
   const collationdata = [
     {
       name: 'Party',

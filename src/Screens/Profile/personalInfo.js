@@ -32,6 +32,7 @@ import { GET_PROFILE_DETAIL, ADD_PROFILE_API, UPDATE_PROFILE_PICTURE_API } from 
 import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import RNFS from 'react-native-fs';
+import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 
 export default function PersonalInfo({navigation}) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -47,6 +48,7 @@ export default function PersonalInfo({navigation}) {
   const [getLastName, SetLastname] = useState();
   const [getemailaddress, setEmailAddress] = useState();
   const [getPhonenumber, setPhonenumber] = useState();
+  const [getName, setname] = useState('Perfume');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -59,6 +61,11 @@ export default function PersonalInfo({navigation}) {
   const getProfileDetail = () => {
     GET_PROFILE_DETAIL().then((res) => {
       setLoading(false);
+      if (res.customerExtraData.firstname == '') {
+        setname('Perfuem')
+      } else {
+        setname(res.customerExtraData.firstname);
+      }
       setProfileDAta(res.customerExtraData)
       SetFirstName(res.customerExtraData?.firstname);
       SetLastname(res.customerExtraData?.lastname);
@@ -151,8 +158,9 @@ export default function PersonalInfo({navigation}) {
   };
 
   return (
-    <>
-      <View>
+    <KeyboardAwareView doNotForceDismissKeyboardWhenLayoutChanges={true}>
+      <View style={{ flex: 1 }}>
+
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -182,13 +190,14 @@ export default function PersonalInfo({navigation}) {
             <TouchableOpacity onPress={() => setShowMenu(true)}>
               <Image
                 style={styles.avatar}
-                source={image ? image : require('../../../assets/Avatar.png')}
-                PlaceholderContent={<ActivityIndicator />}
+                  source={{ uri: 'https://eu.ui-avatars.com/api/?name=$' + getName + '&size=250' }}
+
+
               />
               <Image
                 style={{
-                  width: 32,
-                  height: 32,
+                    width: 35,
+                    height: 35,
                   position: 'absolute',
                   bottom: 0,
                   right: 0,
@@ -198,7 +207,7 @@ export default function PersonalInfo({navigation}) {
               />
             </TouchableOpacity>
           </View>
-            <Text style={styles.userName}>{getProfileData?.firstname}</Text>
+            <Text style={styles.userName}>{getProfileData?.firstname + ' ' + getLastName}</Text>
           <View>
             <TextInput
               style={styles.TextInput}
@@ -243,10 +252,12 @@ export default function PersonalInfo({navigation}) {
                 }}
               />
             </View>
+            </View>
+            <View style={{ marginHorizontal: Metrics.rfv(16) }}>
+
+            </View>
           </View>
-        </View>
-      </ScrollView>
-      <View style={{marginHorizontal: Metrics.rfv(16)}}>
+        </ScrollView>
         <AppButton
           disabled={false}
           tx={t('Save changes')}
@@ -266,14 +277,10 @@ export default function PersonalInfo({navigation}) {
                 setLoading(false);
 
               });
-
-
-
             }}
         />
-      </View>
         <Loader loading={loading} />
-      </View>
+
       {/* Modal */}
       <Modal isVisible={isModalVisible}>
         <View style={styles.ModalView}>
@@ -360,7 +367,8 @@ export default function PersonalInfo({navigation}) {
           />
         </Pressable>
       )}
-    </>
+      </View>
+    </KeyboardAwareView>
   );
 }
 
@@ -371,8 +379,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   scrollView: {
+    flex: 1,
     backgroundColor: COLORS_NEW.white,
     paddingHorizontal: Metrics.rfv(20),
+    paddingBottom: '20%',
   },
   navBarView: {
     flexDirection: 'row',

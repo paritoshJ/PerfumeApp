@@ -69,7 +69,8 @@ export default StyleSheet.create({
      },
      viewall_Image:{
         width: 100, 
-        height: 80
+        height: 80,
+        borderRadius: 10
      },
      
 })

@@ -15,6 +15,8 @@ import {Rating, AirbnbRating} from 'react-native-ratings';
 import {useTranslation} from 'react-i18next';
 
 const AddAddressModal = props => {
+  console.log(props)
+
   const {onOpenDailog, setOnOpenDailog} = props;
   const [text, settext] = useState('');
   const {t, i18n} = useTranslation();

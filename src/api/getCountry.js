@@ -119,6 +119,8 @@ export const GET_COUNTRY_API = (token) => {
                        weight_unit
                        base_url
                        base_link_url
+                       copyright
+                       logo_alt 
                        base_static_url
                        base_media_url
                        secure_base_url
@@ -161,12 +163,10 @@ export const GET_TRANSLATION_JSON = (token) => {
             });
             if (data) {
                 // alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
-                console.log('data', JSON.stringify(data));
                 resolve(data);
             }
         } catch (error) {
             //   alert(`error => ${JSON.stringify(error)}`);
-            console.log('error', `${JSON.stringify(error)}`);
             reject(error);
         }
     });

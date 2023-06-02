@@ -45,7 +45,7 @@ export default function Input(props) {
         maxLength={maxLength}
         ref={ref}
         returnKeyType={"next"}
-        onSubmitEditing={e => { onSubmitEditing(e) }}
+        // onSubmitEditing={e => { onSubmitEditing(e) }}
         editable={editable ?? true}
       />
       {showRightIcon && (

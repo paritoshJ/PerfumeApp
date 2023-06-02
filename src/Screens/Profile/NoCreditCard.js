@@ -28,6 +28,7 @@ import UnCheckedRadioSVG from '../../assets/svg/UnCheckedRadio';
 import fontConstant from '../../constant/fontConstant';
 import PlusSVG from '../../assets/svg/PlusSVG';
 import Modal from 'react-native-modal';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Example icon library
 
 export default function NoCreditCard({navigation}) {
   const [loading, setLoading] = useState(false);
@@ -62,6 +63,46 @@ export default function NoCreditCard({navigation}) {
     })
     console.log('response', getCreditcardList.length)
 
+  }
+
+  const detectCardType = (cardNumber) => {
+    const cleanedCardNumber = cardNumber.replace(/\D/g, ''); // Remove non-digit characters
+
+    if (/^4\d{12}(\d{3})?$/.test(cleanedCardNumber)) {
+      return 'Visa';
+    } else if (/^5[1-5]\d{14}$/.test(cleanedCardNumber)) {
+      return 'Mastercard';
+    } else if (/^3[47]\d{13}$/.test(cleanedCardNumber)) {
+      return 'American Express';
+    } else if (/^6(?:011|5\d{2})\d{12}$/.test(cleanedCardNumber)) {
+      return 'Discover';
+    } else if (/^(?:2131|1800|35\d{3})\d{11}$/.test(cleanedCardNumber)) {
+      return 'JCB';
+    } else if (/^3(?:0[0-5]|[68]\d)\d{11}$/.test(cleanedCardNumber)) {
+      return 'Diners Club';
+    }
+    else {
+      return 'Unknown';
+    }
+  };
+
+  const CreditCardIcon = (Carname) => {
+    if (Carname == 'Visa') {
+      return require('../../../src/assets/images/visa.png');
+    } else if (Carname == 'Mastercard') {
+      return require('../../../src/assets/images/master.png');
+    } else if (Carname == 'American Express') {
+      return require('../../../src/assets/images/amirecan.png');
+    } else if (Carname == 'Discover') {
+      return require('../../../src/assets/images/discover.png');
+    } else if (Carname == 'JCB') {
+      return require('../../../src/assets/images/jcb.png');
+    } else if (Carname == 'Diners Club') {
+      return require('../../../src/assets/images/dinnerclub.png');
+    }
+    else {
+      return 'credit-card';
+    }
   }
 
 
@@ -99,7 +140,9 @@ export default function NoCreditCard({navigation}) {
       } contentContainerStyle={{ flexGrow: 1 }}>
         {getCreditcardList?.length > 0 ? (
           getCreditcardList.map((e, index) => {
-            console.log('enter', index)
+            var cardName = detectCardType(e?.card_number);
+            var icon = CreditCardIcon(cardName);
+            // console.log('enter', CreditCardIcon(e?.card_number))
             return (
               <Swipeout
                 autoClose={true}
@@ -177,7 +220,9 @@ export default function NoCreditCard({navigation}) {
                   ) : (
                     <UnCheckedRadioSVG />
                   )}
-                  <View style={{ flexDirection: 'column', marginHorizontal: 16 }}>
+                  <View style={{ marginHorizontal: 16 }}>
+                    <View style={{ flexDirection: 'row', }}>
+
                     <Text
                       style={{
                         fontWeight: '500',
@@ -186,6 +231,9 @@ export default function NoCreditCard({navigation}) {
                         color: COLORS_NEW.mainBlack,
                         letterSpacing: 0.4,
                       }}>{`${e?.cardholder_name}`}</Text>
+                      <View style={{ backgroundColor: 'green', width: '5%', height: '5%' }}></View>
+                    </View>
+
                     <Text
                       style={{
                         marginTop: 6,
@@ -193,7 +241,7 @@ export default function NoCreditCard({navigation}) {
                         fontFamily: fontConstant.satoshi,
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
-                      }}>{`${e?.card_number.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim()}`}</Text>
+                      }}>{`${cardName + ' **********' + e?.card_number.replace(/\s?/g, '').replace(/(\d{4})/g, '$1 ').trim().replace(/.(?=.{4,}$)/g, '')}`}</Text>
                     <Text
                       style={{
                         marginTop: 6,
@@ -202,7 +250,16 @@ export default function NoCreditCard({navigation}) {
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
                       }}>{`${t('Expiration :')} ${e?.expiry_date}`}</Text>
+
+
                   </View>
+                  {icon == 'credit-card' ? <Icon
+                    name={icon}
+                    size={25}
+                    style={{ position: 'absolute', right: 0, marginRight: '2%', marginTop: '2%', }}
+                    color="black"
+                  /> :
+                    <Image source={icon} style={{ position: 'absolute', right: 0, marginRight: '2%', marginTop: '2%', width: '11%', height: '36%' }} />}
                 </TouchableOpacity>
 
               </Swipeout>
@@ -230,7 +287,6 @@ export default function NoCreditCard({navigation}) {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('AddCreditCard')
-
             }}
             style={{
               borderRadius: 8,
@@ -251,7 +307,7 @@ export default function NoCreditCard({navigation}) {
                 marginRight: 10,
                 color: COLORS_NEW.mainBlack,
                 textAlign: 'center',
-              }}>{`${t('Add new address')}`}</Text>
+              }}>{`${t('Add new card')}`}</Text>
             <PlusSVG />
           </TouchableOpacity>
         ) : null}
@@ -298,11 +354,8 @@ export default function NoCreditCard({navigation}) {
                 DELETE_CREDIT_CARD_API(getDeleteid).then((responce) => {
                   setSelectedItem(0)
                   GetCreditCard();
-
-
                 }).catch((error) => {
                   setLoading(false);
-
                 })
                 handleModal();
               }}
@@ -315,7 +368,6 @@ export default function NoCreditCard({navigation}) {
                 marginTop: Metrics.rfv(5),
                 alignSelf: 'center',
                 marginBottom: Metrics.rfv(15),
-
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>

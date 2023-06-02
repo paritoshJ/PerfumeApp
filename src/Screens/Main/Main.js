@@ -42,6 +42,7 @@ import { navigationRef } from '../../Navigator/utils';
 import { isStringNotNull } from '../../Helper/helper';
 import Constants from '../../Comman/Constants';
 import { GET_COUNTRY_LIST, GET_COUNTRY_API, GET_TRANSLATION_JSON } from '../../api/getCountry';
+import { useFocusEffect } from '@react-navigation/native';
 
 import {
   GET_CATEGORY_LIST,
@@ -73,6 +74,8 @@ const MainScreen = props => {
   const [shopWomens, setShopWomans] = useState({});
   const [shopMans, setShopMans] = useState({});
   const [sales, setSales] = useState({});
+  const [getWishlist, SetWishlist] = useState([]);
+
   // const data = [
   //   {id: 1, name: 'abc'},
   //   {id: 2, name: 'text'},
@@ -80,51 +83,56 @@ const MainScreen = props => {
   // ];
   const [text, setText] = useState('');
   const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-    GET_TRANSLATION_JSON().then((Responce) => {
-      console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
-
-    }).catch((error) => {
-
-    });
-    AsyncStorage.getItem('Country').then((data) => {
-      console.log('country', data);
-      if (data == null || data == '') {
-        GET_COUNTRY_API().then((Responsce) => {
-          console.log('Responsce', Responsce.allStoreConfigData[0].store_code)
-          AsyncStorage.setItem('Country', Responsce.allStoreConfigData[0].store_code);
-          Constants.StoreCode = Responsce.allStoreConfigData[0].store_code;
-
-        }).catch((error) => {
-          setLoading(false)
-
-        });
-      } else {
-        Constants.StoreCode = data;
-      }
-    });
-    GET_TRANSLATION_JSON().then((Responce) => {
-      console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
-
-    }).catch((error) => {
-
-    });
-    // getCategory();
-    getCategory();
-    getConfigData();
-    getCategoryHome();
-    handleCartId();
-    try {
-      AsyncStorage.getItem('token').then((value) => {
-        console.log('totken==>', value)
-        Constants.Token = "Bearer " + value;
+  useFocusEffect(
+    React.useCallback(() => {
+      AsyncStorage.getItem('wishlist').then((response) => {
+        console.log('response', response)
+        SetWishlist(JSON.parse(response))
       }).catch((error) => {
+        console.log('error', error)
+      });
 
-      })
-    } catch (error) {
-      console.log(error);
-    }
+      AsyncStorage.getItem('Country').then((data) => {
+        if (data == null || data == '') {
+          GET_COUNTRY_API().then((Responsce) => {
+            AsyncStorage.setItem('Country', Responsce.allStoreConfigData[0].store_code);
+            Constants.StoreCode = Responsce.allStoreConfigData[0].store_code;
+
+          }).catch((error) => {
+            setLoading(false)
+
+          });
+        } else {
+          Constants.StoreCode = data;
+        }
+      });
+
+      // getCategory();
+      getCategory();
+      getConfigData();
+      getCategoryHome();
+      handleCartId();
+      try {
+        AsyncStorage.getItem('token').then((value) => {
+          Constants.Token = "Bearer " + value;
+        }).catch((error) => {
+
+        })
+      } catch (error) {
+      }
+
+      return () => { };
+    }, []),
+  );
+  useEffect(() => {
+
+    // GET_TRANSLATION_JSON().then((Responce) => {
+    //   console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
+
+    // }).catch((error) => {
+
+    // });
+
 
 
 
@@ -132,30 +140,28 @@ const MainScreen = props => {
   }, []);
   const handleCartId = async () => {
     let res = await EMPTY_CART();
-    console.log('get cart id', res);
     if (res && res?.createEmptyCart) {
       try {
         await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
         // setCartId(res?.createEmptyCart)
       } catch (e) {
         // saving error
-        console.log(e);
       }
     }
   };
+
   const getConfigData = async () => {
     let res = await GET_HOME_CONFIG_DATA();
     // setProductData(res.products.items);
     // setCategoryData(res?.categoryList[0]?.products?.items)
-    console.log('GET_HOME_CONFIG_DATA', res);
     if (res) {
       let arr = res?.storeConfig?.AppConfiguration?.AppData?.map(async item => {
-        console.log(item?.value);
         if (item?.name === 'app_slider' && item?.value) {
           let res = await GET_HOME_DATA(item?.value);
           setBannerData(res?.homeBannerSlider?.banners);
         } else if (item?.value) {
           let data = await GET_SLIDER_PRODUCTS(item?.value);
+          console.log('data====>', data)
           if (item?.name === 'new_arrivals') {
             setNewArrivals(data.getSliderProducts);
           } else if (item?.name === 'our_perfumes') {
@@ -177,27 +183,16 @@ const MainScreen = props => {
 
   const getCategory = async () => {
     let res = await GET_CATEGORY_LIST();
-    // setProductData(res.products.items);
-    // setCategoryData(res?.categoryList[0]?.products?.items);
-    // console.log('GET_CATEGORY_LIST', res);
   };
   const getCategoryHome = async () => {
     let res = await GET_CATEGORY_LIST_HOME();
-    // setProductData(res.products.items);
     setCategoryData(res?.categoryList);
-    console.log('GET_CATEGORY_LIST_HOME', res?.categoryList);
   };
 
   const AddItemTowishlist = async (id, item) => {
     let res = await ADD_WISH_LST_API(id, item);
-    console.log('GET_CATEGORY_LIST_HOME aasaasdasas', res);
+    console.log('res===>', res)
   };
-  // const getPro = async () => {
-  //   let res = await GET_PRODUCTS();
-  //   setProductData(res.products.items);
-  //   console.log("res.products.items",res.products.items);
-  // };
-
   const renderBannerInnerList = item => {
     return (
       <Image resizeMode="contain" style={{ flex: 1 }} source={{ uri: item }} />
@@ -205,12 +200,14 @@ const MainScreen = props => {
   };
 
   const renderItemProduct = ({ item, index }) => {
+
     return (
       <ProductCard
         isHome={true}
         item={item}
         offer={false}
-        onSizeSelect={data => { }}
+        favoriteOnSelect={data => { console.log('iteam', data) }}
+        onSizeSelect={() => { console.log('iteam') }}
         onFullItemPress={() => {
           setSelectedProduct(item);
           setonOpenDailog(true);
@@ -219,11 +216,48 @@ const MainScreen = props => {
     );
   };
   const renderItem = ({ item, index }) => {
+    var Wishlist = false;
+    var count = getWishlist?.filter(function (item1) {
+      return item1?.product?.id == item?.id;
+    });
+    if (count == '' || count == null) {
+      console.log('count', count)
+      Wishlist = false;
+
+    } else {
+      console.log('count else', count)
+      Wishlist = true;
+
+    }
+
     return (
       <ProductCard
         isHome={true}
         item={item}
         offer={true}
+        faviourite={Wishlist}
+        favoriteOnSelect={async data => {
+          let objNew = {
+            sku: item.sku,
+            quantity: 1,
+          };
+          let res = await AddItemTowishlist(0, objNew);
+          let objNew1 = {
+            product: { id: item.id },
+
+          };
+          SetWishlist([...getWishlist, objNew1]);
+          SetWishlist([...getWishlist, objNew1]);
+          try {
+
+            await AsyncStorage.setItem('wishlist1', JSON.stringify(getWishlist));
+          } catch (e) {
+            console.log(e);
+          }
+
+
+
+        }}
         onSizeSelect={data => { }}
         onFullItemPress={() => {
           setSelectedProduct(item);
@@ -240,12 +274,11 @@ const MainScreen = props => {
           isHome={true}
           item={item}
           offer={true}
+          favoriteOnSelect={data => { console.log('iteam', data) }}
           onSizeSelect={data => { }}
           onFullItemPress={() => {
             setSelectedProduct(item);
             setonOpenDailog(true);
-            // setSelectedProduct(item);
-            // setonOpenDailog(true);
           }}
         />
       </View>
@@ -347,6 +380,9 @@ const MainScreen = props => {
     setonOpenDailog(false);
   };
   const renderItemPreminum = ({ item, index }) => {
+    console.log(item)
+    var Wishlist = false;
+
     const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
 
     function getRandomColor() {
@@ -359,6 +395,18 @@ const MainScreen = props => {
    let finalPrice = item?.price_range?.minimum_price?.final_price;
    let regularPrice = item?.price_range?.minimum_price?.regular_price;
    let offer =  item?.price_range?.minimum_price?.discount?.percent_off
+    var count = getWishlist?.filter(function (item1) {
+      return item1?.product?.id == item?.id;
+    });
+    if (count == '' || count == null) {
+      console.log('count', count)
+      Wishlist = false;
+
+    } else {
+      console.log('count', count)
+      Wishlist = true;
+
+    }
     return (
       <TouchableOpacity
         style={{
@@ -368,7 +416,6 @@ const MainScreen = props => {
           borderRadius: 10,
         }}
         onPress={() => {
-          console.log('item?.sku', item?.sku);
           navigationRef.navigate('ProductPage', { skuID: item?.sku });
         }}>
         <View
@@ -403,20 +450,23 @@ const MainScreen = props => {
           )}
           <View style={{ padding: 10 }}>
             <MaterialIcons
-              name="favorite-border"
+              name={Wishlist == true ? "favorite" : "favorite-border"}
+
               size={22}
               color={colorConstant.BLACK}
               onPress={async () => {
-                console.log('selected OItem', item);
-                console.log('selected OItem', item.sku);
+                console.log('object', item)
                 let objNew = {
                   sku: item.sku,
                   quantity: 1,
                 };
-                console.warn(objNew);
-                let res = await AddItemTowishlist(item.id.toString(), objNew);
-                console.warn(res);
+                let res = await AddItemTowishlist(0, objNew);
+                let objNew1 = {
+                  product: { id: item.id },
 
+                };
+                SetWishlist([...getWishlist, objNew1]);
+                SetWishlist([...getWishlist, objNew1]);
                 // props.navigation.goBack();
               }}
             />
@@ -534,7 +584,6 @@ const MainScreen = props => {
                     <Text style={style.ajmal_text}>{item?.title}</Text>
                     <TouchableOpacity style={style.shop_button} onPress={()=>{
                       // navigationRef.navigate('ProductPage', { skuID: item?.sku });
-                      console.log(item);
                       }}>
                       <Text style={style.button_text}>{t('Shop now')}</Text>
                     </TouchableOpacity>
@@ -658,7 +707,6 @@ const MainScreen = props => {
                   data={premiumCollection?.items}
                   contentContainerStyle={{ paddingHorizontal: 16 }}
                   // renderItem={({item}) => {
-                  //   console.log(item);
                   //   return <PremiumCard item={item} offer={true} />;
                   // }}
                   renderItem={renderItemPreminum}

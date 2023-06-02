@@ -9,7 +9,7 @@ export const client = new ApolloClient({
   });
 
 export const GET_SLIDER_PRODUCTS = async (slider_name) => {
-
+  console.log('slider name', slider_name)
   return new Promise(async (resolve, reject) => {
     try {
       let {data} = await client.mutate({

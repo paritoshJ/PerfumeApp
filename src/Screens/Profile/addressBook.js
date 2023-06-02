@@ -8,6 +8,7 @@ import {
   ScrollView,
   I18nManager,
   SafeAreaView,
+  Modal
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
@@ -29,6 +30,9 @@ import AddAddressModal from './../../modal/AddAddressModal';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Lens from '../../assets/svg/Lens';
 import { Dropdown } from 'react-native-element-dropdown';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import fontConstant from '../../constant/fontConstant';
+import { Rating, AirbnbRating } from 'react-native-ratings';
 
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -49,9 +53,13 @@ export default function AddressBook({route, navigation}) {
   const [address, setAddress] = useState('');
   const [buildingName, setBuildingName] = useState('');
   const [value, setValue] = useState('');
-  const [markerData, setMarkerData] = useState({});
+  const [markerData, setMarkerData] = useState('');
   const [showMap, setShowMap] = useState(false);
-  const [markers, setMarkers] = useState([]);
+
+  const [markers, setMarkers] = useState({
+    latitude: 24.1607038,
+    longitude: 55.8069848,
+  });
   const [getcountry, setCountrylist] = useState([])
   const [countryCode, setCountryCode] = useState('');
   const [getCountryname, setCountyrname] = useState('');
@@ -87,6 +95,7 @@ export default function AddressBook({route, navigation}) {
     } 
     setLoading(true);
     GET_REGION_COUNTRY().then((Data) => {
+      console.log(Data)
       if (route.params.id) {
         var Countryname = Data.countries.filter((iteam) => {
           return iteam.id == route.params.id.country_code;
@@ -102,11 +111,54 @@ export default function AddressBook({route, navigation}) {
     }).catch((error) => {
       setLoading(false);
     });
+    cityNameBaselatlongget();
   }, []);
   const onSelect = country => {
     setCountryCode(country.cca2);
     setCountryPhoneCode(country.callingCode[0]);
   };
+
+  const cityNameBaselatlongget = () => {
+    fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + 'ahmedabad' + '&sensor=false&key=AIzaSyDdoMjBprJUivFiEdqhXxwvu8ZDn4OVnXI')
+      .then(response => response.json())
+      .then(json => {
+        console.log('Respopnce lar long ', json)
+        // return json.movies;
+      })
+      .catch(error => {
+        console.error('error', error);
+      });
+  }
+
+  const latlongbaseGetAdddress = () => {
+    fetch('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + `${markers.latitude},${markers.longitude}` + '&sensor=false&key=AIzaSyDdoMjBprJUivFiEdqhXxwvu8ZDn4OVnXI')
+      .then(response => response.json())
+      .then(json => {
+        setLoading(false)
+        console.log('Respopnce lar long ', json.results[0])
+        var Address = '';
+        json.results[0].address_components.map((item) => {
+          if (Address == '') {
+            Address = item.long_name;
+          } else {
+            Address = Address + ',' + item.long_name;
+          }
+
+        })
+        console.log(Address)
+
+        setMarkerData(Address);
+        console.log(markerData)
+
+        setvisibale(true);
+
+
+        // return json.movies;
+      })
+      .catch(error => {
+        console.error('error', error);
+      });
+  }
 
   const onSaveAddress = async () => {
     setLoading(true);
@@ -175,37 +227,42 @@ export default function AddressBook({route, navigation}) {
             <View style={[StyleSheet.absoluteFillObject]}>
               <MapView
                 style={styles.map}
-                scrollEnabled={true}
+                // scrollEnabled={true}
                 zoomEnabled={true}
+                  onPress={(event) => {
+                    const { coordinate } = event.nativeEvent;
+
+                    console.log(coordinate)
+                    setLoading(true)
+                    setMarkers(coordinate)
+                    latlongbaseGetAdddress();
+                  }}
                 minZoomLevel={0}
-                maxZoomLevel={10}
+                  // maxZoomLevel={15}
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE}
+
                 initialRegion={{
-                  latitude: 24.1607038,
-                  longitude: 55.8069848,
+                  latitude: markers.latitude,
+                  longitude: markers.longitude,
                   latitudeDelta: 0.003,
                   longitudeDelta: 0.003,
-                }}
-                onRegionChangeComplete={region => {
                   }}>
-                {markers.map((marker, index) => (
                   <Marker
-                    key={index}
                     coordinate={{
-                      latitude: marker.latitude,
-                      longitude: marker.longitude,
+                      latitude: markers.latitude,
+                      longitude: markers.longitude,
                     }}
                     image={require('./../../assets/icon/Location.png')}
-                    title={marker.name}
+                    // title={'ahmedabd'}
                     description={address}
+
                     onPress={() => {
-                      setvisibale(true);
-                      setMarkerData(marker);
-                      setAddress(marker.address);
+
+                      // setMarkerData(marker);
+                      // setAddress(marker.address);
                     }}
                   ></Marker>
-                ))}
               </MapView>
             </View>
               <View>
@@ -217,19 +274,24 @@ export default function AddressBook({route, navigation}) {
                 onPress={(data, details = null) => {
                   let location = details?.geometry?.location;
                   setAddress(data.description);
-                  setShowMap(false)
+                  // setShowMap(false)
                   let region = {
                     latitude: location?.lat,
                     longitude: location?.lng,
                     latitudeDelta: 0.1028653841151301,
                     longitudeDelta: 0.0706259161233902,
                   };
+                  setMarkers(region)
+
                   mapRef.current.animateToRegion(region);
                 }}
                 fetchDetails={true}
                 query={{
                   key: 'AIzaSyDdoMjBprJUivFiEdqhXxwvu8ZDn4OVnXI',
                   language: 'en',
+                  location: `${markers.latitude},${markers.longitude}`, // Set the specific latitude and longitude
+                  radius: 100000, // Set the radius in meters for nearby search (adjust as needed)
+
                 }}
                 renderLeftButton={() => (
                   <View
@@ -307,9 +369,7 @@ export default function AddressBook({route, navigation}) {
             <Input
               placeholder={t('First Name')}
               placeholderTextColor="gray"
-              value={firstname}
-
-
+                  value={firstname}
                   onSubmitEditing={() => {
                     Lastnamer.current().focus();
                   }}
@@ -488,16 +548,105 @@ export default function AddressBook({route, navigation}) {
       )}
       <Loader loading={loading} />
       {visibale && (
-        <AddAddressModal
-          data={markerData}
-          onOpenDailog={visibale}
-          setOnOpenDailog={setvisibale}
-          selectAddress={val => {
+        <Modal
+          backdropColor="black"
+          backdropOpacity={1}
+          animationType="slide"
+          transparent={true}
+          isVisible={visibale}
+          onRequestClose={() => {
             setvisibale(false);
-            setShowMap(false);
-            setAddress(val?.address);
           }}
-        />
+          onBackdropPress={() => {
+            setvisibale(false);
+          }}>
+          <MyStatusBar backgroundColor={'rgba(0, 0, 0, 0.6)'} />
+          <View style={styles.centeredView}>
+            <View
+              style={{
+                width: '100%',
+                backgroundColor: 'rgba(255, 255, 255, 1)',
+                borderTopLeftRadius: 24,
+                borderTopRightRadius: 24,
+              }}>
+              <View
+                style={{
+                  width: '100%',
+                  justifyContent: 'flex-end',
+                  alignItems: 'flex-end',
+                  paddingRight: 20,
+                  paddingTop: 20,
+                }}>
+                <AntDesign
+                  name="close"
+                  size={20}
+                  color={colorConstant.LIGHT_GREY}
+                  onPress={() => {
+                    setvisibale(false);
+                  }}
+                />
+              </View>
+              <View
+                style={{
+                  width: '100%',
+                  marginHorizontal: 20,
+                  alignItems: 'flex-start',
+                  justifyContent: 'flex-start',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fontConstant.gambetta,
+                    fontSize: fontConstant.TEXT_15_SIZE_REGULAR,
+                    color: colorConstant.BLACK,
+                    marginLeft: '5%',
+                    marginRight: '10%',
+                    fontSize: 18, marginTop: '5%'
+                  }}>
+                  {markerData}
+                </Text>
+                {/* <Text
+                  style={{
+                    fontFamily: fontConstant.gambetta,
+                    marginTop: 20,
+                    fontSize: fontConstant.TEXT_15_SIZE_REGULAR,
+                    color: colorConstant.BLACK,
+
+                  }}>
+                </Text> */}
+              </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  setAddress(markerData)
+                  setvisibale(false);
+                  setShowMap(false);
+                }}
+                style={{
+                  width: '90%',
+                  height: 50,
+                  borderRadius: 30,
+                  backgroundColor: colorConstant.DARK_PRIMARY,
+                  alignSelf: 'center',
+                  marginTop: '10%',
+                  marginBottom: '5%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontFamily: fontConstant.satoshi,
+                    fontStyle: 'normal',
+                    fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+                    fontWeight: fontConstant.WEIGHT_LEIGHT,
+                    color: colorConstant.WHITE,
+                  }}>
+                  {t('Select')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
       )}
     </SafeAreaView>
   );
@@ -506,6 +655,11 @@ export default function AddressBook({route, navigation}) {
 const styles = StyleSheet.create({
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    // backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   mainView: {
     flex: 1,
