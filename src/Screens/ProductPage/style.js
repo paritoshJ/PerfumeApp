@@ -204,5 +204,6 @@ export default StyleSheet.create({
     // marginTop:"8%",
     marginBottom: '8%',
     flexDirection: 'row',
+    alignItems: 'center',
   },
 });

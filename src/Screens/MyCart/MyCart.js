@@ -192,10 +192,9 @@ export default function MyCartScreen({navigation}) {
     let regularPrice = productDetail?.price_range?.minimum_price?.regular_price;
     return (
       <View style={style.price_view}>
-        <Text
-          style={
-            style.offer_price
-          }>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+        <Text style={style.offer_price}>{`${parseFloat(
+          finalPrice?.value,
+        ).toFixed(2)} ${finalPrice?.currency}`}</Text>
         {finalPrice?.value < regularPrice?.value && (
           <Text
             style={[
@@ -206,7 +205,9 @@ export default function MyCartScreen({navigation}) {
                 textDecorationLine: 'line-through',
               },
             ]}>
-            {`${regularPrice?.value} ${regularPrice?.currency}`}
+            {`${parseFloat(regularPrice?.value).toFixed(2)} ${
+              regularPrice?.currency
+            }`}
           </Text>
         )}
       </View>
@@ -250,6 +251,7 @@ export default function MyCartScreen({navigation}) {
                 const categoryDetail = item?.customAttributesAjmalData
                   ? `${item?.customAttributesAjmalData[0]?.display_category} / ${item?.customAttributesAjmalData[0]?.display_size} / ${item?.customAttributesAjmalData[0]?.gender}`
                   : '';
+                console.log(item.image, '---item.image--');
                 return (
                   <Swipeout
                     right={[
@@ -291,7 +293,7 @@ export default function MyCartScreen({navigation}) {
                       <View>
                         <Image
                           style={styles.cartPerfumeImage}
-                          source={item.image}
+                          source={{uri: item.image?.url}}
                         />
                       </View>
                       <View
@@ -401,7 +403,11 @@ export default function MyCartScreen({navigation}) {
                   </Text>
                   <Text style={styles.CreditCardNumberView}>
                     {cartData?.prices
-                      ? `${cartData?.prices?.subtotal_excluding_tax?.value} ${cartData?.prices?.subtotal_excluding_tax?.currency}`
+                      ? `${parseFloat(
+                          cartData?.prices?.subtotal_excluding_tax?.value,
+                        ).toFixed(2)} ${
+                          cartData?.prices?.subtotal_excluding_tax?.currency
+                        }`
                       : ''}
                   </Text>
                 </View>
@@ -430,7 +436,11 @@ export default function MyCartScreen({navigation}) {
                       fontStyle: 'normal',
                     }}>
                     {cartData?.prices
-                      ? `${cartData?.prices?.subtotal_including_tax?.value} ${cartData?.prices?.subtotal_including_tax?.currency}`
+                      ? `${parseFloat(
+                          cartData?.prices?.subtotal_including_tax?.value,
+                        ).toFixed(2)} ${
+                          cartData?.prices?.subtotal_including_tax?.currency
+                        }`
                       : ''}
                   </Text>
                 </View>
@@ -597,7 +607,7 @@ const styles = StyleSheet.create({
   cartPerfumeImage: {
     height: Metrics.rfv(130),
     width: Metrics.rfv(130),
-    resizeMode: 'contain',
+    resizeMode: 'cover',
     marginBottom: Metrics.rfv(10),
   },
   cartDetailView: {

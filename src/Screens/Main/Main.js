@@ -162,7 +162,7 @@ const MainScreen = props => {
           setBannerData(res?.homeBannerSlider?.banners);
         } else if (item?.value) {
           let data = await GET_SLIDER_PRODUCTS(item?.value);
-          console.log('data====>', data);
+          console.log('data====>', item.name, data);
           if (item?.name === 'new_arrivals') {
             setNewArrivals(data.getSliderProducts);
           } else if (item?.name === 'our_perfumes') {
@@ -171,7 +171,7 @@ const MainScreen = props => {
             setPremiumCollection(data.getSliderProducts);
           } else if (item?.name === 'shop_womans') {
             setShopWomans(data.getSliderProducts);
-          } else if (item?.name === 'shop_mans') {
+          } else if (item?.name === 'shop_mens') {
             setShopMans(data.getSliderProducts);
           } else if (item?.name === 'sale') {
             setSales(data.getSliderProducts);
@@ -503,7 +503,9 @@ const MainScreen = props => {
                 fontStyle: 'normal',
                 fontSize: fontConstant.TEXT_20_SIZE_BOLD,
                 fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
-              }}>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+              }}>{`${parseFloat(finalPrice?.value).toFixed(2)} ${
+              finalPrice?.currency
+            }`}</Text>
             {finalPrice?.value < regularPrice?.value && (
               <Text
                 style={[
@@ -517,7 +519,9 @@ const MainScreen = props => {
                     textDecorationLine: 'line-through',
                   },
                 ]}>
-                {`${regularPrice?.value} ${regularPrice?.currency}`}
+                {`${parseFloat(regularPrice?.value).toFixed(2)} ${
+                  regularPrice?.currency
+                }`}
               </Text>
             )}
           </View>
@@ -808,7 +812,8 @@ const MainScreen = props => {
               </View>
               <View style={style.perfumedata_contain}>
                 <FlatList
-                  data={perfumedata}
+                  data={shopMans?.items}
+                  removeClippedSubviews={false}
                   renderItem={renderItem}
                   horizontal={true}
                   keyExtractor={item => item.id}
