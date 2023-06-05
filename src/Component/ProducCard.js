@@ -43,7 +43,6 @@ const ProductCard = props => {
     finalPrice = item?.price_range?.minimum_price?.final_price;
     regularPrice = item?.price_range?.minimum_price?.regular_price;
     image = item?.image;
-    
   } else if (isSearch) {
     finalPrice = item?.price_range?.minimum_price?.final_price;
     regularPrice = item?.price_range?.minimum_price?.regular_price;
@@ -53,8 +52,8 @@ const ProductCard = props => {
     regularPrice = item?.price_range?.minimum_price?.regular_price;
     image = item?.image[0]?.url;
   }
-   
-  let offers =  item?.price_range?.minimum_price?.discount?.percent_off
+
+  let offers = item?.price_range?.minimum_price?.discount?.percent_off;
   let size =
     item?.customAttributesAjmalData !== undefined
       ? item?.customAttributesAjmalData[0]?.display_size
@@ -90,7 +89,10 @@ const ProductCard = props => {
         }}>
         <View
           style={{
-            justifyContent: isStringNotNull(offers) && offers > 0 ? 'space-between' : 'flex-end',
+            justifyContent:
+              isStringNotNull(offers) && offers > 0
+                ? 'space-between'
+                : 'flex-end',
             flexDirection: 'row',
           }}>
           {isStringNotNull(offers) && offers > 0 && (
@@ -117,7 +119,7 @@ const ProductCard = props => {
           )}
           <View style={{padding: 10}}>
             <MaterialIcons
-              name={faviourite == true ? "favorite" : "favorite-border"}
+              name={faviourite == true ? 'favorite' : 'favorite-border'}
               size={22}
               color={colorConstant.BLACK}
               onPress={() => props?.favoriteOnSelect()}
