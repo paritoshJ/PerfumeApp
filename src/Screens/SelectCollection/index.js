@@ -54,13 +54,14 @@ const SelectCollection = props => {
   const [getWishlist, SetWishlist] = useState([]);
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
-  const { item, offer, wishlist, isHome = false } = props;
+  const { item, offer, wishlist, idget, isHome = false } = props;
   var categoryvalue = 0, Shortvaluename = 'Sort';
   let page = 1;
   var Wishlistitema = [];
   useEffect(() => {
+    console.log('aasdadadasd', props.route.params.idget)
     setLoading(true);
-    getCategory();
+    getCategory(props.route.params.idget);
 
 
   }, [])
@@ -68,13 +69,13 @@ const SelectCollection = props => {
   var object = {};
   var sortobject = {}
   console.log('enter')
-  const getCategory = async () => {
+  const getCategory = async (id) => {
     const value = await AsyncStorage.getItem('wishlist');
 
     SetWishlist(JSON.parse(value))
     console.log('Dataadsdsdsds', JSON.parse(value));;
 
-    let res = await GET_CATEGORY();
+    let res = await GET_CATEGORY(id);
 
 
     if (res.category.display_sub_categories == 1 && res.category.is_anchor == 1) {
@@ -185,20 +186,23 @@ const SelectCollection = props => {
     var count = getWishlist?.filter(function (item1) {
       return item1?.product?.id == item?.id;
     });
-    if (count != '') {
-      Wishlist = true;
-    }
-    else {
+    if (count == '' || count == null) {
+      console.log('count', count)
       Wishlist = false;
 
+    } else {
+      console.log('count', count)
+      Wishlist = true;
+
     }
+
     console.log('count', isHome,count,item);
     console.log('get value Wishlist', Wishlist);
 
     return (
       <TouchableOpacity
         key={item}
-        onPress={() => props?.onFullItemPress()}
+        onPress={() => { }}
         style={{
           // flex: 1,
           marginLeft: '1.2%',

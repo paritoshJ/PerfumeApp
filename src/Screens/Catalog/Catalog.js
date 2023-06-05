@@ -19,23 +19,33 @@ import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
 import { GET_CATEGORY, GET_CATEGORY1 } from '../../api/getCategory';
 import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../../Component/Loader';
+
 
 const CatalogScreen = props => {
   const [text, setText] = useState('');
   const [categoryData, setcategoryData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
   const { t, i18n } = useTranslation();
   const navigation = useNavigation()
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true)
+      getCategory()
 
-  useEffect(() => {
-    getCategory()
-  }, [])
 
-  const onChangeText = () => {
+      return () => { };
+    }, []),
+  );
 
-  }
+
+
   const getCategory = async () => {
     // let res = await GET_CATEGORY();
     let res1 = await GET_CATEGORY1();
+    setLoading(false)
 
     setcategoryData(res1.amMegaMenuTree.items)
     console.log(":::::Res Chuildren ::::", res1.amMegaMenuTree.items);
@@ -52,10 +62,11 @@ const CatalogScreen = props => {
   )
 
   const renderItem = ({ item }) => {
-    // console.log(":::: item :::", item)
     return (
       <TouchableOpacity
         onPress={() => {
+          console.log(":::: item :::", item)
+
           navigation.navigate('Collection', {
             data: item
           });
@@ -134,6 +145,7 @@ const CatalogScreen = props => {
       </View>
 
       <FlatList contentContainerStyle={style.new_Contain} data={categorydata} renderItem={renderItem} ListFooterComponent={renderFooter} ListHeaderComponent={renderHeader} />
+      <Loader loading={loading} />
 
     </View>
   );

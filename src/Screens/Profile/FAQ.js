@@ -73,7 +73,6 @@ const getIcons = (item) =>{
   }else{
     return {uri:item?.image}
   }
-
 }
 
 useEffect(async () => {

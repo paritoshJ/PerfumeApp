@@ -81,9 +81,9 @@ export default function MyCartScreen({navigation}) {
         buttonTitle={t('Go shopping')}
         onButtonPress={() => {
           navigation.reset({
-        index: 0,
-        routes: [{name: 'Main'}],
-      });
+            index: 0,
+            routes: [{name: 'Main'}],
+          });
         }}
       />
     );
@@ -144,8 +144,8 @@ export default function MyCartScreen({navigation}) {
         setCartList(res?.removeItemFromCart?.cart?.items);
       } catch (e) {
         // saving error
-        setCartData({})
-        setCartList([])
+        setCartData({});
+        setCartList([]);
         console.log(e);
       }
     }
@@ -166,12 +166,13 @@ export default function MyCartScreen({navigation}) {
   };
 
   const handleCartData = async cartId => {
-     setLoading(true)
+    setLoading(true);
     let res = await CART_DATA(cartId);
-    setLoading(false)
+    setLoading(false);
     if (res) {
       console.log('CART_DATA', res);
       setCartData(res?.cart);
+      console.warn('res?.cart?.items', res?.cart?.items);
       setCartList(res?.cart?.items);
     }
 
@@ -474,8 +475,10 @@ export default function MyCartScreen({navigation}) {
               <AppButton
                 preset="primary"
                 text={t('Checkout')}
-                onPress={() => navigation.navigate('Checkout',{cart:cartData})}
-                style={{marginTop: Metrics.rfv(16),}}
+                onPress={() =>
+                  navigation.navigate('Checkout', {cart: cartData})
+                }
+                style={{marginTop: Metrics.rfv(16)}}
               />
             </View>
           </View>

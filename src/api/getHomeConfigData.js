@@ -34,7 +34,6 @@ export const GET_HOME_CONFIG_DATA = async () => {
       }
     } catch (error) {
       alert(`error => ${JSON.stringify(error)}`);
-      console.log('error', JSON.stringify(error));
       reject(error);
     }
   });

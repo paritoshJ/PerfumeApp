@@ -109,12 +109,10 @@ export const GET_CATEGORY_LIST = async () => {
       });
       if (data) {
         // alert(`Response: ${JSON.stringify(data)}`);
-        // console.log('data', JSON.stringify(data));
         resolve(data);
       }
     } catch (error) {
       // alert(`error => ${JSON.stringify(error)}`);
-      // console.log('error', JSON.stringify(error));
       reject(error);
     }
   });
@@ -122,8 +120,7 @@ export const GET_CATEGORY_LIST = async () => {
 
 export const ADD_WISH_LST_API = async (wishlistId, wishlistItems) => {
   console.log(wishlistId)
-  console.log([wishlistItems]);
-  console.log(Constants.Token);
+  console.log(wishlistItems)
   const client = new ApolloClient({
     uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
@@ -162,15 +159,12 @@ export const ADD_WISH_LST_API = async (wishlistId, wishlistItems) => {
       },
     });
     if (error) {
-      console.log('error', JSON.stringify(error));
       return;
     }
-    console.log('data', JSON.stringify(data));
     return data;
   } catch (error) {
     alert(error?.message);
-
-    console.log('error', JSON.stringify(error));
+    console.log(error)
     return [];
   }
 };
@@ -206,7 +200,6 @@ export const Add_CATEGORY_LIST_CARD = async (wishlistid, arr) => {
         'Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM3ODQ1NDMsImV4cCI6MTY4Mzc4ODE0M30.Y6bT8kaJ77yIhiEoU_WpDNc121RQ9PoEPTbo5c3gmqM',
     },
   });
-  console.log('asd', client1, wishlistid, arr);
   return new Promise(async (resolve, reject) => {
     try {
       let {data} = await client1.mutate({
@@ -238,12 +231,10 @@ export const Add_CATEGORY_LIST_CARD = async (wishlistid, arr) => {
       });
       if (data) {
         // alert(`Response: ${JSON.stringify(data)}`);
-        console.log('data', JSON.stringify(data));
         resolve(data);
       }
     } catch (error) {
       //   alert(`error => ${JSON.stringify(error)}`);
-      console.log('error', JSON.stringify(error));
       reject(error);
     }
   });
@@ -326,12 +317,10 @@ export const GET_CATEGORY_LIST_HOME = async () => {
       });
       if (data) {
         // alert(`Response: ${JSON.stringify(data)}`);
-        // console.log('data', JSON.stringify(data));
         resolve(data);
       }
     } catch (error) {
       //   alert(`error => ${JSON.stringify(error)}`);
-      console.log('error', JSON.stringify(error));
       reject(error);
     }
   });

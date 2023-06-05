@@ -2,6 +2,8 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
 
@@ -13,6 +15,20 @@
   // They will be passed down to the ViewController used by React Native.
   self.initialProps = @{};
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
+}
+- (BOOL)application:(UIApplication *)app
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  if ([[FBSDKApplicationDelegate sharedInstance] application:app openURL:url options:options]) {
+    return YES;
+  }
+ 
+  if ([RCTLinkingManager application:app openURL:url options:options]) {
+    return YES;
+  }
+ 
+  return NO;
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge

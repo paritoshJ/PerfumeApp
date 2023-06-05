@@ -21,6 +21,7 @@ const ProductCard = props => {
     item,
     offer,
     wishlist,
+    faviourite,
     isHome = false,
     isSearch = false,
     customFlex = false,
@@ -42,7 +43,6 @@ const ProductCard = props => {
     finalPrice = item?.price_range?.minimum_price?.final_price;
     regularPrice = item?.price_range?.minimum_price?.regular_price;
     image = item?.image;
-    
   } else if (isSearch) {
     finalPrice = item?.price_range?.minimum_price?.final_price;
     regularPrice = item?.price_range?.minimum_price?.regular_price;
@@ -52,8 +52,8 @@ const ProductCard = props => {
     regularPrice = item?.price_range?.minimum_price?.regular_price;
     image = item?.image[0]?.url;
   }
-   
-  let offers =  item?.price_range?.minimum_price?.discount?.percent_off
+
+  let offers = item?.price_range?.minimum_price?.discount?.percent_off;
   let size =
     item?.customAttributesAjmalData !== undefined
       ? item?.customAttributesAjmalData[0]?.display_size
@@ -62,13 +62,6 @@ const ProductCard = props => {
     item?.customAttributesAjmalData !== undefined
       ? item?.customAttributesAjmalData[0]?.display_category
       : '';
-  // let image = item?.media_gallery[0]?.url
-
-  // let imagetwo =
-  //   item?.customAttributesAjmalData !== undefined
-  //     ? item?.customAttributesAjmalData[0]?.rtop_note_image
-  //     : '';
-  let sku = item.sku;
 
   function getRandomColor() {
     const colorIndex = Math.floor(Math.random() * COLORS.length);
@@ -76,7 +69,7 @@ const ProductCard = props => {
   }
 
   const AddItemTowishlist = async (id, item) => {
-    let res = await ADD_WISH_LST_API(id, item);
+    let res = await ADD_WISH_LST_API(0, item);
     console.log('GET_CATEGORY_LIST_HOME aasaasdasas', res);
     if (res) {
     } else {
@@ -96,7 +89,10 @@ const ProductCard = props => {
         }}>
         <View
           style={{
-            justifyContent: isStringNotNull(offers) && offers > 0 ? 'space-between' : 'flex-end',
+            justifyContent:
+              isStringNotNull(offers) && offers > 0
+                ? 'space-between'
+                : 'flex-end',
             flexDirection: 'row',
           }}>
           {isStringNotNull(offers) && offers > 0 && (
@@ -123,20 +119,20 @@ const ProductCard = props => {
           )}
           <View style={{padding: 10}}>
             <MaterialIcons
-              name="favorite-border"
+              name={faviourite == true ? 'favorite' : 'favorite-border'}
               size={22}
               color={colorConstant.BLACK}
-              onPress={async () => {
-                console.log('selected OItem', item);
-                console.log('selected OItem', item.sku);
-                let objNew = {
-                  sku: item.sku,
-                  quantity: 1,
-                };
-                console.warn(objNew);
-                let res = await AddItemTowishlist(item.id.toString(), objNew);
-                console.warn(res);
-              }}
+              onPress={() => props?.favoriteOnSelect()}
+              // onPress={async () => {
+              //   console.log('selected OItem', item);
+              //   console.log('selected OItem', item.sku);
+              //   let objNew = {
+              //     sku: item.sku,
+              //     quantity: 1,
+              //   };
+              //   let res = await AddItemTowishlist(0, objNew);
+              //   console.warn(res);
+              // }}
             />
           </View>
         </View>

@@ -51,6 +51,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>FacebookAppID</key>
+  <string>251500256158241</string>
+  <key>FacebookDisplayName</key>
+  <string>Castpro</string>
+  
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pushster-Regular.ttf</string>

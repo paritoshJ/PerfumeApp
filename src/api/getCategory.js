@@ -3,26 +3,34 @@ import { gql } from '@apollo/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import Constants from '../Comman/Constants';
 
-
 export const client = new ApolloClient({
   uri: Constants.BASE_GRAPH_QL,
   cache: new InMemoryCache(),
-  connectToDevTools: true
+  connectToDevTools: true,
+  headers: {
+    store: Constants.StoreCode,
+    authorization: Constants.Token,
+  }
 });
 
 export const client1 = new ApolloClient({
   uri: Constants.BASE_GRAPH_QL,
   cache: new InMemoryCache(),
-  connectToDevTools: true
+  connectToDevTools: true,
+  headers: {
+    store: Constants.StoreCode,
+    authorization: Constants.Token,
+  }
 });
-export const GET_CATEGORY = async () => {
+export const GET_CATEGORY = async (ID) => {
+  console.log('=======>', Constants.StoreCode)
 
   return new Promise(async (resolve, reject) => {
     try {
       let { data } = await client.mutate({
         mutation: gql`
         query {
-          category(id: 4) {
+          category(id: "${ID}") {
             display_mode
             is_anchor
              display_sub_categories
@@ -195,6 +203,189 @@ export const GET_CATEGORY = async () => {
     }
   });
 };
+export const GET_SUB_CATEGORY = async (itemID) => {
+  console.log(itemID)
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { data } = await client.mutate({
+        mutation: gql`
+        query {
+          category(url_key: "${itemID}") {
+                display_mode
+                is_anchor
+                 display_sub_categories
+                 children_count
+                 id
+                 uid
+                 level
+                 name
+                 path
+                 url_path
+                 url_key
+                 image
+                 description
+                 children {
+                     id
+                     uid
+                     level
+                     name
+                     path
+                     display_sub_categories
+                     image
+                     url_key
+                     children_count
+                     products (pageSize:4){
+                         total_count
+                         items {
+                             id
+                             uid
+                             sku
+                             url_key
+                             url_path
+                             name
+                             color
+                             name
+                           customAttributesAjmalData{
+                             display_category
+                             display_size
+                             gender
+                           }
+                             price_range {
+                               minimum_price {
+                                 discount {
+                                     amount_off
+                                     percent_off
+                                 }
+                                 regular_price {
+                                   value
+                                   currency
+                                 }
+                                 final_price {
+                                   value
+                                   currency
+                                 }
+                               }
+                               maximum_price {
+                                 discount {
+                                     amount_off
+                                     percent_off
+                                 }
+                                 regular_price {
+                                   value
+                                   currency
+                                 }
+                                 final_price {
+                                   value
+                                   currency
+                                 }
+                               }
+                             }
+                             price_tiers {
+                               quantity
+                               final_price {
+                                 value
+                                 currency
+                               }
+                             }
+                             size
+                             special_price
+                             image {
+                               label
+                               url
+                             }
+                        }
+                     }
+                     children {
+                         display_sub_categories
+                         children_count
+                         id
+                         uid
+                         level
+                         name
+                         path
+                         url_path
+                         url_key
+                         image
+                         description
+                         products (pageSize:4){
+                         total_count
+                         items {
+                             id
+                             uid
+                             sku
+                             url_key
+                             url_path
+                             name
+                             color
+                             name
+                           customAttributesAjmalData{
+                             display_category
+                             display_size
+                             gender
+                           }
+                             price_range {
+                               minimum_price {
+                                 discount {
+                                     amount_off
+                                     percent_off
+                                 }
+                                 regular_price {
+                                   value
+                                   currency
+                                 }
+                                 final_price {
+                                   value
+                                   currency
+                                 }
+                               }
+                               maximum_price {
+                                 discount {
+                                     amount_off
+                                     percent_off
+                                 }
+                                 regular_price {
+                                   value
+                                   currency
+                                 }
+                                 final_price {
+                                   value
+                                   currency
+                                 }
+                               }
+                             }
+                             price_tiers {
+                               quantity
+                               final_price {
+                                 value
+                                 currency
+                               }
+                             }
+                             size
+                             special_price
+                             image {
+                               label
+                               url
+                             }
+                        }
+                     }
+                       
+                     }
+                 }
+             }
+         }`});
+      if (data) {
+        // alert(`Response: ${JSON.stringify(data)}`);
+        resolve(data);
+      }
+    } catch (error) {
+      alert(`error => ${JSON.stringify(error)}`);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};
+
 export const GET_CATEGORY1 = async () => {
 
   return new Promise(async (resolve, reject) => {

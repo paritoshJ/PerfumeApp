@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   I18nManager,
+  RefreshControl
 } from 'react-native';
 import MyStatusBar from '../../Component/MyStatusBar';
 import Metrics from '../../Helper/metrics';
@@ -18,6 +19,7 @@ import Loader from '../../Component/Loader';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from '../../Comman/Constants';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function Country({navigation}) {
@@ -25,11 +27,21 @@ export default function Country({navigation}) {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [getcountry, setCountry] = useState([]);
+  const [getRefrash, setRefresh] = useState(false);
 
-  useEffect(() => {
-    console.log(Constants.StoreCode)
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log(Constants.StoreCode)
     console.log(selectedCountry)
     setLoading(true)
+      AsyncStorage.getItem('Country').then((response) => {
+        console.log('currant language', response)
+        setSelectedCountry(response);
+        console.log('currant language', getcountry)
+
+      }).catch((error) => {
+
+      })
     GET_COUNTRY_API().then((Responsce) => {
       console.log(Responsce)
       setCountry(Responsce.allStoreConfigData);
@@ -39,40 +51,54 @@ export default function Country({navigation}) {
       setLoading(false)
 
     });
-    // GET_TRANSLATION_JSON().then((Responce) => {
-    //   console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
 
-    // }).catch((error) => {
+      return () => { };
+    }, []),
+  );
+  // useEffect(() => {
+  //   console.log(Constants.StoreCode)
+  //   console.log(selectedCountry)
+  //   setLoading(true)
+  //   GET_COUNTRY_API().then((Responsce) => {
+  //     console.log(Responsce)
+  //     setCountry(Responsce.allStoreConfigData);
+  //     setLoading(false)
 
-    // });
-  }, [])
-  
-  // const changeLanguage = value => {
-  //   i18n
-  //     .changeLanguage(value)
-  //     .then(() => {
-  //       console.log('========>', value);
-  //       AsyncStorage.setItem('CURRENT_LANGUAGE', value);
-  //     })
-  //     .catch(err => console.log(err));
-  // };
-  // const languageChange = async () => {
-  //   //changing language based on what was chosen
-  //   console.log('::: rtl called');
-  //   if (I18nManager.isRTL) {
-  //     changeLanguage('en');
-  //     await I18nManager.forceRTL(false);
-  //   } else {
-  //     changeLanguage('ar');
-  //     await I18nManager.forceRTL(true);
-  //   }
-  //   RNRestart.Restart();
-  // };
+  //   }).catch((error) => {
+  //     setLoading(false)
+
+  //   });
+  //   // GET_TRANSLATION_JSON().then((Responce) => {
+  //   //   console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
+
+  //   // }).catch((error) => {
+
+  //   // });
+  // }, [])
+
+  const changeLanguage = value => {
+    i18n
+      .changeLanguage(value)
+      .then(() => {
+        console.log('========>', value);
+        AsyncStorage.setItem('CURRENT_LANGUAGE', value);
+      })
+      .catch(err => console.log(err));
+  };
+  const languageChange = async () => {
+    //changing language based on what was chosen
+    if (I18nManager.isRTL) {
+      changeLanguage('en');
+      await I18nManager.forceRTL(false);
+    } else {
+      changeLanguage('ar');
+      await I18nManager.forceRTL(true);
+    }
+    RNRestart.Restart();
+  };
   const onSelectSwitch = (e) => {
     console.log(e)
-    AsyncStorage.setItem('Country', e.store_code);
     // languageChange();
-    setSelectedCountry(e.store_code);
   };
   return (
     <>
@@ -93,13 +119,34 @@ export default function Country({navigation}) {
         <Image style={styles.navBarImage1} source={''} />
       </View>
       <View style={styles.mainView}>
-        <ScrollView>
+        <ScrollView refreshControl={
+          <RefreshControl
+            refreshing={getRefrash}
+            onRefresh={() => {
+              console.log('refrash')
+              setRefresh(false)
+
+            }}
+          />
+        }>
           {getcountry.map((item, index) => {
+            console.log('enter')
           return (
             <View>{item.store_name == 'English' ?
             <TouchableOpacity
               style={styles.loginPageComponentView}
-                onPress={() => onSelectSwitch(item)}>
+                onPress={() => {
+                  console.log('selectedCountry', item.store_code);
+
+                  setSelectedCountry(item.store_code);
+                  setRefresh(true)
+                  setRefresh(false)
+
+                  AsyncStorage.setItem('Country', item.store_code);
+                  console.log('selectedCountry', selectedCountry);
+
+                  // onSelectSwitch(item)
+                }}>
 
               <View style={styles.loginPageComponentview1}>
                 <View>
@@ -107,14 +154,14 @@ export default function Country({navigation}) {
                 </View>
                   <Text style={styles.countryText}>{t(item.store_group_code + ' (' + item.base_currency_code + ')')}</Text>
               </View>
-                {selectedCountry === item.store_code && (
+                {selectedCountry == item.store_code ?
                 <View style={styles.loginPageComponentView}>
                   <Image
                     style={styles.countryLogo}
                     source={require('../../../assets/CheckCircle.png')}
                   />
-                </View>
-              )}
+                  </View> : <View />
+                }
               </TouchableOpacity> : null}
             </View>
           );

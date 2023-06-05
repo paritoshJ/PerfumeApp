@@ -34,6 +34,8 @@ export default function ProfilePage({navigation}) {
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   const [loading, setLoading] = useState(false);
   const [getProfileData, setProfileDAta] = useState();
+  const [getName, setname] = useState('Perfume');
+  const [getUsername, setUsername] = useState('Perfume');
 
   const {t} = useTranslation();
 
@@ -143,8 +145,14 @@ export default function ProfilePage({navigation}) {
   };
   const getProfileDetail = () => {
     GET_PROFILE_DETAIL().then((res) => {
+      console.log('Respomnce get Profile', res)
       setLoading(false);
-
+      if (res.customerExtraData.firstname == '') {
+        setname('Perfuem')
+      } else {
+        setname(res.customerExtraData.firstname);
+        setUsername(res.customerExtraData.firstname + ' ' + res.customerExtraData.lastname);
+      }
       setProfileDAta(res.customerExtraData)
 
 
@@ -224,14 +232,14 @@ export default function ProfilePage({navigation}) {
                 <View>
                   <Image
                     style={styles.avatar}
-                    source={require('../../../assets/Avatar.png')}
+                    source={{ uri: 'https://eu.ui-avatars.com/api/?name=$' + getName + '&size=250' }}
                   />
                 </View>
                 <View
                   style={{
                     marginTop: Metrics.rfv(15),
                   }}>
-                  <Text style={styles.loginPageComponentview2}>{getProfileData?.firstname + ' ' + getProfileData?.lastname}</Text>
+                  <Text style={styles.loginPageComponentview2}>{getUsername}</Text>
                   <Text
                     style={{
                       marginLeft: Metrics.rfv(15),
@@ -541,6 +549,12 @@ const styles = StyleSheet.create({
   avatar: {
     height: Metrics.rfv(70),
     width: Metrics.rfv(70),
+
+    borderRadius: Metrics.rfv(70) / 2,
+    overflow: "hidden",
+    borderWidth: 3,
+
+
   },
   pencilIcon: {
     width: Metrics.rfv(20),

@@ -78,7 +78,7 @@ export default function WishList({navigation}) {
                 DeviceEventEmitter.emit('event.logout', {});
                 await AsyncStorage.setItem('token', '');
                 createEmptyCartForLogout();
-                navigationn.replace('LoadingPage');
+                navigation.navigate('Profile');
 
               } catch (error) {
                 console.log(error);
@@ -94,7 +94,7 @@ export default function WishList({navigation}) {
   }
   const createEmptyCartForLogout = async () => {
     let res = await EMPTY_CART();
-    console.log(res);
+    console.log('res', res);
     if (res && res?.createEmptyCart) {
       try {
         await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
@@ -348,25 +348,18 @@ export default function WishList({navigation}) {
           />
         </View>
         </ImageBackground> : <View />}
-      {/* No Return View */}
-       
+
+        <View style={{ height: '77%', }}>
         {data.length > 0 ? <FlatList
-          numColumns={2}
-              // itemDimension={130}
+            style={{ paddingBottom: '20%', paddingLeft: '5%', paddingRight: '5%' }}
+            numColumns={2}
               data={data}
-              contentContainerStyle={styles.scrollView}
+              // contentContainerStyle={styles.scrollView}
           renderItem={renderItem}
-        // renderItem={({item}) => (
-        //   <ProductCard item={item}
-        //    offer={true}
-        //   wishlist={true} 
-        //   onSizeSelect={(data)=>{}} 
-        //   onFullItemPress ={() => {
-        //       // setSelectedProduct(item);
-        //       // setonOpenDailog(true);
-        //     }} />
-        // )}
+
         /> : loading == false ? renderEmptyAndNoLogin() : null}
+        </View>
+
         <Loader loading={loading} />
       </View>
     </SafeAreaView>

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+
 import { FlatList, Text, TouchableOpacity, Image, StatusBar, I18nManager } from 'react-native';
 import { View } from 'react-native';
 import CatlogItem from '../../Component/catlogItem';
@@ -12,44 +13,65 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
 import { useRoute } from '@react-navigation/native';
+import { GET_SUB_CATEGORY } from '../../api/getCategory';
+import Loader from '../../Component/Loader';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 const Collection = props => {
   const { t, i18n } = useTranslation();
   const { params } = useRoute();
-  const { data } = params;
-  console.log(":::: params ::::", data.children)
-  const collationdata = [
-    {
-      name: 'Egift Card',
-      image: imageConstant.egift,
-    },
-    {
-      name: 'For Him',
-      image: imageConstant.cardman,
-    },
-    {
-      name: 'For Her',
-      image: imageConstant.cardwomen,
-    },
-  ];
+  const [loading, setLoading] = useState(false);
+  const [getSubCategory, setSubCategory] = useState();
 
+  const { data } = params;
+  console.log(":::: params ::::asdsasas", data)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      var getID = data.url.split('.html');
+      console.log(getID[0])
+      getProductSubCategory(getID[0]);
+
+      return () => { };
+    }, []),
+  );
+  const getProductSubCategory = (itemId) => {
+    setLoading(true);
+    GET_SUB_CATEGORY(itemId).then((item) => {
+      setSubCategory(item.category)
+      setLoading(false);
+
+      console.log('item', item)
+    }).catch((error) => {
+      setLoading(false);
+
+      console.log('item', error)
+
+    })
+  }
   const renderItem = ({ item }) => {
     return (
       <>
         <TouchableOpacity
           style={style.collationdata_Contain}
           onPress={() => {
-            props.navigation.navigate('CollectionDetails', { name: item.name });
+            if (item.display_sub_categories == 0) {
+              props.navigation.navigate('SelectCollection', { idget: getSubCategory?.id });
+            } else {
+              props.navigation.navigate('CollectionDetails', { idget: item.id });
+
+            }
           }}>
           {/* <CatlogItem name={item.name} right={true} /> */}
 
           <View
             style={style.collationItemData}>
-            <Image
-              source={item?.image}
+            {item?.image == null ? <View /> : <Image
+              source={{ uri: item?.image == null ? '' : item?.image }}
               style={{ width: 100, height: 80, borderRadius: 10 }}
-              resizeMode="contain"
-            />
+            // resizeMode="contain"
+            />}
             <Text style={style.header_title}>{item?.name}</Text>
           </View>
           <View
@@ -89,20 +111,24 @@ const Collection = props => {
         style={style.View_Collection_Conatain}>
         <TouchableOpacity
           onPress={() => {
-            props.navigation.navigate('SelectCollection');
+            console.log(getSubCategory?.id)
+            props.navigation.navigate('SelectCollection', { idget: getSubCategory?.id });
           }}
           style={style.viewall_Conatin}>
           <Image
-            source={imageConstant.viewall}
+            source={{ uri: getSubCategory?.image }}
             style={style.viewall_Image}
-            resizeMode="contain"
+            // resizeMode="contain"
           />
           <Text style={style.header_title}>{t('View all')}</Text>
         </TouchableOpacity>
         <View style={style.border}></View>
-
-        <FlatList data={data?.children} renderItem={renderItem} />
+        <View style={{ height: '84%', }}>
+          <FlatList style={{ marginBottom: '3%' }} data={getSubCategory?.children} renderItem={renderItem} />
+        </View>
       </View>
+      <Loader loading={loading} />
+
     </View>
   );
 };
