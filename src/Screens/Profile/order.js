@@ -9,23 +9,23 @@ import {
   TouchableOpacity,
   ScrollView,
   I18nManager,
-  FlatList, Alert
+  FlatList,
+  Alert,
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {Badge} from 'react-native-paper';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
-import { useTranslation } from 'react-i18next';
-import { useFocusEffect } from '@react-navigation/native';
-import { GET_ORERS_API } from '../../api/Orders';
+import {useTranslation} from 'react-i18next';
+import {useFocusEffect} from '@react-navigation/native';
+import {GET_ORERS_API} from '../../api/Orders';
 import Loader from '../../Component/Loader';
 import AddressBookSVG from '../../assets/svg/CartBag';
 import EmptyPageView from '../../Component/EmptyPageView';
-import { horizontal } from 'react-native-swiper-flatlist/src/themes';
+import {horizontal} from 'react-native-swiper-flatlist/src/themes';
 import Moment from 'moment';
-import { EMPTY_CART } from '../../api/getEmptyCart';
+import {EMPTY_CART} from '../../api/getEmptyCart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 
 export default function Order({navigation}) {
   const [orderClick, setOrderClick] = useState(false);
@@ -38,45 +38,48 @@ export default function Order({navigation}) {
       Moment.locale('en');
 
       setLoading(true);
-      getOrderList()
+      getOrderList();
 
-      return () => { };
+      return () => {};
     }, []),
   );
   const getOrderList = () => {
-    GET_ORERS_API().then((Response) => {
-      console.log('get response', Response.salesOrder.salesData);
-      setLoading(false);
-      setOrders(Response.salesOrder.salesData);
+    GET_ORERS_API()
+      .then(Response => {
+        console.log('get response', Response.salesOrder.salesData);
+        setLoading(false);
+        setOrders(Response.salesOrder.salesData);
+      })
+      .catch(error => {
+        console.log('get error', error);
+        setOrders([]);
 
-    }).catch((error) => {
-      console.log('get error', error);
-      setOrders([]);
-
-      setLoading(false);
-      if (error == "ApolloError: Internal server error") {
-        Alert.alert('Session Expired', 'Your session has expired. Please login again to continue working.', [
-
-          {
-            text: 'OK', onPress: async () => {
-
-              try {
-                DeviceEventEmitter.emit('event.logout', {});
-                await AsyncStorage.setItem('token', '');
-                createEmptyCartForLogout();
-              } catch (error) {
-                console.log(error);
-              }
-              setTimeout(() => {
-                navigation.replace('LoadingPage');
-              }, 500);
-            }
-          },
-        ]);
-      }
-
-    })
-  }
+        setLoading(false);
+        if (error == 'ApolloError: Internal server error') {
+          Alert.alert(
+            'Session Expired',
+            'Your session has expired. Please login again to continue working.',
+            [
+              {
+                text: 'OK',
+                onPress: async () => {
+                  try {
+                    DeviceEventEmitter.emit('event.logout', {});
+                    await AsyncStorage.setItem('token', '');
+                    createEmptyCartForLogout();
+                  } catch (error) {
+                    console.log(error);
+                  }
+                  setTimeout(() => {
+                    navigation.replace('LoadingPage');
+                  }, 500);
+                },
+              },
+            ],
+          );
+        }
+      });
+  };
   const createEmptyCartForLogout = async () => {
     let res = await EMPTY_CART();
     console.log(res);
@@ -88,17 +91,12 @@ export default function Order({navigation}) {
       }
     }
   };
-  const renderItem = ({ item }) => {
-    console.log(item)
-    return (
-      <Image style={styles.productView} source={{ uri: item.image_url }} />
-    )
+  const renderItem = ({item}) => {
+    console.log(item);
+    return <Image style={styles.productView} source={{uri: item.image_url}} />;
   };
   return (
-
-    <View style={{ flex: 1 }}>
-
-
+    <View style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -118,70 +116,82 @@ export default function Order({navigation}) {
           <Image style={styles.navBarImage2} source={''} />
         </TouchableOpacity>
       </View>
-      {getOrders == '' ?
+      {getOrders == '' ? (
         <EmptyPageView
           icon={<AddressBookSVG />}
           title={t("You don't have any orders yet")}
           message={t('You don`t have orders, explore our perfume collections')}
           hideAddButton={false}
-          onButtonPress={() => {
-
-          }}
+          onButtonPress={() => {}}
           buttonTitle={t('Go shopping')}
         />
-        :
-      <ScrollView style={styles.mainView}>
+      ) : (
+        <ScrollView style={styles.mainView}>
           {getOrders.map((item, index) => {
-            return (<View>
-              <View
-                style={{
-                  borderBottomColor: COLORS_NEW.lightGray,
-                  borderBottomWidth: 1,
-                }}>
-                {/* Order Number View */}
-                <View style={styles.orderView}>
-                  <TouchableOpacity
-                    style={styles.orderView}
-                    onPress={() => {
-                      if (getPosition == index) {
-                        setOrderClick(!orderClick);
-                      } else {
-                        setOrderClick(true);
-                      }
-                      setPosiont(index);
-                    }}>
-                    <Text style={styles.orderNumberText}>
-                      {item.customer_name}
-                    </Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.orderView}
-                    onPress={() =>
-                      navigation.navigate('OrderDetails', { page: 'order', items: item })
-                    }>
-                    <Image
-                      style={{ resizeMode: 'contain' }}
-                      source={require('../../../assets/More-button.png')} />
-                  </TouchableOpacity>
-                </View>
-                {console.log(Moment(item.created_at).format('MMM d, yyyy'))}
-                {orderClick == true && getPosition == index ? (<>
-                  <View style={styles.sampleOrderView}>
-                    <Badge style={styles.badge}>{item.is_guest_customer == true ? 'Courier accepted' : 'Courier processing'}</Badge>
-                    <View style={styles.dateAndPriceView}>
-                      <Text style={styles.textDate}>{Moment(item.created_at).format('MMM d, yyyy')}</Text>
-                      <Text style={styles.textPrice}>{item.increment_id}</Text>
-                    </View>
+            return (
+              <View>
+                <View
+                  style={{
+                    borderBottomColor: COLORS_NEW.lightGray,
+                    borderBottomWidth: 1,
+                  }}>
+                  {/* Order Number View */}
+                  <View style={styles.orderView}>
+                    <TouchableOpacity
+                      style={styles.orderView}
+                      onPress={() => {
+                        if (getPosition == index) {
+                          setOrderClick(!orderClick);
+                        } else {
+                          setOrderClick(true);
+                        }
+                        setPosiont(index);
+                      }}>
+                      <Text style={styles.orderNumberText}>
+                        {item.customer_name}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.orderView}
+                      onPress={() =>
+                        navigation.navigate('OrderDetails', {
+                          page: 'order',
+                          items: item,
+                        })
+                      }>
+                      <Image
+                        style={{resizeMode: 'contain'}}
+                        source={require('../../../assets/More-button.png')}
+                      />
+                    </TouchableOpacity>
                   </View>
-                  {/* Image View */}
-                  <View style={styles.imageView}>
-                    <FlatList
-                      horizontal={true}
-                      data={item.items}
-                      renderItem={renderItem}
-                      keyExtractor={(item) => item.id}
-                    />
-                    {/* {ImageData.map(item => {
+                  {console.log(Moment(item.created_at).format('MMM d, yyyy'))}
+                  {orderClick == true && getPosition == index ? (
+                    <>
+                      <View style={styles.sampleOrderView}>
+                        <Badge style={styles.badge}>
+                          {item.is_guest_customer == true
+                            ? 'Courier accepted'
+                            : 'Courier processing'}
+                        </Badge>
+                        <View style={styles.dateAndPriceView}>
+                          <Text style={styles.textDate}>
+                            {Moment(item.created_at).format('MMM d, yyyy')}
+                          </Text>
+                          <Text style={styles.textPrice}>
+                            {item.increment_id}
+                          </Text>
+                        </View>
+                      </View>
+                      {/* Image View */}
+                      <View style={styles.imageView}>
+                        <FlatList
+                          horizontal={true}
+                          data={item.items}
+                          renderItem={renderItem}
+                          keyExtractor={item => item.id}
+                        />
+                        {/* {ImageData.map(item => {
                       return (
                         <ScrollView style={{ flex: 1 }} onScroll={horizontal}>
                           <View>
@@ -190,15 +200,17 @@ export default function Order({navigation}) {
                         </ScrollView>
                       );
                     })} */}
-                  </View>
-                </>) : (<View />)}
-
+                      </View>
+                    </>
+                  ) : (
+                    <View />
+                  )}
+                </View>
               </View>
-            </View>)
+            );
           })}
-
-      </ScrollView>
-      }
+        </ScrollView>
+      )}
       <Loader loading={loading} />
     </View>
   );
@@ -221,7 +233,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Metrics.rfv(15),
     backgroundColor: COLORS_NEW.white,
     padding: Metrics.rfv(10),
-    borderBottomColor: COLORS_NEW.lightGray, 
+    borderBottomColor: COLORS_NEW.lightGray,
     borderBottomWidth: 1,
   },
   navBarImage1: {

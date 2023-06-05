@@ -427,10 +427,9 @@ const ProductPage = props => {
     let regularPrice = productDetail?.price_range?.minimum_price?.regular_price;
     return (
       <View style={style.price_view}>
-        <Text
-          style={
-            style.offer_price
-          }>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+        <Text style={style.offer_price}>{`${parseFloat(
+          finalPrice?.value,
+        ).toFixed(2)} ${finalPrice?.currency}`}</Text>
         {finalPrice?.value < regularPrice?.value && (
           <Text
             style={[
@@ -441,7 +440,9 @@ const ProductPage = props => {
                 textDecorationLine: 'line-through',
               },
             ]}>
-            {`${regularPrice?.value} ${regularPrice?.currency}`}
+            {`${parseFloat(regularPrice?.value).toFixed(2)} ${
+              regularPrice?.currency
+            }`}
           </Text>
         )}
       </View>
@@ -849,42 +850,63 @@ const ProductPage = props => {
             )}
 
             <View style={style.add_card_view}>
-              <View
-                style={{
-                  width: '30%',
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <UIStepperView
-                  value={value}
-                  setValue={val => {
-                    setValue(val);
-                    console.log(val, '---added count');
-                  }}
-                />
-              </View>
-              <View
-                style={{
-                  width: '55%',
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleAddItemToCart();
-                  }}
+              {productDetail?.stock_status === 'OUT_OF_STOCK' ? (
+                <Text
                   style={[
-                    style.review_add_view,
-                    {backgroundColor: colorConstant.DARK_PRIMARY},
+                    style.product_name,
+                    {
+                      fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
+                      marginTop: '-3%',
+                      marginLeft: 20,
+                      flex: 1,
+                      alignSelf: 'center',
+                    },
                   ]}>
-                  <Text
-                    style={[style.text_viewall, {color: colorConstant.WHITE}]}>
-                    {t('Add to cart')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  This item is out of stock
+                </Text>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      width: '30%',
+                      height: 50,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <UIStepperView
+                      value={value}
+                      setValue={val => {
+                        setValue(val);
+                        console.log(val, '---added count');
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      width: '55%',
+                      height: 50,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleAddItemToCart();
+                      }}
+                      style={[
+                        style.review_add_view,
+                        {backgroundColor: colorConstant.DARK_PRIMARY},
+                      ]}>
+                      <Text
+                        style={[
+                          style.text_viewall,
+                          {color: colorConstant.WHITE},
+                        ]}>
+                        {t('Add to cart')}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </>
+              )}
               <View
                 style={{
                   width: '15%',
@@ -901,15 +923,6 @@ const ProductPage = props => {
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
-                  {/* <Image
-              source={imageConstant.fav}
-              style={{
-                width: 18,
-                height: 18,
-                tintColor: colorConstant.DARK_PRIMARY,
-              }}
-              resizeMode="contain"
-            /> */}
                   <MaterialIcons
                     name="favorite-border"
                     size={22}

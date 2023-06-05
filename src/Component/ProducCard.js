@@ -195,10 +195,9 @@ const ProductCard = props => {
         {name}
       </Text>
       <View style={styles.price_view}>
-        <Text
-          style={
-            styles.offer_price
-          }>{`${finalPrice?.value} ${finalPrice?.currency}`}</Text>
+        <Text style={styles.offer_price}>{`${parseFloat(
+          finalPrice?.value,
+        ).toFixed(2)} ${finalPrice?.currency}`}</Text>
         {finalPrice?.value < regularPrice?.value && (
           <Text
             style={[
@@ -209,7 +208,9 @@ const ProductCard = props => {
                 textDecorationLine: 'line-through',
               },
             ]}>
-            {`${regularPrice?.value} ${regularPrice?.currency}`}
+            {`${parseFloat(regularPrice?.value).toFixed(2)} ${
+              regularPrice?.currency
+            }`}
           </Text>
         )}
       </View>
