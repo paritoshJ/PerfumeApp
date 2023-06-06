@@ -25,7 +25,7 @@ export const GET_ALL_STORES_LIST = async (quantity, sku) => {
       return;
     }
     // alert(`Response: ${JSON.stringify(data)}`);
-    console.log('data', JSON.stringify(data));
+    console.log('data w', JSON.stringify(data));
     return data;
   } catch (error) {
     console.log('error', JSON.stringify(error));

@@ -268,7 +268,7 @@ export default function ProfilePage({navigation}) {
               return (
                 <TouchableOpacity
                   style={styles.profilePageListView}
-                  onPress={e => navigation.navigate(item.navigation)}>
+                  onPress={e => navigation.navigate(item.navigation, { address: true })}>
                   <View style={styles.loginPageComponentview1}>
                     <View>
                       <Image

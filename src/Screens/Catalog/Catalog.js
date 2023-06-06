@@ -26,6 +26,7 @@ import Loader from '../../Component/Loader';
 const CatalogScreen = props => {
   const [text, setText] = useState('');
   const [categoryData, setcategoryData] = useState([]);
+  const [categoryDatasearch, setsearchcategoryData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { t, i18n } = useTranslation();
@@ -46,7 +47,7 @@ const CatalogScreen = props => {
     // let res = await GET_CATEGORY();
     let res1 = await GET_CATEGORY1();
     setLoading(false)
-
+    setsearchcategoryData(res1.amMegaMenuTree.items)
     setcategoryData(res1.amMegaMenuTree.items)
     console.log(":::::Res Chuildren ::::", res1.amMegaMenuTree.items);
     // console.log(":::::Res Chuildren ::::", res);
@@ -127,8 +128,23 @@ const CatalogScreen = props => {
         </TouchableOpacity>
         <View style={style.searchbar_Contain}>
           <TextInput
-            value={text}
-            onChangeText={setText}
+            // value={text}
+            onChangeText={(search) => {
+              const newData = categoryDatasearch.filter(
+                function (item) {
+                  // Applying filter for the inserted text in search bar
+                  const itemData = item.name
+                    ? item.name.toUpperCase()
+                    : ''.toUpperCase();
+                  const textData = search.toUpperCase();
+                  return itemData.indexOf(textData) > -1;
+                }
+              );
+              setcategoryData(newData)
+              console.log('newData', newData)
+
+
+            }}
             placeholder={t('Search for perfume')}
             style={style.searchtext_Contain}
           />
@@ -143,7 +159,7 @@ const CatalogScreen = props => {
           />
         </View>
       </View>
-
+      {categorydata == '' ? <Text style={{ position: 'absolute', alignSelf: 'center' }}>No Data Found </Text> : ''}
       <FlatList contentContainerStyle={style.new_Contain} data={categorydata} renderItem={renderItem} ListFooterComponent={renderFooter} ListHeaderComponent={renderHeader} />
       <Loader loading={loading} />
 

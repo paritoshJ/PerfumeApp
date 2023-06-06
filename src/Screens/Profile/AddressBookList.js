@@ -37,6 +37,7 @@ import PlusSVG from '../../assets/svg/PlusSVG';
 import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GET_ALL_STORES_LIST } from '../../api/store';
 
 export default function AddressBookList({route, navigation}) {
   const [open, setOpen] = useState(false);
@@ -44,6 +45,8 @@ export default function AddressBookList({route, navigation}) {
   const [allShops, setAllShops] = useState([]);
   const [loading, setLoading] = useState(false);
   const [getRefrash, setRefresh] = useState(false);
+  const [getAddress, setAddress] = useState(false);
+  const [geRadio, checkRadio] = useState(false);
 
   const [data, setData] = useState([]);
   const {t} = useTranslation();
@@ -51,8 +54,32 @@ export default function AddressBookList({route, navigation}) {
   const onSelectSwitch = index => {};
   useFocusEffect(
     React.useCallback(() => {
-      setLoading(true);
-      getaddresslist()
+      console.log('address', route?.params?.address)
+      checkRadio(route?.params?.address)
+      if (route?.params?.storeList) {
+        setLoading(true);
+        setAddress(false);
+        console.log('dfsfsf', route?.params?.storeList);
+        GET_ALL_STORES_LIST().then((Responce) => {
+          console.log('Route res 2', Responce)
+          setData(Responce?.StorePickUpData?.allStoreLocation);
+        }).catch((error) => {
+          console.log('Route res 2', error)
+        });
+        setLoading(false);
+      } else {
+        console.log('Route confirm 1', route?.params)
+        setAddress(true);
+        setSelectedItem(route?.params?.selectedAddress);
+        setLoading(true);
+        getaddresslist()
+      }
+      // if (route?.params?.selectedAddress) {
+
+      // }
+      // if (route?.params?.storeList) {
+
+      // }
 
       return () => { };
     }, []),
@@ -108,7 +135,7 @@ export default function AddressBookList({route, navigation}) {
     navigation.navigate('AddressBook', {
       selectedAddress: isEdit ? selectedAddress : {},
       onAddAddress: onAddAddress,
-      storeList: allShops,
+      storeList: getAddress == true ? '' : data,
     });
   };
 
@@ -170,11 +197,11 @@ export default function AddressBookList({route, navigation}) {
         contentContainerStyle={{ flexGrow: 1 }}>
         {data.length > 0 ? (
           data.map((e, index) => {
-            console.log('enter')
             return (
               <Swipeout
                 autoClose={true}
-                close={index == selectedItem ? false : true}
+                close={e.id == selectedItem?.id
+                  ? false : true}
                 onOpen={(data) => {
                   console.log('oper', data);
                   console.log('oper', index);
@@ -239,8 +266,12 @@ export default function AddressBookList({route, navigation}) {
                 buttonWidth={120}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log('eeeeee', e)
-                    setSelectedItem(e.id);
+                    setSelectedItem(e)
+                    if (route?.params?.onAddressFetch) {
+                      route?.params?.onAddressFetch(e);
+                      navigation.goBack();
+                    }
+
                   }}
                   style={{
                     borderRadius: 8,
@@ -250,11 +281,12 @@ export default function AddressBookList({route, navigation}) {
                     borderColor: 'rgba(43, 40, 38, 0.1)',
                     flexDirection: 'row',
                   }}>
-                  {selectedItem == e.id ? (
+                  {geRadio == true ? '' : <View>
+                    {selectedItem?.id == e.id ? (
                     <CheckedRadioSVG />
                   ) : (
                     <UnCheckedRadioSVG />
-                  )}
+                    )}</View>}
                   <View style={{flexDirection: 'column', marginHorizontal: 16}}>
                     <Text
                       style={{
@@ -263,7 +295,7 @@ export default function AddressBookList({route, navigation}) {
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
                         letterSpacing: 0.4,
-                      }}>{`${e?.firstname}`}</Text>
+                      }}>{`${getAddress == true ? e?.firstname : e?.name}`}</Text>
                     <Text
                       style={{
                         marginTop: 6,
@@ -271,7 +303,7 @@ export default function AddressBookList({route, navigation}) {
                         fontFamily: fontConstant.satoshi,
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
-                      }}>{`${e?.street?.toString()} ${e?.postcode}`}</Text>
+                      }}>{`${getAddress == true ? e?.street?.toString() : e?.address} ${e?.postcode}`}</Text>
                     <Text
                       style={{
                         marginTop: 6,
@@ -279,7 +311,7 @@ export default function AddressBookList({route, navigation}) {
                         fontFamily: fontConstant.satoshi,
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
-                      }}>{`${t('PHONE :')} ${e?.telephone}`}</Text>
+                      }}>{`${t('PHONE :')} ${getAddress == true ? e?.telephone : e?.phone_number == null ? '' : e?.phone_number}`}</Text>
                   </View>
                 </TouchableOpacity>
 
