@@ -169,10 +169,12 @@ export default function Checkout({route, navigation}) {
 
     if (res?.StorePickUpData) {
       console.log('GET_ALL_STORES_LIST', res);
-      setStoreList(res?.StorePickUpData?.allStoreLocation);
+      // setStoreList(res?.StorePickUpData?.allStoreLocation
+      // );
       // console.warn(res?.StorePickUpData?.allStoreLocation);
       navigation.navigate('AddressBookList', {
-        storeList: res?.StorePickUpData?.allStoreLocation,
+        storeList: res?.StorePickUpData?.allStoreLocation
+        ,
       });
     }
   };

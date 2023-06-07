@@ -109,7 +109,6 @@ export const GET_ADDRESS_LIST = async () => {
         }
         `});
       if (data) {
-        console.log('data', JSON.stringify(data));
 
         resolve(data);
       }

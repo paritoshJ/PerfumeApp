@@ -6,6 +6,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "rgba(255, 255, 255, 1)",
+    justifyContent: 'center'
   },
   search_view: {
     width: '100%',

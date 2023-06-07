@@ -58,7 +58,15 @@ const ProductModal = props => {
       let res = await ADD_TO_CART_DATA(parseFloat(value).toFixed(1), `${sku}`);
       setLoading(false);
       if (res != undefined && res !== null) {
-        Alert.alert('Your item added to cart successfully.');
+        // Alert.alert('Your item added to cart successfully.');
+        Alert.alert('', 'Your item added to cart successfully.', [
+
+          {
+            text: 'OK', onPress: () => props.setOnOpenDailog(false)
+          },
+        ]);
+
+
       }
     }
   };
@@ -95,7 +103,7 @@ const ProductModal = props => {
               borderTopLeftRadius: 24,
               borderTopRightRadius: 24,
             }}>
-            <Image source={{uri: image}} style={{width: 150, height: 100}} />
+            <Image source={{ uri: image }} style={{ width: 150, height: 100, resizeMode: 'contain' }} />
             <AntDesign
               name="close"
               size={22}

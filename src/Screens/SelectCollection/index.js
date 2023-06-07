@@ -35,6 +35,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ADD_WISH_LST_API} from '../../api/getCategoryList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProductModal from '../../modal/productmodal';
 
 const SelectCollection = props => {
   const {t, i18n} = useTranslation();
@@ -54,6 +55,8 @@ const SelectCollection = props => {
   const [getSortvalue, setSortValue] = useState('Sort');
   const [getasendingdesending, Setassendingdissending] = useState('ASC');
   const [getWishlist, SetWishlist] = useState([]);
+  const [onOpenDailog, setonOpenDailog] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   const {item, offer, wishlist, idget, isHome = false} = props;
@@ -172,6 +175,9 @@ const SelectCollection = props => {
     const colorIndex = Math.floor(Math.random() * COLORS.length);
     return COLORS[colorIndex];
   }
+  const closeDialog = () => {
+    setonOpenDailog(false);
+  };
   const renderItem = ({item, index}) => {
     let name = item.name;
     let finalPrice = {};
@@ -206,7 +212,11 @@ const SelectCollection = props => {
     return (
       <TouchableOpacity
         key={item}
-        onPress={() => {}}
+        onPress={() => {
+          setSelectedProduct(item);
+          setonOpenDailog(true);
+
+        }}
         style={{
           // flex: 1,
           marginLeft: '1.2%',
@@ -279,8 +289,7 @@ const SelectCollection = props => {
 
           <Image
             source={{uri: item.image.url}}
-            style={{width: '80%', height: '80%', alignSelf: 'center'}}
-            resizeMode="contain"
+            style={{ width: '80%', height: '80%', alignSelf: 'center' }}
           />
         </View>
 
@@ -288,11 +297,28 @@ const SelectCollection = props => {
           <TouchableOpacity
             style={style.tochablesize}
             onPress={() => {
-              props?.onSizeSelect();
+              // props?.onSizeSelect();
             }}>
             <Text style={style.sizetext}>
               {item.customAttributesAjmalData[0].display_size}
             </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            console.log('item data', item)
+            setSelectedProduct(item);
+            setonOpenDailog(true);
+          }} style={{
+            width: 30,
+            height: 30,
+            borderRadius: 30 / 2,
+            borderColor: "#BC8B57",
+            borderWidth: 0.5,
+            position: 'absolute',
+            right: 0,
+            marginRight: 2,
+            justifyContent: 'center'
+          }}>
+            <Image style={{ width: 17, height: 17, alignSelf: 'center' }} source={require('../../../assets/empty-cart.png')}></Image>
           </TouchableOpacity>
         </View>
 
@@ -532,7 +558,7 @@ const SelectCollection = props => {
                     alignItems: 'center',
                   }}>
                   <Text alignSelf={'center'} style={{textAlign: 'center'}}>
-                    No data found
+                    Out of stock in Product
                   </Text>
                 </View>
               ) : (
@@ -811,6 +837,36 @@ const SelectCollection = props => {
           )
         ) : (
           <View />
+        )}
+        {onOpenDailog && (
+          <ProductModal
+            item={selectedProduct}
+            onOpenDailog={onOpenDailog}
+            setOnOpenDailog={closeDialog}
+            // image={selectedProduct?.image.url}
+            image={selectedProduct?.image.url}
+            title={selectedProduct?.name}
+            sku={selectedProduct.sku}
+            cat={
+              selectedProduct?.customAttributesAjmalData[0]?.display_category
+            }
+            price={
+              selectedProduct?.price_range?.minimum_price?.final_price.value
+            }
+            offer={
+              selectedProduct?.price_range?.minimum_price?.discount?.percent_off
+              // selectedProduct?.discount_percent
+            }
+            displaySize1={
+              selectedProduct?.customAttributesAjmalData[0]?.display_size
+            }
+            finalPrice={
+              selectedProduct?.price_range?.minimum_price?.final_price
+            }
+            regularPrice={
+              selectedProduct?.price_range?.minimum_price?.regular_price
+            }
+          />
         )}
         <Loader loading={loading} />
         {loading == true ? (

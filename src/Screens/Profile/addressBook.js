@@ -24,6 +24,11 @@ import {
   GET_REGION_COUNTRY,
   SAVE_BOOK_ADDRESS
 } from '../../api/SaveAddress';
+import {
+  SAVE_BILLING_ADDRESS,
+  SAVE_GUEST_EMAIL,
+  SAVE_SHIPPING_ADDRESS,
+} from '../../api/SaveAddress';
 import Loader from '../../Component/Loader';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 import AddAddressModal from './../../modal/AddAddressModal';
@@ -60,6 +65,7 @@ export default function AddressBook({route, navigation}) {
     latitude: 24.1607038,
     longitude: 55.8069848,
   });
+  const [markersq, setMarkersq] = useState({});
   const [getcountry, setCountrylist] = useState([])
   const [countryCode, setCountryCode] = useState('');
   const [getCountryname, setCountyrname] = useState('');
@@ -71,6 +77,8 @@ export default function AddressBook({route, navigation}) {
   const [getRegionId, setRegionId] = useState('');
   const [getRegionArray, setRegionArray] = useState([]);
   const [getCountrycodeslect, setCountrycodeselect] = useState('');
+  const [getaddress, setaddress] = useState(false);
+
   const onSelectSwitch = index => {
     if (index == 1) {
       setShowMap(true);
@@ -79,6 +87,19 @@ export default function AddressBook({route, navigation}) {
     }
   };
   useEffect(() => {
+    if (route?.params?.storeList) {
+      setaddress(false)
+      console.log('dfsfsf', route?.params
+      );
+      setMarkers(route?.params?.storeList);
+    }
+    else {
+      setMarkers({
+        latitude: 24.1607038,
+        longitude: 55.8069848,
+      })
+      setaddress(true)
+    }
     if (route.params.id) {
       setFirstName(route.params.id.firstname);
       setLastName(route.params.id.lastname);
@@ -118,6 +139,39 @@ export default function AddressBook({route, navigation}) {
     setCountryPhoneCode(country.callingCode[0]);
   };
 
+  const onSaveAddress1 = async () => {
+    let obj = {
+      address: {
+        city: city,
+        country_code: countryCode,
+        firstname: firstname,
+        lastname: lastName,
+        postcode: zipCode,
+        telephone: mobile,
+        street: [`${buildingName} ${address}`],
+      },
+    };
+
+    setLoading(true);
+    const res = await SAVE_SHIPPING_ADDRESS([obj]);
+    console.log('res======>', res)
+    setLoading(false);
+    if (res) {
+      if (route?.params.onAddAddress)
+        route?.params?.onAddAddress(
+          res?.setShippingAddressesOnCart?.cart?.shipping_addresses,
+        );
+      navigation.goBack();
+    }
+    const res1 = await SAVE_BILLING_ADDRESS(obj);
+    if (res1) {
+      console.log('SAVE_BILLING_ADDRESS', res1);
+    }
+    const resEmail = await SAVE_GUEST_EMAIL(email);
+    if (resEmail) {
+      console.log(resEmail);
+    }
+  };
   const cityNameBaselatlongget = () => {
     fetch('https://maps.googleapis.com/maps/api/geocode/json?address=' + 'ahmedabad' + '&sensor=false&key=AIzaSyDdoMjBprJUivFiEdqhXxwvu8ZDn4OVnXI')
       .then(response => response.json())
@@ -233,36 +287,75 @@ export default function AddressBook({route, navigation}) {
                     const { coordinate } = event.nativeEvent;
 
                     console.log(coordinate)
-                    setLoading(true)
-                    setMarkers(coordinate)
-                    latlongbaseGetAdddress();
+                    if (getaddress == true) {
+                      setLoading(true)
+                      setMarkers(coordinate)
+                      latlongbaseGetAdddress();
+
+                    }
+                    else {
+                      setLoading(false)
+                      // setMarkers(coordinate)
+                      // latlongbaseGetAdddress();
+
+                    }
                   }}
                 minZoomLevel={0}
-                  // maxZoomLevel={15}
+                  maxZoomLevel={10}
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE}
 
                 initialRegion={{
-                  latitude: markers.latitude,
-                  longitude: markers.longitude,
+                  latitude: getaddress == false ? 24.1607038 : markers.latitude,
+                  longitude: getaddress == false ? 55.8069848 : markers.longitude,
                   latitudeDelta: 0.003,
                   longitudeDelta: 0.003,
-                  }}>
+                  }}
+                // initialRegion={{
+                //   latitude: 24.1607038,
+                //   longitude: 55.8069848,
+                //   latitudeDelta: 0.003,
+                //   longitudeDelta: 0.003,
+                //   }}
+                >
+                  {getaddress == false ? markers.map((marker, index) => (
                   <Marker
-                    coordinate={{
-                      latitude: markers.latitude,
-                      longitude: markers.longitude,
-                    }}
-                    image={require('./../../assets/icon/Location.png')}
-                    // title={'ahmedabd'}
-                    description={address}
+                      key={index}
+                      coordinate={{
+                        latitude: marker.latitude,
+                        longitude: marker.longitude,
+                      }}
+                      image={require('./../../assets/icon/Location.png')}
+                      title={marker.name}
+                      description={address}
+                      onPress={() => {
+                        console.log(marker, '---##3#######');
+                        setvisibale(true);
+                        if (getaddress == false) {
+                          setMarkerData(marker.address + ' ' + marker.city + ' ' + marker.postcode);
+                        }
+                        else {
+                          setMarkerData(marker);
+                          setAddress(marker.address);
+                        }
+                      }}
+                    // description={marker}
+                    ></Marker>
+                  )) : <Marker
+                      coordinate={{
+                        latitude: markers.latitude,
+                        longitude: markers.longitude,
+                      }}
+                      image={require('./../../assets/icon/Location.png')}
+                      description={address}
 
-                    onPress={() => {
+                      onPress={() => {
 
-                      // setMarkerData(marker);
-                      // setAddress(marker.address);
-                    }}
-                  ></Marker>
+                        // setMarkerData(marker);
+                        // setAddress(marker.address);
+                      }}
+                  ></Marker>}
+
               </MapView>
             </View>
               <View>
@@ -538,7 +631,12 @@ export default function AddressBook({route, navigation}) {
                 !isStringNotNull(buildingName)
               }
               onPress={() => {
-                onSaveAddress();
+                if (getaddress == true) {
+                  onSaveAddress();
+                }
+                else {
+                  onSaveAddress1();
+                }
               }}
               tx={t('Save address')}
               style={{marginTop: Metrics.rfv(16)}}
