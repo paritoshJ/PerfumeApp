@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text, Pressable, SafeAreaView} from 'react-native';
+import { View, Text, Pressable, SafeAreaView, LogBox } from 'react-native';
 import React, {useState} from 'react';
 import Routes from './src/Routes/index';
 import {useTranslation} from 'react-i18next';
@@ -9,7 +9,10 @@ import {WebSocketLink} from '@apollo/client/link/ws';
 
 const App = () => {
   const {t, i18n} = useTranslation();
+  LogBox.ignoreLogs(['Warning: ...']);
 
+  //Ignore all log notifications
+  LogBox.ignoreAllLogs();
   const wsLink = new WebSocketLink({
     uri: `ws://integration-5ojmyuq-vvqszukhxdw6q.eu-3.magentosite.cloud/graphq`,
     options: {

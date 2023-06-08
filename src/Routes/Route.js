@@ -1,7 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabs } from 'rn-animated-tabbar';
+import { BottomFabBar } from 'rn-wave-bottom-bar';
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import {
+  Pressable,
+  StatusBar,
+  StyleSheet,
+  View,
+  Text,
+  LayoutChangeEvent,
+} from 'react-native'
 import { Image, DeviceEventEmitter } from 'react-native';
 import {
   Search_ic,
@@ -96,6 +106,10 @@ import AddressBookList from '../Screens/Profile/AddressBookList';
 import Constants from '../Comman/Constants';
 import { getAuthTokenHeaders } from '../Helper/helper';
 import FAQList from '../Screens/ProductPage/FAQList';
+import Svg, { Path } from 'react-native-svg'
+// reanimated
+import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated';
+const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const ProfileStack = () => {
   return (
@@ -287,20 +301,22 @@ const Route = navigation => {
 
   return (
     <TabsNavigator.Navigator
+
       tabBar={props => (
-        <BottomTabs
-          tabsData={BottomTabsData}
-          tabBarBackground="#F3ECE3"
-          textColor="#BC8B57"
-          activeTabBackground="#FFFFFF"
-          activeIconBackColor="#BC8B57"
-          navigationHandler={screen => {
-            // call your navigation method
-            console.log(screen, '::::: SCREEN :::', props);
-            navigate(screen);
-          }}
-          {...props}
-        />
+        <AnimatedTabBar {...props} />
+        // <BottomTabs
+        //   tabsData={BottomTabsData}
+        //   tabBarBackground="#F3ECE3"
+        //   textColor="#BC8B57"
+        //   activeTabBackground="#FFFFFF"
+        //   activeIconBackColor="#BC8B57"
+        //   navigationHandler={screen => {
+        //     // call your navigation method
+        //     console.log(screen, '::::: SCREEN :::', props);
+        //     navigate(screen);
+        //   }}
+        //   {...props}
+        // />
       )}
       screenOptions={{ headerShown: false }}
       // tabBarOptions={{}}
@@ -313,5 +329,205 @@ const Route = navigation => {
     </TabsNavigator.Navigator>
   );
 };
+const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, descriptors }: BottomTabBarProps) => {
+  const { bottom } = useSafeAreaInsets()
 
+  // get information about the components position on the screen -----
+
+  const reducer = (state: any, action: { x: number, index: number }) => {
+    // Add the new value to the state
+    return [...state, { x: action.x, index: action.index }]
+  }
+
+  const [layout, dispatch] = useReducer(reducer, [])
+  console.log(layout)
+
+  const handleLayout = (event: LayoutChangeEvent, index: number) => {
+    dispatch({ x: event.nativeEvent.layout.x, index })
+  }
+
+  // animations ------------------------------------------------------
+
+  const xOffset = useDerivedValue(() => {
+    // Our code hasn't finished rendering yet, so we can't use the layout values
+    if (layout.length !== routes.length) return 0;
+    // We can use the layout values
+    // Copy layout to avoid errors between different threads
+    // We subtract 25 so the active background is centered behind our TabBar Components
+    // 20 pixels is the width of the left part of the svg (the quarter circle outwards)
+    // 5 pixels come from the little gap between the active background and the circle of the TabBar Components
+    return [...layout].find(({ index }) => index === activeIndex).x - 25;
+    // Calculate the offset new if the activeIndex changes (e.g. when a new tab is selected)
+    // or the layout changes (e.g. when the components haven't finished rendering yet)
+  }, [activeIndex, layout])
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      // translateX to the calculated offset with a smooth transition
+      transform: [{ translateX: withTiming(xOffset.value, { duration: 250 }) }],
+    }
+  })
+
+  return (
+    <View style={[styles.tabBar, { paddingBottom: bottom }]}>
+      <AnimatedSvg
+        width={174}
+        height={40}
+        viewBox="22 22 130 50"
+        style={[styles.activeBackground, animatedStyles]}
+      >
+        <Path
+          fill="#FFFFFF"
+          d="M20 0H0c11.046 0 20 8.953 20 20v5c0 19.33 15.67 35 35 35s35-15.67 35-35v-5c0-11.045 8.954-20 20-20H20z"
+        />
+      </AnimatedSvg>
+
+      <View style={styles.tabBarContainer}>
+        {routes.map((route, index) => {
+          console.log('ind3ex', index, route)
+          const active = index === activeIndex
+          const { options } = descriptors[route.key]
+          var imagessvginactive = '';
+          var imagessvgactive = '';
+          var Tabactivename = '';
+          if (index == 0) {
+            imagessvginactive = <Search_ic />;
+            imagessvgactive = <Search_ic_active />;
+            Tabactivename = 'Catalog';
+          } else if (index == 1) {
+            imagessvginactive = <Wishlist_ic />;
+            imagessvgactive = <Wishlist_ic_active />;
+            Tabactivename = 'Wishlist';
+
+          } else if (index == 2) {
+            imagessvginactive = <Home_ic />;
+            imagessvgactive = <Home_ic_active />;
+            Tabactivename = 'Main';
+
+          } else if (index == 3) {
+            imagessvginactive = <Cart_ic />;
+            imagessvgactive = <Cart_ic_active />;
+            Tabactivename = 'My cart';
+
+          } else if (index == 4) {
+            imagessvginactive = <Profile_ic />;
+            imagessvgactive = <Profile_ic_active />;
+            Tabactivename = 'Profile';
+
+          }
+          return (
+            <TabBarComponent
+              key={route.key}
+              active={active}
+              options={options}
+              tabicon={imagessvginactive}
+              tabactiveicon={imagessvgactive}
+              activename={Tabactivename}
+              onLayout={(e) => handleLayout(e, index)}
+              onPress={() => navigation.navigate(route.name)}
+            />
+          )
+        })}
+      </View>
+    </View>
+  )
+}
+const TabBarComponent = ({ active, options, tabicon, tabactiveicon, activename, onLayout, onPress }: TabBarComponentProps) => {
+  // handle lottie animation -----------------------------------------
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (active && ref?.current) {
+      // @ts-ignore
+      ref.current.play()
+    }
+  }, [active])
+
+  // animations ------------------------------------------------------
+
+  const animatedComponentCircleStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: withTiming(active ? 1 : 0, { duration: 250 })
+        }
+      ]
+    }
+  })
+
+  const animatedIconContainerStyles = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(active ? 2 : 2, { duration: 250 })
+    }
+  })
+
+  return (
+    <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
+      <Animated.View
+        style={[styles.componentCircle, animatedComponentCircleStyles]}
+      />
+      <Animated.View style={[styles.iconContainer, {
+        marginBottom: active ? 100 : 0,
+      }, animatedIconContainerStyles]}>
+        {/* @ts-ignore */}
+        {options.tabBarIcon ? options.tabBarIcon({ ref }) : active ? tabactiveicon : tabicon}
+
+      </Animated.View>
+      <Text style={{ position: 'absolute', bottom: 0, marginTop: 5, alignSelf: 'center', fontSize: 13 }}>{active ? activename : ''}</Text>
+    </Pressable>
+  )
+}
+
+
+const styles = StyleSheet.create({
+  tabBar: {
+    backgroundColor: '#F3ECE3',
+    // height: 50
+  },
+  activeBackground: {
+    position: 'absolute',
+    marginBottom: 20
+  },
+  tabBarContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    // backgroundColor: 'red',
+    height: 70,
+  },
+  component: {
+    height: 90,
+    width: 50,
+    marginTop: -25,
+
+  },
+  componentCircle: {
+    flex: 1,
+    borderRadius: 30,
+    backgroundColor: '#BC8B57',
+    marginBottom: 10,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 50,
+    width: 50,
+    borderRadius: 50 / 2
+  },
+  iconContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 25,
+
+  },
+  icon: {
+    height: 36,
+    width: 36,
+  }
+})
 export default Route;
