@@ -41,9 +41,12 @@ export default function LoginPage({navigation}) {
   useFocusEffect(
     React.useCallback(() => {
       GmailConfiguration();
-      return appleAuth.onCredentialRevoked(async () => {
-        console.warn('If this function executes, User Credentials have been Revoked');
-      });
+      if (Platform.OS == 'ios') {
+        return appleAuth.onCredentialRevoked(async () => {
+          console.warn('If this function executes, User Credentials have been Revoked');
+        });
+      }
+
       return () => { };
     }, []),
   );
@@ -53,12 +56,12 @@ export default function LoginPage({navigation}) {
   const GmailConfiguration = () => {
     GoogleSignin.configure({
       // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId: '59454198171-riv4i7q7g70esra0l8c2efe9kvnove2c.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      webClientId: '876587074927-d7saicn7ljn3g427npg96mndpk2kr5pl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
       hostedDomain: '', // specifies a hosted domain restriction
       forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
       accountName: '', // [Android] specifies an account name on the device that should be used
-      iosClientId: '59454198171-jdlajp40s9m11g47uqp9n2db7fpj2tbc.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+      // iosClientId: '59454198171-jdlajp40s9m11g47uqp9n2db7fpj2tbc.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
       googleServicePlistPath: '', // [iOS] if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
       openIdRealm: '', // [iOS] The OpenID2 realm of the home web server. This allows Google to include the user's OpenID Identifier in the OpenID Connect ID token.
       profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
@@ -109,8 +112,10 @@ export default function LoginPage({navigation}) {
         console.log('access token responce 2', result)
         if (result) {
           LoginManager.logOut();
+          setLoading(true);
 
           socail_login_api(result.name, "", result.email, result.id, 'facebook')
+
           // FacebookLogin(result.email, result.id, result.name)
         } else {
           reject(error)
@@ -149,21 +154,34 @@ export default function LoginPage({navigation}) {
       console.log('if ');
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
+      setLoading(true);
       console.log('if 1', userInfo);
-
-
+      socail_login_api(userInfo.user.familyName,
+        userInfo.user.givenName,
+        userInfo.user.email,
+        userInfo.user.id,
+        "google");
+      signOut();
     } catch (error) {
       console.log('Error', error);
       // const typedError = error as NativeModuleError;
       if (typedError.code === statusCodes.SIGN_IN_REQUIRED) {
-        this.setState({
-          error: new Error('User not signed it yet, please sign in :)'),
-        });
+        // this.setState({
+        //   error: new Error('User not signed it yet, please sign in :)'),
+        // });
       } else {
-        this.setState({ error: typedError });
+        // this.setState({ error: typedError });
       }
     }
   };
+  const signOut = async () => {
+    try {
+      await GoogleSignin.signOut();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   ////******* Apple Login *********//////////
 
