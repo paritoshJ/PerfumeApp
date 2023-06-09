@@ -16,6 +16,7 @@ export const client = new ApolloClient({
 export const GET_ALL_STORES_LIST = async (quantity, sku) => {
   try {
     const cartId = await AsyncStorage.getItem('CART_ID');
+    console.log(cartId)
     const {data, error} = await client.query({
       query: GET_ALL_STORES,
     });

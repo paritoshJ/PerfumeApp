@@ -83,3 +83,41 @@ export const USER_LOGIN_MOBILE = async (mobile, password, websiteId) => {
     }
   });
 };
+
+export const USER_SOCIAL_LOGIN = async (firtname, lastname, email, user, socialLoginType) => {
+  console.log(firtname, lastname, email, user, socialLoginType, '::: data ....');
+
+  return new Promise(async (resolve, reject) => {
+    try {
+      let { data } = await client.mutate({
+        mutation: gql`
+        mutation  {
+          authenticateCustomerWithSocialLogin(input: {
+            firstname :"${firtname}",
+            lastname :"${lastname}",
+            socialId :"${user}",
+            socialLoginType :"${socialLoginType}",
+            email:"${email}"
+          }) {
+            token
+          }
+        }
+        `,
+
+      });
+      if (data) {
+        // alert(`Response: ${JSON.stringify(data.generateCustomerToken.token)}`);
+        console.log('data', JSON.stringify(data));
+        resolve(data?.authenticateCustomerWithSocialLogin);
+
+      } else {
+        Alert.alert(error?.message);
+        console.log('error', JSON.stringify(error));
+      }
+    } catch (error) {
+      Alert.alert(error?.message);
+      console.log('error', JSON.stringify(error));
+      reject(error);
+    }
+  });
+};

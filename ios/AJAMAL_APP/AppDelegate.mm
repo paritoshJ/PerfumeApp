@@ -1,3 +1,4 @@
+
 #import "AppDelegate.h"
 
 #import <React/RCTBundleURLProvider.h>
@@ -9,6 +10,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+  didFinishLaunchingWithOptions:launchOptions];
  [GMSServices provideAPIKey:@"AIzaSyDdoMjBprJUivFiEdqhXxwvu8ZDn4OVnXI"];
   self.moduleName = @"AJAMAL_APP";
   // You can add your custom initial props in the dictionary below.

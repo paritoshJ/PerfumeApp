@@ -27,18 +27,29 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import { useFocusEffect } from '@react-navigation/native';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
+import { USER_SOCIAL_LOGIN } from '../../api/useLogin';
+import Loader from '../../Component/Loader';
+import Constants from '../../Comman/Constants';
 
 export default function LoginPage({navigation}) {
   const {t, i18n} = useTranslation();
   const [isEnabled, setIsEnabled] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   useFocusEffect(
     React.useCallback(() => {
       GmailConfiguration();
-
+      return appleAuth.onCredentialRevoked(async () => {
+        console.warn('If this function executes, User Credentials have been Revoked');
+      });
       return () => { };
     }, []),
   );
+
+  ////******* Gmail Login *********//////////
+
   const GmailConfiguration = () => {
     GoogleSignin.configure({
       // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
@@ -76,8 +87,15 @@ export default function LoginPage({navigation}) {
     }
     RNRestart.Restart();
   };
+
+  ////******* Facebook Login *********//////////
+
   const FBGraphRequest = (fields, callback) => {
+    console.log('access token responce', fields)
+
     const accessData = AccessToken.getCurrentAccessToken();
+    console.log('access token responce 1', accessData)
+
     const request = new GraphRequest('/me',
       {
         accessToken: accessData.accessToken,
@@ -88,9 +106,12 @@ export default function LoginPage({navigation}) {
         }
       },
       (error, result) => {
+        console.log('access token responce 2', result)
         if (result) {
-          this.setState({ isLoading: true });
-          this.Facebooklogin(result.email, result.id, result.name)
+          LoginManager.logOut();
+
+          socail_login_api(result.name, "", result.email, result.id, 'facebook')
+          // FacebookLogin(result.email, result.id, result.name)
         } else {
           reject(error)
         }
@@ -107,9 +128,11 @@ export default function LoginPage({navigation}) {
         LoginManager.setLoginBehavior('web_only');
       }
       LoginManager.logInWithPermissions(['public_profile', 'email']).then((result) => {
+        console.log('responce', result)
         if (result.isCancelled) {
         } else {
-          this.FBGraphRequest('id,email,picture.width(1024).height(1024),name', this.FBLoginCallback);
+
+          FBGraphRequest('id,email,picture.width(1024).height(1024),name', this.FBLoginCallback);
         }
       });
     } catch (nativeError) {
@@ -119,6 +142,8 @@ export default function LoginPage({navigation}) {
       }
     }
   }
+
+  ////******* Gmail Login *********//////////
   const signIn = async () => {
     try {
       console.log('if ');
@@ -139,6 +164,83 @@ export default function LoginPage({navigation}) {
       }
     }
   };
+
+  ////******* Apple Login *********//////////
+
+  const appleDeveloperLogin = async () => {
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      // Note: it appears putting FULL_NAME first is important, see issue #293
+      requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+    });
+    console.log('appleAuthRequestResponse', appleAuthRequestResponse.email);
+    // var input = {
+    //   firstname: appleAuthRequestResponse.fullName.familyName,
+    //   lastname: appleAuthRequestResponse.fullName.givenName,
+    //   socialId: appleAuthRequestResponse.user,
+    //   // email: appleAuthRequestResponse.email,
+    //   socialLoginType: "apple"
+    // }
+    // console.log(input)
+    var emmail = appleAuthRequestResponse.email == null || appleAuthRequestResponse.email == "" ? null : appleAuthRequestResponse.email;
+    socail_login_api(appleAuthRequestResponse.fullName.familyName,
+      appleAuthRequestResponse.fullName.givenName,
+      emmail,
+      appleAuthRequestResponse.user,
+      "apple");
+    // get current authentication state for user
+    // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+    const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+    console.log('credentialState', credentialState);
+    console.log('credentialState', appleAuth);
+
+    // use credentialState response to ensure the user is authenticated
+    if (credentialState === appleAuth.State.AUTHORIZED) {
+      console.log('credentialState', credentialState, appleAuth.State.AUTHORIZED);
+
+      // user is authenticated
+    }
+
+
+  }
+
+  const handleCartId = async () => {
+    let res = await EMPTY_CART();
+    const sourceCartId = await AsyncStorage.getItem('CART_ID');
+
+    console.log(res);
+    if (res && res?.createEmptyCart) {
+      try {
+        await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
+
+        setTimeout(() => {
+          handleMergeCart(sourceCartId, res?.createEmptyCart);
+        }, 1000);
+        // setCartId(res?.createEmptyCart)
+      } catch (e) {
+        // saving error
+        console.log(e);
+      }
+    }
+  };
+  const socail_login_api = async (firtname, lastname, email, user, socialLoginType) => {
+    await USER_SOCIAL_LOGIN(firtname, lastname, email, user, socialLoginType)
+      .then(async res => {
+        setLoading(false);
+        console.log('login called ...', res?.token);
+
+        Constants.Token = "Bearer " + res?.token;
+        console.log('login called ...', Constants.Token);
+
+        await AsyncStorage.setItem('token', res?.token);
+        handleCartId();
+        navigation.replace('Profile');
+      })
+      .catch(async err => {
+        showDefaultAlert(err?.message);
+        setLoading(false);
+      });
+  }
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -198,7 +300,9 @@ export default function LoginPage({navigation}) {
               source={require('../../../assets/Facebook.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.socialLoginLogoComponent}>
+          <TouchableOpacity onPress={async () => {
+            appleDeveloperLogin();
+          }} style={styles.socialLoginLogoComponent}>
             <Image
               style={styles.button}
               source={require('../../../assets/Apple.png')}
@@ -333,6 +437,8 @@ export default function LoginPage({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
+      <Loader loading={loading} />
+
     </>
   );
 }
