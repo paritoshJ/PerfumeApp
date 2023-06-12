@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "876587074927",
+    "firebase_url": "https://ajmal-perfume-mobile-app.firebaseio.com",
+    "project_id": "ajmal-perfume-mobile-app",
+    "storage_bucket": "ajmal-perfume-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876587074927:android:4f679b6910b815d92d149a",
+        "android_client_info": {
+          "package_name": "com.ajamal_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876587074927-pgaqucjblfui74hh73gd6glsaba2a96u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0zAMkV_G2bwAmXHv_xKL8uaYz7DvADgE"
+        },
+        {
+          "current_key": "AIzaSyCoAiUqaJgblLisg9brokV3ah0nUcCBDbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876587074927-pgaqucjblfui74hh73gd6glsaba2a96u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "876587074927-d7saicn7ljn3g427npg96mndpk2kr5pl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.AJAMAL-APP"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:876587074927:android:94deebf820dae5eb",
+        "android_client_info": {
+          "package_name": "com.webkul.Ajmal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "876587074927-86skqfsuj37pm8vs7kqdd8alqceqb6rq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webkul.Ajmal",
+            "certificate_hash": "4d93888524152de2db0295b1bf2c321485a0c18e"
+          }
+        },
+        {
+          "client_id": "876587074927-8ctph90gnjqs5pvahcrg6sulfjnn0utd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.webkul.Ajmal",
+            "certificate_hash": "2700a6143ef766dd704ffc6f6feabd12c729cebe"
+          }
+        },
+        {
+          "client_id": "876587074927-pgaqucjblfui74hh73gd6glsaba2a96u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0zAMkV_G2bwAmXHv_xKL8uaYz7DvADgE"
+        },
+        {
+          "current_key": "AIzaSyCoAiUqaJgblLisg9brokV3ah0nUcCBDbo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "876587074927-pgaqucjblfui74hh73gd6glsaba2a96u.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "876587074927-d7saicn7ljn3g427npg96mndpk2kr5pl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.AJAMAL-APP"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

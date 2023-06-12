@@ -40,6 +40,7 @@ export default function LoginPage({navigation}) {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   useFocusEffect(
     React.useCallback(() => {
+
       GmailConfiguration();
       if (Platform.OS == 'ios') {
         return appleAuth.onCredentialRevoked(async () => {
@@ -56,9 +57,12 @@ export default function LoginPage({navigation}) {
   const GmailConfiguration = () => {
     GoogleSignin.configure({
       // scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId: '876587074927-d7saicn7ljn3g427npg96mndpk2kr5pl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      // webClientId: '876587074927-d7saicn7ljn3g427npg96mndpk2kr5pl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+      webClientId: Platform.OS == 'android' ? '876587074927-pgaqucjblfui74hh73gd6glsaba2a96u.apps.googleusercontent.com' : '876587074927-d7saicn7ljn3g427npg96mndpk2kr5pl.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
       hostedDomain: '', // specifies a hosted domain restriction
+      androidClientId: '876587074927-pgaqucjblfui74hh73gd6glsaba2a96u.apps.googleusercontent.com',
+
       forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
       accountName: '', // [Android] specifies an account name on the device that should be used
       // iosClientId: '59454198171-jdlajp40s9m11g47uqp9n2db7fpj2tbc.apps.googleusercontent.com', // [iOS] if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
@@ -192,14 +196,7 @@ export default function LoginPage({navigation}) {
       requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
     });
     console.log('appleAuthRequestResponse', appleAuthRequestResponse.email);
-    // var input = {
-    //   firstname: appleAuthRequestResponse.fullName.familyName,
-    //   lastname: appleAuthRequestResponse.fullName.givenName,
-    //   socialId: appleAuthRequestResponse.user,
-    //   // email: appleAuthRequestResponse.email,
-    //   socialLoginType: "apple"
-    // }
-    // console.log(input)
+
     var emmail = appleAuthRequestResponse.email == null || appleAuthRequestResponse.email == "" ? null : appleAuthRequestResponse.email;
     socail_login_api(appleAuthRequestResponse.fullName.familyName,
       appleAuthRequestResponse.fullName.givenName,
@@ -209,17 +206,10 @@ export default function LoginPage({navigation}) {
     // get current authentication state for user
     // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
     const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
-    console.log('credentialState', credentialState);
-    console.log('credentialState', appleAuth);
 
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
-      console.log('credentialState', credentialState, appleAuth.State.AUTHORIZED);
-
-      // user is authenticated
     }
-
-
   }
 
   const handleCartId = async () => {
