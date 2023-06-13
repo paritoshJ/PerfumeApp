@@ -26,6 +26,10 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import Metrics from '../../Helper/metrics';
 import EmptyPageView from '../../Component/EmptyPageView';
 import HeartSVG from '../../assets/svg/Heart';
+import Input from '../../Component/Input';
+import Voice from '@react-native-community/voice';
+import { useFocusEffect } from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 const SearchScreen = props => {
   const [text, setText] = useState('');
@@ -33,33 +37,77 @@ const SearchScreen = props => {
   const [data, setdata] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [voiceget, setvoiceSlect] = useState(false);
+  const [getstartrewcord, setStartRecord] = useState(false);
+  const [getVoiceSearch, StratVoiceSearch] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   const {t} = useTranslation();
+  useFocusEffect(
+    React.useCallback(() => {
+      Voice.onSpeechStart = onSpeechStartHandler;
+      Voice.onSpeechEnd = onSpeechEndHandler;
+      Voice.onSpeechResults = onSpeechResultsHandler;
+      // setLoading(true)
+      searchFunction('');
+    }, []),
+  );
+  const onSpeechStartHandler = (e) => {
+    console.log('Speeach Recognize start=====>', e)
+  }
+  const onSpeechEndHandler = (e) => {
+    console.log('Speeach Recognize end =====>', e)
+    setStartRecord(false);
+    try {
+      Voice.start('en-Us')
+    } catch (error) {
+      console.log("error raised", error)
+    }
 
-  useEffect(() => {
-    searchFunction('');
-  }, []);
+  }
+  const onSpeechResultsHandler = (e) => {
+    console.log('Speeach Recognize resulet=====>', e.value[0])
+    StratVoiceSearch(e.value[0])
+    searchFunctionvoice(e.value[0])
+  }
+  const startRecording = async () => {
+    try {
+      await Voice.start('en-Us')
+    } catch (error) {
+      console.log("error raised", error)
+    }
+  }
+  const stopRecording = async () => {
+    try {
+      await Voice.stop();
+      setStartRecord(false);
+
+    } catch (error) {
+      console.log("error raised", error)
+    }
+  }
 
   const searchFunction = async text => {
-    // const updatedData = store.filter(item => {
-    //   const item_data = `${item.name})`;
-    //   const text_data = text.toUpperCase();
-    //   return item_data.indexOf(text_data) > -1;
-    // });
-    // setdata(updatedData);
-    setText(text);
-    setSearching(true);
     let res = await GET_PRODUCTS(text);
-    setSearching(false);
+    stopRecording();
 
+    setSearching(false);
     if (res) {
       console.log('GET_PRODUCTS', res);
       setdata(res?.products.items);
-      // console.warn(res?.StorePickUpData?.allStoreLocation);
-      // navigation.navigate('AddressBookList', {
-      //   storeList: res?.StorePickUpData?.allStoreLocation,
-      // });
+    }
+  };
+  const searchFunctionvoice = async text => {
+    setText(text);
+    setSearching(true);
+    let res = await GET_PRODUCTS(text);
+    stopRecording();
+
+    setSearching(false);
+    if (res) {
+      console.log('GET_PRODUCTS', res);
+      console.log('GET_PRODUCTS', res?.products.items);
+      setstore(res?.products.items);
     }
   };
 
@@ -126,7 +174,7 @@ const SearchScreen = props => {
   return (
     <SafeAreaView style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
-      {renderHeader()}
+      {voiceget == false ? renderHeader() : <View />}
       <View
         style={{
           width: '100%',
@@ -136,6 +184,15 @@ const SearchScreen = props => {
           flexDirection: 'row',
           alignItems: 'center',
           padding: 15,
+          borderBottomColor: colorConstant.LIGHT_GREY,
+          borderBottomWidth: 1,
+        }}>
+        {voiceget == false ? <View style={{
+          width: '90%',
+          height: 50,
+          alignSelf: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
           borderBottomColor: colorConstant.LIGHT_GREY,
           borderBottomWidth: 1,
         }}>
@@ -164,7 +221,18 @@ const SearchScreen = props => {
             }}
           />
         </View>
-        <View
+        </View> : <Text style={[styles.navBarText, { marginLeft: '15%' }]}>{t('Voice search')}</Text>}
+        <TouchableOpacity
+          onPress={() => {
+            if (voiceget == false) {
+              setvoiceSlect(true)
+
+            } else {
+              setvoiceSlect(false);
+              setstore([]);
+              StratVoiceSearch('');
+            }
+          }}
           style={{
             width: '10%',
             height: 50,
@@ -179,15 +247,15 @@ const SearchScreen = props => {
               alignSelf: 'center',
             }}></View>
           <MaterialIcons
-            name="mic-none"
+            name={voiceget == false ? "mic-none" : "close"}
             size={25}
             color={colorConstant.LIGHT_GREY}
             style={{alignSelf: 'center', marginLeft: 10}}
           />
-        </View>
+        </TouchableOpacity>
       </View>
 
-      <View
+      {voiceget == false ? <View
         style={{
           width: '90%',
           alignSelf: 'center',
@@ -220,10 +288,102 @@ const SearchScreen = props => {
           contentContainerStyle={styles.scrollView}
           renderItem={renderItem}
           // ListEmptyComponent={renderEmptyAndNoLogin}
-        />
+        /> 
 
         <Loader loading={loading} />
-      </View>
+      </View> :
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ alignSelf: 'center', height: '20%', width: '100%', position: 'absolute', paddingBottom: store.length > 0 ? '140%' : 0 }}>
+              <Image style={{ width: '100%' }} source={require("../../../assets/loopwaves.gif")}></Image>
+            </View>
+            {getstartrewcord == false ? <TouchableOpacity onPress={() => {
+              setStartRecord(true);
+              startRecording();
+            }} style={{ width: '100%', height: '15%', alignSelf: 'center', justifyContent: 'center', marginBottom: store.length > 0 ? 0 : '10%', marginTop: store.length > 0 ? '10%' : 0 }}>
+
+              <Image source={require("../../../assets/voice.png")} style={{ alignSelf: 'center' }}></Image>
+            </TouchableOpacity> :
+              <TouchableOpacity onPress={() => { setStartRecord(false) }} style={{ width: '100%', height: '13%', alignSelf: 'center', justifyContent: 'center', marginBottom: store.length > 0 ? 0 : '10%', marginTop: store.length > 0 ? '10%' : 0 }}>
+                <LottieView source={require("../../../assets/ripple.json")} autoPlay loop />
+                {/* <Image source={require("../../../assets/micripple.gif")} style={{ alignSelf: 'center', width: '20%', height: '90%', }}></Image> */}
+              </TouchableOpacity>}
+            <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: store.length > 0 ? '10%' : 0, justifyContent: 'center' }}>
+              <Input
+                placeholder={t('Search for perfume')}
+                placeholderTextColor={"gray"}
+                value={getVoiceSearch}
+                onChangeText={e => StratVoiceSearch(e)}
+                style={
+                  {
+                    borderWidth: 1,
+                    borderTopRightRadius: 50,
+                    borderBottomRightRadius: 50,
+                    borderColor: getVoiceSearch.length > 0 ? colorConstant.DARK_PRIMARY : colorConstant.LIGHT_MIDIUM_GREY,
+                    marginTop: 5,
+                    justifyContent: 'center',
+                    backgroundColor: 'transparent',
+                    paddingHorizontal: 10,
+                    paddingVertical: 10,
+                  }
+                }
+              />
+              {getVoiceSearch != '' && store.length == 0 ? <TouchableOpacity onPress={() => {
+                StratVoiceSearch('');
+                setStartRecord(true);
+                startRecording();
+              }} style={{ position: 'absolute', height: 40, width: '25%', right: 0, justifyContent: 'center' }}>
+                <Text style={{
+                  fontFamily: fontConstant.satoshi,
+                  fontStyle: 'normal',
+                  fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
+                  fontWeight: fontConstant.WEIGHT_REGULAR,
+                  color: colorConstant.DARK_PRIMARY,
+                }}>Try again</Text>
+              </TouchableOpacity> :
+                <View />}
+            </View>
+            {store.length > 0 ? <View style={{
+              width: '90%',
+              height: '70%',
+              alignSelf: 'center',
+              // marginTop: '5%'
+            }}>
+              <FlatList
+                numColumns={2}
+                ItemSeparatorComponent={(item, index) => {
+                  return <View style={{ marginVertical: 8 }}></View>;
+                }}
+                ListHeaderComponent={() => {
+                  return (
+                    <Text
+                      style={{
+                        fontFamily: fontConstant.satoshi,
+                        fontStyle: 'normal',
+                        fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
+                        fontWeight: fontConstant.WEIGHT_REGULAR,
+                        color: colorConstant.BLACK,
+                        marginTop: '2%',
+                        marginBottom: '5%',
+                      }}>
+                      POPULAR SEARCHES
+                    </Text>
+                  );
+                }}
+                // itemDimension={130}
+                data={store}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.scrollView}
+                renderItem={renderItem}
+              // ListEmptyComponent={renderEmptyAndNoLogin}
+              />
+            </View> : <View />}
+
+          </View>
+
+        </View>
+
+      }
     </SafeAreaView>
   );
 };

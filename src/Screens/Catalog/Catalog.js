@@ -7,6 +7,7 @@ import {
   View,
   Image,
 } from 'react-native';
+
 import React, { useState, useEffect } from 'react';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import style from './style';
@@ -129,6 +130,9 @@ const CatalogScreen = props => {
         <View style={style.searchbar_Contain}>
           <TextInput
             // value={text}
+            onFocus={() => {
+              navigation.navigate('SearchScreen');
+            }}
             onChangeText={(search) => {
               const newData = categoryDatasearch.filter(
                 function (item) {
@@ -149,7 +153,10 @@ const CatalogScreen = props => {
             style={style.searchtext_Contain}
           />
         </View>
-        <View style={style.micnoneIcon_Contain}>
+        <TouchableOpacity onPress={async () => {
+          navigation.navigate('SearchScreen');
+
+        }} style={style.micnoneIcon_Contain}>
           <View style={style.micnoneIcon_Row}></View>
           <MaterialIcons
             name="mic-none"
@@ -157,7 +164,7 @@ const CatalogScreen = props => {
             color={colorConstant.LIGHT_GREY}
             style={style.micnoneIcon}
           />
-        </View>
+        </TouchableOpacity>
       </View>
       {categorydata == '' ? <Text style={{ position: 'absolute', alignSelf: 'center' }}>No Data Found </Text> : ''}
       <FlatList contentContainerStyle={style.new_Contain} data={categorydata} renderItem={renderItem} ListFooterComponent={renderFooter} ListHeaderComponent={renderHeader} />
