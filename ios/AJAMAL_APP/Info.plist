@@ -51,6 +51,11 @@
 	<string>383550672445280</string>
 	<key>FacebookDisplayName</key>
 	<string>Castpro</string>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Description of why you require the use of the microphone</string>
+  <key>NSSpeechRecognitionUsageDescription</key>
+  <string>Description of why you require the use of the speech recognition</string>
+
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
