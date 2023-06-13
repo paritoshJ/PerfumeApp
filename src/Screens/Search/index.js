@@ -88,6 +88,8 @@ const SearchScreen = props => {
   }
 
   const searchFunction = async text => {
+    setText(text);
+    setSearching(true);
     let res = await GET_PRODUCTS(text);
     stopRecording();
 
@@ -98,8 +100,6 @@ const SearchScreen = props => {
     }
   };
   const searchFunctionvoice = async text => {
-    setText(text);
-    setSearching(true);
     let res = await GET_PRODUCTS(text);
     stopRecording();
 
