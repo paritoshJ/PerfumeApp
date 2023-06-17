@@ -69,6 +69,7 @@
 		89C6BE57DB24E9ADA2F236DE /* Pods-AJAMAL_APP-AJAMAL_APPTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AJAMAL_APP-AJAMAL_APPTests.release.xcconfig"; path = "Target Support Files/Pods-AJAMAL_APP-AJAMAL_APPTests/Pods-AJAMAL_APP-AJAMAL_APPTests.release.xcconfig"; sourceTree = "<group>"; };
 		BE30D7482AF94E5C83AE3E01 /* Gambetta-Italic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-Italic.otf"; path = "../assets/fonts/Gambetta-Italic.otf"; sourceTree = "<group>"; };
 		BF030B88719E4D7AAD67B786 /* Gambetta-LightItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-LightItalic.otf"; path = "../assets/fonts/Gambetta-LightItalic.otf"; sourceTree = "<group>"; };
+		DC1800572A3DB3D100CDEB7D /* AJAMAL_APP.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = AJAMAL_APP.entitlements; path = AJAMAL_APP/AJAMAL_APP.entitlements; sourceTree = "<group>"; };
 		DE5E54A9388B4DD094F0EEE6 /* Gambetta-Bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-Bold.otf"; path = "../assets/fonts/Gambetta-Bold.otf"; sourceTree = "<group>"; };
 		E07C0ED5228C4533B17B0544 /* Gambetta-Semibold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-Semibold.otf"; path = "../assets/fonts/Gambetta-Semibold.otf"; sourceTree = "<group>"; };
 		E24026D2A3C146F98D38E5D9 /* Gambetta-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-Medium.otf"; path = "../assets/fonts/Gambetta-Medium.otf"; sourceTree = "<group>"; };
@@ -117,6 +118,7 @@
 		13B07FAE1A68108700A75B9A /* AJAMAL_APP */ = {
 			isa = PBXGroup;
 			children = (
+				DC1800572A3DB3D100CDEB7D /* AJAMAL_APP.entitlements */,
 				733675EF2A33589200CD8576 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
@@ -569,8 +571,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AJAMAL_APP/AJAMAL_APP.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JTP4D7346F;
+				DEVELOPMENT_TEAM = 9443VKF54S;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = AJAMAL_APP/Info.plist;
@@ -585,8 +588,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = "org.reactjs.native.example.AJAMAL-APP";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ajmal.test.perfume;
 				PRODUCT_NAME = AJAMAL_APP;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -600,8 +602,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AJAMAL_APP/AJAMAL_APP.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = JTP4D7346F;
+				DEVELOPMENT_TEAM = 9443VKF54S;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = AJAMAL_APP/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -616,7 +619,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = "org.reactjs.native.example.AJAMAL-APP";
+				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.ajmal.test.perfume;
 				PRODUCT_NAME = AJAMAL_APP;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
