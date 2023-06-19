@@ -10,7 +10,7 @@ export default StyleSheet.create({
     },
     header_title:{
         // paddingTop:15,
-        fontFamily:fontConstant.satoshi,
+       fontFamily: fontConstant.satoshifont,
         fontSize:fontConstant.TEXT_14_SIZE_REGULAR,
         fontWeight:fontConstant.WEIGHT_REGULAR,
         color:colorConstant.BLACK,

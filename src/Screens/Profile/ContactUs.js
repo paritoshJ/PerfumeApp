@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   StatusBar,
@@ -17,11 +17,40 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import fontConstant from '../../constant/fontConstant';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
-
+import { GET_COUNTAC_US_API } from '../../api/ContactUs';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../../Component/Loader';
 
 export default function ContactUs({navigation}) {
   const { t } = useTranslation();
+  const [getAddress, setAddress] = useState('');
+  const [getPhonenumber, setPhoneumber] = useState('');
+  const [getlandline, setlandline] = useState('');
+  const [getEmail, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      GET_COUNTAC_US_API().then((Response) => {
+        console.log('Respone', Response);
+        var sreet1 = Response.storeConfig?.street_line1 == null ? '' : ', ' + Response.storeConfig?.street_line1;
+        var sreet2 = Response.storeConfig?.street_line2 == null ? '' : ', ' + Response.storeConfig?.street_line2 + ', ';
+        var city = Response.storeConfig?.city == null ? '' : ', ' + Response.storeConfig?.city;
+        var country = Response.storeConfig?.country == null ? '' : ', ' + Response.storeConfig?.country;
+        var postcode = Response.storeConfig?.postcode == null ? '' : ', ' + Response.storeConfig?.postcode;
+        setAddress(Response.storeConfig?.office_name + sreet1 + sreet2 + city + country + postcode)
+        setPhoneumber(Response.storeConfig?.store_phone);
+        setlandline(Response.storeConfig?.store_landline_phone == null ? '' : Response.storeConfig?.store_landline_phone);
+        setEmail(Response.storeConfig?.support_email == null ? '' : Response.storeConfig?.support_email);
+        setLoading(false);
+
+      }).catch((error) => {
+        setLoading(false);
+      })
+      return () => { };
+    }, []),
+  );
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -84,25 +113,26 @@ export default function ContactUs({navigation}) {
             <View style={styles.dateView}>
               <Text style={styles.orderDetailViewLabel}>{t('CORPORATE OFFICE')}</Text>
               <Text style={styles.orderDetailViewText}>
-                Ajmal International Trading Co. (LLC) One By Omniyat, 27th Floor
-                Business Bay P.O. Box - 8809 Dubai, United Arab Emirates
+                {getAddress}
+                {/* Ajmal International Trading Co. (LLC) One By Omniyat, 27th Floor
+                Business Bay P.O. Box - 8809 Dubai, United Arab Emirates */}
               </Text>
             </View>
             <View style={styles.statusView}>
               <Text style={styles.orderDetailViewLabel}>{t('TOLL FREE')}</Text>
-              <Text style={styles.orderDetailViewText}>80025625</Text>
+              <Text style={styles.orderDetailViewText}>{getPhonenumber}</Text>
             </View>
             <View style={styles.customerView}>
               <Text style={styles.orderDetailViewLabel}>{t('PHONE')}</Text>
-              <Text style={styles.orderDetailViewText}>+971 (4) 457 4111</Text>
+              <Text style={styles.orderDetailViewText}>{getPhonenumber}</Text>
             </View>
             <View style={styles.addressView}>
               <Text style={styles.orderDetailViewLabel}>{t('FAX')}</Text>
-              <Text style={styles.orderDetailViewText}>+971 (4) 552 0821</Text>
+              <Text style={styles.orderDetailViewText}>{getlandline}</Text>
             </View>
             <View style={styles.phoneView}>
               <Text style={styles.orderDetailViewLabel}>{t('EMAIL')}</Text>
-              <Text style={styles.orderDetailViewText}>estore@ajmal.net</Text>
+              <Text style={styles.orderDetailViewText}>{getEmail}</Text>
             </View>
           </View>
           <View style={styles.termView}>
@@ -158,10 +188,10 @@ export default function ContactUs({navigation}) {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <Loader loading={loading} />
     </>
   );
 }
-
 const styles = StyleSheet.create({
   header_container: {
     width: '100%',
@@ -207,19 +237,23 @@ const styles = StyleSheet.create({
     paddingHorizontal: Metrics.rfv(20),
   },
   orderDetailViewLabel: {
-    fontSize: Metrics.rfv(17),
+    fontSize: 14,
     color: COLORS_NEW.black,
     marginTop: Metrics.rfv(15),
     opacity: 0.2,
     fontFamily: fontConstant.satoshi,
     fontStyle: 'normal',
+    fontWeight: '500',
+    letterSpacing: 1
   },
   orderDetailViewText: {
-    fontSize: Metrics.rfv(15),
+    fontSize: 16,
     color: COLORS_NEW.black,
     fontFamily: fontConstant.satoshi,
     fontStyle: 'normal',
     paddingVertical: Metrics.rfv(10),
+    lineHeight: 20,
+    fontWeight: '500'
   },
   termView: {
     marginTop: Metrics.rfv(20),
@@ -231,18 +265,23 @@ const styles = StyleSheet.create({
     paddingBottom: Metrics.rfv(10),
   },
   termText: {
-    fontSize: Metrics.rfv(15),
+    fontSize: 16,
     marginBottom: Metrics.rfv(5),
     color: 'black',
     fontFamily: fontConstant.satoshi,
-    fontStyle: 'normal',
+    fontWeight: '500',
+    lineHeight: 20,
+
   },
   nextButtontext: {
     flex: 1,
     padding: Metrics.rfv(12),
     textAlign: 'center',
     color: COLORS_NEW.white,
-    fontSize: Metrics.rfv(15),
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 20,
+    fontFamily: fontConstant.satoshi,
   },
   cancelButton: {
     flex: 1,

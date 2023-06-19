@@ -22,6 +22,7 @@ import { GET_CATEGORY, GET_CATEGORY1 } from '../../api/getCategory';
 import { useNavigation } from '@react-navigation/native';
 import { useFocusEffect } from '@react-navigation/native';
 import Loader from '../../Component/Loader';
+import Constants from '../../Comman/Constants';
 
 
 const CatalogScreen = props => {
@@ -64,6 +65,8 @@ const CatalogScreen = props => {
   )
 
   const renderItem = ({ item }) => {
+    var image = Constants.BASE_GRAPH_IMAGE + item.icon;
+    console.log('image', image)
     return (
       <TouchableOpacity
         onPress={() => {
@@ -73,7 +76,7 @@ const CatalogScreen = props => {
             data: item
           });
         }}>
-        <CatlogItem icon={item.image} name={item.name} right={true} />
+        <CatlogItem icon={image} name={item.name} right={true} />
       </TouchableOpacity>
     );
   };

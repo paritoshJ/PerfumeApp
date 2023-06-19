@@ -94,6 +94,7 @@ useEffect(async () => {
   }, [])
 
   const renderItemProduct = ({ item,index }) => {
+    var faqs = item?.questions?.items.length > 1 ? ' FAQS' : ' FAQ';
       return <TouchableOpacity
       style={styles.loginPageComponentView}
       onPress={() => navigation.navigate('OnlineOrder',{
@@ -104,7 +105,8 @@ useEffect(async () => {
         <View>
           <Image style={styles.loginPageComponent} source={getIcons(item)} />
         </View>
-        <Text style={styles.loginPageComponentview2}>{item?.title.toUpperCase()}</Text>
+          <Text style={styles.loginPageComponentview2}>{item?.title}</Text>
+          <Text style={styles.loginPageComponentviewfaqcount}>{item?.questions?.items.length + faqs}</Text>
       </View>
     </TouchableOpacity>
   
@@ -266,7 +268,19 @@ const styles = StyleSheet.create({
     marginHorizontal: Metrics.rfv(15),
     marginTop: Metrics.rfv(10),
     color: COLORS_NEW.black,
-    textAlign:'center'
+    textAlign: 'center',
+    fontFamily: fontConstant.satoshi,
+    fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+  },
+  loginPageComponentviewfaqcount: {
+    marginHorizontal: Metrics.rfv(15),
+    marginTop: Metrics.rfv(10),
+    color: COLORS_NEW.black,
+    textAlign: 'center',
+    fontFamily: fontConstant.satoshi,
+    fontSize: fontConstant.TEXT_10_SIZE_REGULAR,
+    fontWeight: '400',
+    color: '#727272'
   },
   FirstView: {
     marginVertical: Metrics.rfv(10),

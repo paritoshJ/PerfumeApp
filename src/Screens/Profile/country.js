@@ -31,6 +31,7 @@ export default function Country({navigation}) {
 
   useFocusEffect(
     React.useCallback(() => {
+
       console.log(Constants.StoreCode)
     console.log(selectedCountry)
     setLoading(true)
@@ -130,7 +131,8 @@ export default function Country({navigation}) {
           />
         }>
           {getcountry.map((item, index) => {
-            console.log('enter')
+            var image = Constants.BASE_GRAPH_IMAGE + 'media/flag/' + item.website_code + '.png';
+            console.log('enter', image)
           return (
             <View>{item.store_name == 'English' ?
             <TouchableOpacity
@@ -149,8 +151,11 @@ export default function Country({navigation}) {
                 }}>
 
               <View style={styles.loginPageComponentview1}>
-                <View>
-                  <Image style={styles.countryLogo} source={item.image} />
+                  <View >
+                    <Image style={{
+                      width: 25,
+                      height: 25,
+                    }} source={{ uri: 'http://mcstaging.en-ae.ajmal.com/media/flag/india.png' }} />
                 </View>
                   <Text style={styles.countryText}>{t(item.store_group_code + ' (' + item.base_currency_code + ')')}</Text>
               </View>
@@ -158,8 +163,7 @@ export default function Country({navigation}) {
                 <View style={styles.loginPageComponentView}>
                   <Image
                     style={styles.countryLogo}
-                    source={require('../../../assets/CheckCircle.png')}
-                  />
+                      source={require('../../../assets/CheckCircle.png')} />
                   </View> : <View />
                 }
               </TouchableOpacity> : null}
@@ -213,9 +217,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: Metrics.rfv(1),
   },
   countryLogo: {
-    width: Metrics.rfv(25),
-    height: Metrics.rfv(25),
+    width: 25,
+    height: 25,
     marginBottom: Metrics.rfv(5),
+
   },
   countryText: {
     marginTop: Metrics.rfv(2),

@@ -51,11 +51,10 @@
 	<string>383550672445280</string>
 	<key>FacebookDisplayName</key>
 	<string>Castpro</string>
-  <key>NSMicrophoneUsageDescription</key>
-  <string>Description of why you require the use of the microphone</string>
-  <key>NSSpeechRecognitionUsageDescription</key>
-  <string>Description of why you require the use of the speech recognition</string>
-
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Description of why you require the use of the microphone</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Description of why you require the use of the speech recognition</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -77,9 +76,10 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Satoshi-Variable.ttf</string>
 		<string>Pushster-Regular.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
@@ -109,8 +109,10 @@
 		<string>Gambetta-SemiboldItalic.otf</string>
 		<string>Gambetta-Variable.ttf</string>
 		<string>Gambetta-VariableItalic.ttf</string>
-		<string>Satoshi-Variable.ttf</string>
+		<string>SatoshiVariable.ttf</string>
 		<string>Satoshi-Regular.ttf</string>
+		<string>Satoshi-Regular.otf</string>
+		<string>Satoshi Variable.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

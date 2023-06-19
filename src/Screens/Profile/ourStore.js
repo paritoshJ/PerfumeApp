@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
   I18nManager,
+  FlatList
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
@@ -17,6 +18,13 @@ import CustomSwitch from '../../Component/toggleSwitch';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import { OUR_STORES_GET__API } from '../../api/ContactUs';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../../Component/Loader';
+import { countries } from 'country-data';
+import fontConstant from '../../constant/fontConstant';
+import { GET_COUNTRY_API } from '../../api/getCountry';
+import { getCurrencies, getLocales } from "react-native-localize";
 
 const COUNTRY_DATA = [
   {
@@ -76,9 +84,40 @@ export default function OurStore({navigation}) {
   const [formattedValue, setFormattedValue] = useState('');
   const [value, setValue] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('UAE (AED)');
+  const [getCountrylist, setCountrylist] = useState([]);
   const [selectedCity, setSelectedCity] = useState('Dubai');
+  const [getCountry, setCountry] = useState([]);
   const refRBSheet = useRef();
-  const { t } = useTranslation()
+  const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log('asdasdasd', countries['uae']?.name);
+
+      setLoading(true);
+      GET_COUNTRY_API().then((Responsce) => {
+        console.log(Responsce)
+
+        setCountrylist(Responsce.allStoreConfigData);
+        setLoading(false)
+        Responsce.allStoreConfigData.map((item, index) => {
+          console.log('item', item)
+        })
+      }).catch((error) => {
+        setLoading(false)
+
+      });
+      OUR_STORES_GET__API().then((Responce) => {
+        console.log('Response', Responce)
+        setCountry(Responce.StorePickUpData.allStoreLocation);
+        setLoading(false);
+      }).catch((error) => {
+        setLoading(false);
+      })
+      return () => { };
+    }, []),
+  );
 
   const onSelectCountry = e => {
     setSelectedCountry(e);
@@ -110,6 +149,7 @@ export default function OurStore({navigation}) {
       storeAddress: 'United Arab Emirates | Dubai',
     },
   ];
+
   return (
     <>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
@@ -166,9 +206,8 @@ export default function OurStore({navigation}) {
           />
         </View>
       ) : (
-        <ScrollView style={styles.scrollView}>
-          {/* Toggle Switch */}
-          <View style={{alignItems: 'center', margin: 20}}>
+          <View style={{ flex: 1 }}>
+            <View style={{ margin: 20 }}>
             <CustomSwitch
               selectionMode={2}
               roundCorner={true}
@@ -178,8 +217,135 @@ export default function OurStore({navigation}) {
               selectionColor={COLORS_NEW.blue}
             />
           </View>
-          {/* Store List */}
-          {DATA.map(item => {
+            <FlatList
+
+              showsHorizontalScrollIndicator={false}
+              data={getCountry}
+              keyExtractor={(item) => item.id}
+              style={{ marginLeft: '5%', marginRight: '5%' }}
+              renderItem={({ item, index }) => {
+                // console.log(countries['AJ']?.name, item.name);
+
+                return (
+                  <View
+                    style={{
+                      borderBottomColor: COLORS_NEW.lightGray,
+                      borderBottomWidth: 1,
+                      marginTop: '5%',
+                    }}>
+                    <Text
+                      style={{
+                        fontFamily: fontConstant.satoshi,
+                        fontStyle: 'normal',
+                        fontWeight: '500',
+                        letterSpacing: 1,
+                        fontSze: 16,
+                        color: 'black',
+                        marginLeft: '1%',
+                        width: '100%',
+                        marginTop: '1%',
+                      }}>
+                      {item.address}
+                    </Text>
+                    <View style={{ flexDirection: 'row', marginTop: '3%', marginBottom: '5%' }}>
+                      <Image
+                        style={styles.ourStoreImage}
+                        source={require('../../../assets/our-store-icon.png')}
+                      />
+                      <View>
+
+                        <Text style={{
+                          fontFamily: fontConstant.satoshi,
+                          fontStyle: 'normal',
+                          fontWeight: '500',
+                          letterSpacing: 1,
+                          fontSze: 12, color: '#2B2826',
+                          marginLeft: '5%',
+                        }}>
+                          {item.city + ' ' + countries[item.country_id]?.name}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                )
+              }}
+            />
+            {/* {getCountry.map((item1, index) => {
+
+              return (
+                <View style={{}}>
+                  <Text style={{
+                    fontFamily: fontConstant.satoshi,
+                    fontStyle: 'normal',
+                    fontWeight: '500',
+                    letterSpacing: 1,
+                    fontSze: 12, color: '#2B2826',
+                    marginLeft: '5%',
+                    width: '100%',
+                    marginTop: '3%',
+                    marginBottom: '1%'
+                  }}>{item1.full_name_english}</Text>
+                  <FlatList
+
+                    showsHorizontalScrollIndicator={false}
+                    data={item1.available_regions}
+                    keyExtractor={(item) => item.id}
+                    style={{ marginLeft: '5%', marginRight: '5%' }}
+                    renderItem={({ item, index }) => {
+                      // console.log(countries['AJ']?.name, item.name);
+
+                      return (
+                        <View
+                          style={{
+                            borderBottomColor: COLORS_NEW.lightGray,
+                            borderBottomWidth: 1,
+                            marginTop: Metrics.rfv(15),
+                          }}>
+
+                          <View style={{ flexDirection: 'row' }}>
+                            <Image
+                              style={styles.ourStoreImage}
+                              source={require('../../../assets/our-store-icon.png')}
+                            />
+                            <View>
+                              <Text
+                                style={{
+                                  fontFamily: fontConstant.satoshi,
+                                  fontStyle: 'normal',
+                                  fontWeight: '500',
+                                  letterSpacing: 1,
+                                  fontSze: 16,
+                                  color: 'black',
+                                  marginLeft: '5%',
+                                  width: '100%',
+                                  marginTop: '1%',
+                                }}>
+                                {item1.full_name_english + ', ' + item.name}
+                              </Text>
+                              <Text style={{
+                                fontFamily: fontConstant.satoshi,
+                                fontStyle: 'normal',
+                                fontWeight: '500',
+                                letterSpacing: 1,
+                                fontSze: 12, color: '#2B2826',
+                                marginLeft: '5%',
+                              }}>
+                                {item1.full_name_english + ', ' + item.name}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                      )
+                    }}
+                  />
+                </View>
+              )
+            }
+            )} */}
+            <ScrollView style={styles.scrollView}>
+
+
+              {/* {DATA.map(item => {
             return (
               <View
                 style={{
@@ -202,8 +368,10 @@ export default function OurStore({navigation}) {
                 </View>
               </View>
             );
-          })}
+          })} */}
         </ScrollView>
+
+          </View>
       )}
       {/* Filter Popup */}
       <RBSheet
@@ -226,8 +394,9 @@ export default function OurStore({navigation}) {
             </View>
             <View>
               <Text>Country</Text>
-              {COUNTRY_DATA.map(item => {
+              {getCountrylist.map(item => {
                 return (
+                  <View>{item.store_name == 'English' ?
                   <TouchableOpacity
                     style={styles.loginPageComponentView}
                     onPress={() => onSelectCountry(item.name)}>
@@ -235,9 +404,9 @@ export default function OurStore({navigation}) {
                       <View>
                         <Image style={styles.countryLogo} source={item.image} />
                       </View>
-                      <Text style={styles.countryText}>{t(item.name)}</Text>
+                        <Text style={styles.countryText}>{t(item.store_group_code + ' (' + item.base_currency_code + ')')}</Text>
                     </View>
-                    {selectedCountry === item.name && (
+                      {selectedCountry === item.store_group_code && (
                       <View style={styles.loginPageComponentText}>
                         <Image
                           style={styles.countryLogo}
@@ -245,7 +414,8 @@ export default function OurStore({navigation}) {
                         />
                       </View>
                     )}
-                  </TouchableOpacity>
+                    </TouchableOpacity> : null}
+                  </View>
                 );
               })}
             </View>
@@ -285,6 +455,7 @@ export default function OurStore({navigation}) {
           </View>
         </ScrollView>
       </RBSheet>
+      <Loader loading={loading} />
     </>
   );
 }
@@ -401,12 +572,13 @@ const styles = StyleSheet.create({
     color: COLORS_NEW.black,
   },
   ourStoreImage: {
-    height: Metrics.rfv(15),
-    width: Metrics.rfv(15),
+    height: 20,
+    width: 20,
     resizeMode: 'contain',
+    alignSelf: 'center'
   },
   popupFilterText: {
-    fontSize: Metrics.rfv(25),
+    fontSize: Metrics.rfv(30),
     textAlign: 'center',
     fontFamily: 'Gambetta-BoldItalic',
   },

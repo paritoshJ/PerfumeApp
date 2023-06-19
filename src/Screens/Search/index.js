@@ -294,8 +294,10 @@ const SearchScreen = props => {
       </View> :
         <View style={{ flex: 1 }}>
           <View style={{ flex: 1, justifyContent: 'center' }}>
-            <View style={{ alignSelf: 'center', height: '20%', width: '100%', position: 'absolute', paddingBottom: store.length > 0 ? '140%' : 0 }}>
-              <Image style={{ width: '100%' }} source={require("../../../assets/loopwaves.gif")}></Image>
+            <View style={{ alignSelf: 'center', height: '55%', width: '100%', position: 'absolute', paddingBottom: store.length > 0 ? '200%' : 0, }}>
+              <LottieView source={require("../../../assets/sinewave.json")} autoPlay loop style={{ width: '100%', }} />
+
+              {/* <Image style={{ width: '100%' }} source={require("../../../assets/loopwaves.gif")}></Image> */}
             </View>
             {getstartrewcord == false ? <TouchableOpacity onPress={() => {
               setStartRecord(true);

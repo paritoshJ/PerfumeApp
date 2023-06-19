@@ -31,10 +31,10 @@ function getRandomColor() {
           flexDirection: 'row',
         }}>
         {icon && (
-          <View style={{backgroundColor:getRandomColor(),borderRadius:25,alignItems:"center",justifyContent:"center"}}>
+          <View style={{ backgroundColor: getRandomColor(), width: 40, height: 40, borderRadius: 40 / 2, alignItems: "center", justifyContent: "center", marginTop: '2%', marginBottom: '2%' }}>
             <Image
-              source={icon}
-              style={{width: 40, height: 40,}}
+              source={{ uri: icon }}
+              style={{ width: 25, height: 25, }}
               resizeMode="contain"
             />
           </View>
