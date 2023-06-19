@@ -60,11 +60,9 @@ const Collection = props => {
               props.navigation.navigate('SelectCollection', { idget: getSubCategory?.id });
             } else {
               props.navigation.navigate('CollectionDetails', { idget: item.id });
-
             }
           }}>
           {/* <CatlogItem name={item.name} right={true} /> */}
-
           <View
             style={style.collationItemData}>
             {item?.image == null ? <View /> : <Image

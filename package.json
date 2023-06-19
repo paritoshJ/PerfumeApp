@@ -33,6 +33,7 @@
     "@urql/core": "^3.2.2",
     "accordion-collapse-react-native": "^1.1.1",
     "apollo-boost": "^0.4.9",
+    "country-data": "^0.0.31",
     "d3-shape": "^3.2.0",
     "graphql": "^16.6.0",
     "i18next": "^22.4.9",

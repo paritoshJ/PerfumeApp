@@ -109,6 +109,7 @@ import FAQList from '../Screens/ProductPage/FAQList';
 import Svg, { Path } from 'react-native-svg'
 // reanimated
 import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated';
+import fontConstant from '../constant/fontConstant';
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
 
 const ProfileStack = () => {
@@ -473,7 +474,11 @@ const TabBarComponent = ({ active, options, tabicon, tabactiveicon, activename, 
         {options.tabBarIcon ? options.tabBarIcon({ ref }) : active ? tabactiveicon : tabicon}
 
       </Animated.View>
-      <Text style={{ position: 'absolute', bottom: 0, marginTop: 5, alignSelf: 'center', fontSize: 13 }}>{active ? activename : ''}</Text>
+      <Text style={{
+        position: 'absolute', bottom: 0, marginTop: 5, alignSelf: 'center', fontSize: 14, color: '#BC8B57', fontFamily: fontConstant.satoshi,
+        fontStyle: 'normal',
+        fontWeight: '500',
+      }}>{active ? activename : ''}</Text>
     </Pressable>
   )
 }

@@ -50,6 +50,14 @@
       "sha1": "2f646a5ce8396f833d9166bc8aa25fbb4701de13"
     },
     {
+      "path": "assets/fonts/Satoshi Variable.ttf",
+      "sha1": "d49872a745842f389bc9d24b73d0a3090fce50b1"
+    },
+    {
+      "path": "assets/fonts/Satoshi-Regular.otf",
+      "sha1": "7dcb59994f2bee1a4ef1f6c079ba0e99b409878b"
+    },
+    {
       "path": "assets/fonts/Satoshi-Regular.ttf",
       "sha1": "bc605aa08468cfb9a40275a6386ada56c92a5bed"
     },

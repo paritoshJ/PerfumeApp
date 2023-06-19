@@ -5,9 +5,9 @@ import {
 
 export default {
   //** Font Family */
-  // satoshi: 'Satoshi-Regular',
+  satoshifont: 'Satoshi Variable',
   // gambetta: 'Gambetta-Variable',
-  satoshi: 'arial',
+  satoshi: 'Satoshi-Regular',
   gambetta: 'arial',
 
   //** Text Size */

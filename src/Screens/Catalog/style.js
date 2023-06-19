@@ -23,8 +23,9 @@ export default StyleSheet.create({
     paddingTop:15,
     fontFamily:fontConstant.satoshi,
     fontSize:fontConstant.TEXT_14_SIZE_REGULAR,
-    fontWeight:fontConstant.WEIGHT_REGULAR,
-    color:colorConstant.BLACK
+    // fontWeight:fontConstant.WEIGHT_REGULAR,
+    color: colorConstant.BLACK,
+    textTransform: 'uppercase'
   },
   border:{
     width:"100%",

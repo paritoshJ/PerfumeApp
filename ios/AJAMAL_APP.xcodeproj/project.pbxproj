@@ -15,8 +15,13 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		19A43A18F175479886B6999D /* Satoshi Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7FDB1425172240999D99E331 /* Satoshi Variable.ttf */; };
 		25CED5BC3A4B4B4CACDD484A /* Gambetta-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = E07C0ED5228C4533B17B0544 /* Gambetta-Semibold.otf */; };
 		5C196E112BC04CF596439616 /* Gambetta-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = 61EFF55C93904B16B1D5DAEA /* Gambetta-SemiboldItalic.otf */; };
+		733358B92A3AEE0B0049FA01 /* Satoshi-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 733358B82A3AEE0B0049FA01 /* Satoshi-Variable.ttf */; };
+		733358BA2A3AEEB20049FA01 /* Satoshi-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 733358B82A3AEE0B0049FA01 /* Satoshi-Variable.ttf */; };
+		733358BC2A3AF0A80049FA01 /* Satoshi-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 733358BB2A3AF0A80049FA01 /* Satoshi-Regular.otf */; };
+		733358BD2A3AF0DC0049FA01 /* Satoshi-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 733358BB2A3AF0A80049FA01 /* Satoshi-Regular.otf */; };
 		733675F02A33589200CD8576 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 733675EF2A33589200CD8576 /* GoogleService-Info.plist */; };
 		7699B88040F8A987B510C191 /* libPods-AJAMAL_APP-AJAMAL_APPTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-AJAMAL_APP-AJAMAL_APPTests.a */; };
 		794B86FB1F6B43BE85760B74 /* Satoshi-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8307D7FB07344EBE9CC27C3D /* Satoshi-Regular.ttf */; };
@@ -27,7 +32,6 @@
 		CE934EAF75A541F2BFF4C783 /* Gambetta-VariableItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 88F0F1965F7246E59AA8A7E3 /* Gambetta-VariableItalic.ttf */; };
 		DFCC039440F543F890266949 /* Gambetta-Italic.otf in Resources */ = {isa = PBXBuildFile; fileRef = BE30D7482AF94E5C83AE3E01 /* Gambetta-Italic.otf */; };
 		F853F76FB2674E80AD3D3AFE /* Gambetta-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = E24026D2A3C146F98D38E5D9 /* Gambetta-Medium.otf */; };
-		FA6FC1DD31BE4A409AF4739F /* Satoshi-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F9F37C7581BD4F15A8B8509D /* Satoshi-Variable.ttf */; };
 		FC49292A302A4EAEAB862CEF /* Gambetta-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = DE5E54A9388B4DD094F0EEE6 /* Gambetta-Bold.otf */; };
 		FCB2E62621334421A469F442 /* Gambetta-Variable.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 00AD1456C76D4556A7DA80AE /* Gambetta-Variable.ttf */; };
 /* End PBXBuildFile section */
@@ -61,7 +65,10 @@
 		5B7EB9410499542E8C5724F5 /* Pods-AJAMAL_APP-AJAMAL_APPTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AJAMAL_APP-AJAMAL_APPTests.debug.xcconfig"; path = "Target Support Files/Pods-AJAMAL_APP-AJAMAL_APPTests/Pods-AJAMAL_APP-AJAMAL_APPTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-AJAMAL_APP.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AJAMAL_APP.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		61EFF55C93904B16B1D5DAEA /* Gambetta-SemiboldItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-SemiboldItalic.otf"; path = "../assets/fonts/Gambetta-SemiboldItalic.otf"; sourceTree = "<group>"; };
+		733358B82A3AEE0B0049FA01 /* Satoshi-Variable.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Satoshi-Variable.ttf"; path = "../assets/fonts/Satoshi-Variable.ttf"; sourceTree = "<group>"; };
+		733358BB2A3AF0A80049FA01 /* Satoshi-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Satoshi-Regular.otf"; path = "../assets/fonts/Satoshi-Regular.otf"; sourceTree = "<group>"; };
 		733675EF2A33589200CD8576 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7FDB1425172240999D99E331 /* Satoshi Variable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi Variable.ttf"; path = "../assets/fonts/Satoshi Variable.ttf"; sourceTree = "<group>"; };
 		8110AFF8C9A34F5481D978F5 /* Gambetta-Light.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-Light.otf"; path = "../assets/fonts/Gambetta-Light.otf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AJAMAL_APP/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8307D7FB07344EBE9CC27C3D /* Satoshi-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi-Regular.ttf"; path = "../assets/fonts/Satoshi-Regular.ttf"; sourceTree = "<group>"; };
@@ -74,7 +81,6 @@
 		E24026D2A3C146F98D38E5D9 /* Gambetta-Medium.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-Medium.otf"; path = "../assets/fonts/Gambetta-Medium.otf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F0AC10E47BC746A6AFE24DF5 /* Gambetta-MediumItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Gambetta-MediumItalic.otf"; path = "../assets/fonts/Gambetta-MediumItalic.otf"; sourceTree = "<group>"; };
-		F9F37C7581BD4F15A8B8509D /* Satoshi-Variable.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Satoshi-Variable.ttf"; path = "../assets/fonts/Satoshi-Variable.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +190,8 @@
 		CDC9E7D5EBB94A58B1AD0133 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				733358BB2A3AF0A80049FA01 /* Satoshi-Regular.otf */,
+				733358B82A3AEE0B0049FA01 /* Satoshi-Variable.ttf */,
 				DE5E54A9388B4DD094F0EEE6 /* Gambetta-Bold.otf */,
 				06A89327FF52425D8D09DCBC /* Gambetta-BoldItalic.otf */,
 				BE30D7482AF94E5C83AE3E01 /* Gambetta-Italic.otf */,
@@ -196,8 +204,8 @@
 				61EFF55C93904B16B1D5DAEA /* Gambetta-SemiboldItalic.otf */,
 				00AD1456C76D4556A7DA80AE /* Gambetta-Variable.ttf */,
 				88F0F1965F7246E59AA8A7E3 /* Gambetta-VariableItalic.ttf */,
-				F9F37C7581BD4F15A8B8509D /* Satoshi-Variable.ttf */,
 				8307D7FB07344EBE9CC27C3D /* Satoshi-Regular.ttf */,
+				7FDB1425172240999D99E331 /* Satoshi Variable.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -290,6 +298,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				733358BD2A3AF0DC0049FA01 /* Satoshi-Regular.otf in Resources */,
+				733358BA2A3AEEB20049FA01 /* Satoshi-Variable.ttf in Resources */,
 				080EF7CB29B12642008F1636 /* Gambetta-Variable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -306,6 +316,7 @@
 				08078F9E27A242D0A3A98223 /* Gambetta-Light.otf in Resources */,
 				83DB0A417EF44D82A939F5A3 /* Gambetta-LightItalic.otf in Resources */,
 				F853F76FB2674E80AD3D3AFE /* Gambetta-Medium.otf in Resources */,
+				733358BC2A3AF0A80049FA01 /* Satoshi-Regular.otf in Resources */,
 				97F9AD5CE363463E87CEAB9C /* Gambetta-MediumItalic.otf in Resources */,
 				CD7FE7FC1613451DBA4FA623 /* Gambetta-Regular.otf in Resources */,
 				25CED5BC3A4B4B4CACDD484A /* Gambetta-Semibold.otf in Resources */,
@@ -313,8 +324,9 @@
 				733675F02A33589200CD8576 /* GoogleService-Info.plist in Resources */,
 				FCB2E62621334421A469F442 /* Gambetta-Variable.ttf in Resources */,
 				CE934EAF75A541F2BFF4C783 /* Gambetta-VariableItalic.ttf in Resources */,
-				FA6FC1DD31BE4A409AF4739F /* Satoshi-Variable.ttf in Resources */,
 				794B86FB1F6B43BE85760B74 /* Satoshi-Regular.ttf in Resources */,
+				733358B92A3AEE0B0049FA01 /* Satoshi-Variable.ttf in Resources */,
+				19A43A18F175479886B6999D /* Satoshi Variable.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

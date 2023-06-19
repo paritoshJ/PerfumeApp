@@ -35,7 +35,7 @@ export default function OnlineOrder({route,navigation}) {
   const minusImg = require('../../../assets/minus-color-sign.png');
   const {title,questions} = route.params
   const {t} = useTranslation();
-  console.log(title,questions);
+  console.log('jbhhghbgh', route, questions);
   const handleClick = () => {
     setOpen(!open);
   };
@@ -48,16 +48,19 @@ export default function OnlineOrder({route,navigation}) {
           paddingTop: 15,
           paddingBottom: 15,
           borderBottomColor: '#EEEDE7',
-          borderBottomWidth: 1,
+          borderBottomWidth: isExpanded ? 0 : 1,
           flexDirection: 'row',
           justifyContent: 'space-between',
+          paddingRight: 5
+
         }}>
         <Text
           style={{
             color: isExpanded ? COLORS_NEW.blue : colorConstant.BLACK,
             fontFamily: fontConstant.satoshi,
             fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
-            flex: 1,
+            textTransform: 'capitalize',
+            fontWeight: '500'
           }}>
           {removeHtmlTags(item.title)}
         </Text>
@@ -70,10 +73,19 @@ export default function OnlineOrder({route,navigation}) {
     );
   };
 
-  const body = item => {
+  const body = (item, index, isExpanded) => {
     return (
-      <View style={{paddingVertical: 10, paddingHorizontal: 20}}>
-        <Text style={{textAlign: 'left', color: colorConstant.BLACK}}>
+      <View style={{
+        paddingVertical: 10, borderBottomColor: '#EEEDE7',
+        borderBottomWidth: 1, marginTop: 1
+      }}>
+        <Text style={{
+          textAlign: 'left', color: colorConstant.BLACK,
+          fontFamily: fontConstant.satoshi,
+          fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
+          letterSpacing: 1,
+          lineHeight: 22,
+        }}>
           {removeHtmlTags(item.answer)}
         </Text>
       </View>
