@@ -12,18 +12,20 @@ const client = new ApolloClient({
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers: {
+        store: Constants.StoreCode,
         // authorization: "Bearer " + getAuthTokenHeaders(),
         authorization: Constants.Token,
         // authorization: "Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM4MTA0MDAsImV4cCI6MTY4MzgxNDAwMH0.9A4W__M99W5D9r31Rm91Op6zD6vkQ4Y5tgq3TEV_p7c",
     }
 });
 export const GET_PROFILE_DETAIL = async () => {
-    console.log('Enter===>', Constants.Token);
+    console.log('Enter===>', Constants.StoreCode,);
     const client = new ApolloClient({
         uri: Constants.BASE_GRAPH_QL,
         cache: new InMemoryCache(),
         connectToDevTools: true,
         headers: {
+            store: Constants.StoreCode,
             // authorization: "Bearer " + getAuthTokenHeaders(),
             authorization: Constants.Token,
             // authorization: "Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM4MTA0MDAsImV4cCI6MTY4MzgxNDAwMH0.9A4W__M99W5D9r31Rm91Op6zD6vkQ4Y5tgq3TEV_p7c",
@@ -100,6 +102,7 @@ export const ADD_PROFILE_API = async (firastname, lastname) => {
         cache: new InMemoryCache(),
         connectToDevTools: true,
         headers: {
+            store: Constants.StoreCode,
             // authorization: "Bearer " + getAuthTokenHeaders(),
             authorization: Constants.Token,
             // authorization: "Bearer eyJraWQiOiIxIiwiYWxnIjoiSFMyNTYifQ.eyJ1aWQiOjE4MCwidXR5cGlkIjozLCJpYXQiOjE2ODM4MTA0MDAsImV4cCI6MTY4MzgxNDAwMH0.9A4W__M99W5D9r31Rm91Op6zD6vkQ4Y5tgq3TEV_p7c",

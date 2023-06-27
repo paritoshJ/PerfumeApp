@@ -27,6 +27,8 @@ import MobileInput from '../../Component/MobileInput';
 import colorConstant from '../../constant/colorConstant';
 import {inValidPhoneNumber} from '../../Helper/helper';
 import Loader from '../../Component/Loader';
+import Constants from '../../Comman/Constants';
+import fontConstant from '../../constant/fontConstant';
 
 export default function CreateAccount({navigation}) {
   const [isSelected, setSelection] = useState(false);
@@ -53,7 +55,7 @@ export default function CreateAccount({navigation}) {
     if (inputDetail.length > 0 && mobileDetail.length > 0) {
       return (
         <Input
-          placeholder="Password"
+          placeholder={Constants.Laungagues.password}
           placeholderTextColor="gray"
           onChangeText={e => setPassword(e)}
           showRightIcon
@@ -129,7 +131,6 @@ export default function CreateAccount({navigation}) {
             showDefaultAlert(err?.message);
             setLoading(false);
           });
-
         // const [{loading, error, data}] = useQuery(
         //   USER_REGISTER(mobileDetail, inputDetail, password, name),
         // );
@@ -154,8 +155,7 @@ export default function CreateAccount({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-
-        <Text style={styles.navBarText}>CREATE ACCOUNT</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.create_account}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -166,7 +166,7 @@ export default function CreateAccount({navigation}) {
         style={styles.ScrollView}>
         <View style={styles.mainView}>
           <Input
-            placeholder="Name"
+            placeholder={Constants.Laungagues.name}
             placeholderTextColor="gray"
             onChangeText={e => setName(e)}
             value={name}
@@ -180,7 +180,7 @@ export default function CreateAccount({navigation}) {
           <View style={{flexDirection: 'row'}}>
             <View style={{flex: 1}}>
               <Input
-                placeholder={t('Email')}
+                placeholder={Constants.Laungagues.email}
                 placeholderTextColor="gray"
                 value={inputDetail}
                 onChangeText={e => setinputDetail(e)}
@@ -212,7 +212,7 @@ export default function CreateAccount({navigation}) {
             />
             <View style={{flex: 1}}>
               <Input
-                placeholder={t('Phone number')}
+                placeholder={Constants.Laungagues.phone_no}
                 placeholderTextColor="gray"
                 value={mobileDetail}
                 onChangeText={e => setMobileDetail(e)}
@@ -356,5 +356,9 @@ const styles = StyleSheet.create({
   navBarText: {
     fontSize: Metrics.rfv(15),
     color: COLORS_NEW.black,
+    textTransform: 'uppercase',
+    fontFamily: fontConstant.satoshi,
+    fontWeight: '400',
+    fontSize: 14
   },
 });

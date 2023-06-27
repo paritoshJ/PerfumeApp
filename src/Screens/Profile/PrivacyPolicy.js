@@ -12,6 +12,7 @@ import {
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function PrivacyPolicy({navigation}) {
   return (
@@ -31,7 +32,7 @@ export default function PrivacyPolicy({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>PRIVACY POLICY</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.privacy_policy == null ? "PRIVACY POLICY" : Constants.Laungagues.privacy_policy}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>

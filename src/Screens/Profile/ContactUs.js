@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { GET_COUNTAC_US_API } from '../../api/ContactUs';
 import { useFocusEffect } from '@react-navigation/native';
 import Loader from '../../Component/Loader';
+import Constants from '../../Comman/Constants';
 
 export default function ContactUs({navigation}) {
   const { t } = useTranslation();
@@ -75,7 +76,7 @@ export default function ContactUs({navigation}) {
             height: 50,
             alignItems: 'center',
           }}>
-          <Text style={styles.navBarText}>{t('CONTACT US')}</Text>
+          <Text style={styles.navBarText}>{Constants.Laungagues.contact_us}</Text>
         </View>
       </ImageBackground>
       {/* <ImageBackground
@@ -111,7 +112,7 @@ export default function ContactUs({navigation}) {
         <View style={styles.mainView}>
           <View>
             <View style={styles.dateView}>
-              <Text style={styles.orderDetailViewLabel}>{t('CORPORATE OFFICE')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.corporate_office == null ? 'CORPORATE OFFICE' : Constants.Laungagues.corporate_office}</Text>
               <Text style={styles.orderDetailViewText}>
                 {getAddress}
                 {/* Ajmal International Trading Co. (LLC) One By Omniyat, 27th Floor
@@ -119,19 +120,19 @@ export default function ContactUs({navigation}) {
               </Text>
             </View>
             <View style={styles.statusView}>
-              <Text style={styles.orderDetailViewLabel}>{t('TOLL FREE')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.toll_free == null ? 'TOLL FREE' : Constants.Laungagues.toll_free}</Text>
               <Text style={styles.orderDetailViewText}>{getPhonenumber}</Text>
             </View>
             <View style={styles.customerView}>
-              <Text style={styles.orderDetailViewLabel}>{t('PHONE')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.phone == null ? 'PHONE' : Constants.Laungagues.phone}</Text>
               <Text style={styles.orderDetailViewText}>{getPhonenumber}</Text>
             </View>
             <View style={styles.addressView}>
-              <Text style={styles.orderDetailViewLabel}>{t('FAX')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.fax == null ? 'FAX' : Constants.Laungagues.fax}</Text>
               <Text style={styles.orderDetailViewText}>{getlandline}</Text>
             </View>
             <View style={styles.phoneView}>
-              <Text style={styles.orderDetailViewLabel}>{t('EMAIL')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.email == null ? 'EMAIL' : Constants.Laungagues.email}</Text>
               <Text style={styles.orderDetailViewText}>{getEmail}</Text>
             </View>
           </View>
@@ -139,12 +140,12 @@ export default function ContactUs({navigation}) {
             <TouchableOpacity
               style={styles.belowTextView}
               onPress={() => navigation.navigate('PrivacyPolicy')}>
-              <Text style={styles.termText}>{t('Privacy policy')}</Text>
+              <Text style={styles.termText}>{Constants.Laungagues.privacy_policy == null ? 'Privacy policy' : Constants.Laungagues.privacy_policy}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.belowTextView}
               onPress={() => navigation.navigate('TermsAndCondition')}>
-              <Text style={styles.termText}>{t('Terms &  Conditions')}</Text>
+              <Text style={styles.termText}>{Constants.Laungagues.terms_conditions == null ? 'Terms &  Conditions' : Constants.Laungagues.terms_conditions}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -170,7 +171,7 @@ export default function ContactUs({navigation}) {
               borderWidth: 1,
             }}
             onPress={() => navigation.navigate('OurStores')}>
-            <Text style={styles.cancelButton}>{t('OUR STORES')}</Text>
+            <Text style={styles.cancelButton}>{Constants.Laungagues.our_stores == null ? 'OUR STORES' : Constants.Laungagues.our_stores}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => navigation.navigate('WriteUs')}
@@ -184,7 +185,7 @@ export default function ContactUs({navigation}) {
               alignSelf: 'center',
               marginBottom: Metrics.rfv(15),
             }}>
-            <Text style={styles.nextButtontext}>{t('Write us')}</Text>
+            <Text style={styles.nextButtontext}>{Constants.Laungagues.write_us == null ? 'Write us' : Constants.Laungagues.write_us}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

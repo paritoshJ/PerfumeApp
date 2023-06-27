@@ -6,6 +6,9 @@ export const client = new ApolloClient({
   uri: 'http://integration2-hohc4oi-vvqszukhxdw6q.eu-3.magentosite.cloud/graphql',
   cache: new InMemoryCache(),
   connectToDevTools: true,
+  headers: {
+    store: Constants.StoreCode,
+  }
 });
 
 export const ADD_ITEM_TO_CART = async () => {

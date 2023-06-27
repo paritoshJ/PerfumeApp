@@ -25,6 +25,7 @@ import { countries } from 'country-data';
 import fontConstant from '../../constant/fontConstant';
 import { GET_COUNTRY_API } from '../../api/getCountry';
 import { getCurrencies, getLocales } from "react-native-localize";
+import Constants from '../../Comman/Constants';
 
 const COUNTRY_DATA = [
   {
@@ -170,7 +171,7 @@ export default function OurStore({navigation}) {
               source={require('../../../assets/Back-Arrow.png')}
             />
           </TouchableOpacity>
-          <Text style={styles.navBarText}>{t('OUR STORES')}</Text>
+          <Text style={styles.navBarText}>{Constants.Laungagues.our_stores == null ? 'OUR STORES' : Constants.Laungagues.our_stores}</Text>
           <TouchableOpacity>
             <Image style={styles.navBarImage1} source={''} />
           </TouchableOpacity>
@@ -182,7 +183,7 @@ export default function OurStore({navigation}) {
             justifyContent: 'space-between',
             marginHorizontal: Metrics.rfv(20),
           }}>
-          <Text>{t('Filters')}</Text>
+          <Text>{Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}</Text>
           <Image
             style={styles.navBarImage1}
             source={require('../../../assets/wishlist-filters.png')}
@@ -195,13 +196,13 @@ export default function OurStore({navigation}) {
             style={styles.emptyCartImage}
             source={require('../../../assets/address-book-color.png')}
           />
-          <Text style={styles.text1}>You don't have address yet</Text>
+          <Text style={styles.text1}>{Constants.Laungagues.you_dont_have_address_yet == null ? "You don't have address yet" : Constants.Laungagues.you_dont_have_address_yet}</Text>
           <Text style={styles.text2}>
-            Add a address for further quick purchases
+            {Constants.Laungagues.add_a_address_for_further_quick_purchases == null ? "Add a address for further quick purchases" : Constants.Laungagues.add_a_address_for_further_quick_purchases}
           </Text>
           <AppButton
             preset="primary"
-            text="Save address"
+            text={Constants.Laungagues.save_address == null ? "Save address" : Constants.Laungagues.save_address}
             style={{marginTop: Metrics.rfv(16)}}
           />
         </View>
@@ -211,8 +212,8 @@ export default function OurStore({navigation}) {
             <CustomSwitch
               selectionMode={2}
               roundCorner={true}
-              option1={t('List')}
-              option2={t('On the map')}
+                option1={Constants.Laungagues.list == null ? 'List' : Constants.Laungagues.list}
+                option2={Constants.Laungagues.on_the_map == null ? 'On the map' : Constants.Laungagues.on_the_map}
               onSelectSwitch={onSelectSwitch}
               selectionColor={COLORS_NEW.blue}
             />
@@ -390,10 +391,10 @@ export default function OurStore({navigation}) {
         <ScrollView>
           <View style={{marginHorizontal: Metrics.rfv(20)}}>
             <View>
-              <Text style={styles.popupFilterText}>Filter</Text>
+              <Text style={styles.popupFilterText}>{Constants.Laungagues.filter == null ? 'Filter' : Constants.Laungagues.filter}</Text>
             </View>
             <View>
-              <Text>Country</Text>
+              <Text>{Constants.Laungagues.country == null ? 'Country' : Constants.Laungagues.country}</Text>
               {getCountrylist.map(item => {
                 return (
                   <View>{item.store_name == 'English' ?
@@ -420,7 +421,7 @@ export default function OurStore({navigation}) {
               })}
             </View>
             <View>
-              <Text>City</Text>
+              <Text>{Constants.Laungagues.city == null ? 'City' : Constants.Laungagues.city}</Text>
               {CITY_DATA.map(item => {
                 return (
                   <TouchableOpacity
@@ -449,7 +450,7 @@ export default function OurStore({navigation}) {
             }}>
             <AppButton
               preset="primary"
-              text="Apply"
+              text={Constants.Laungagues.apply == null ? "Apply" : Constants.Laungagues.apply}
               style={{marginTop: Metrics.rfv(16)}}
             />
           </View>

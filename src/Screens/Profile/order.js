@@ -26,6 +26,7 @@ import {horizontal} from 'react-native-swiper-flatlist/src/themes';
 import Moment from 'moment';
 import {EMPTY_CART} from '../../api/getEmptyCart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from '../../Comman/Constants';
 
 export default function Order({navigation}) {
   const [orderClick, setOrderClick] = useState(false);
@@ -111,7 +112,7 @@ export default function Order({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('orders')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.orders == null ? 'orders' : Constants.Laungagues.orders}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage2} source={''} />
         </TouchableOpacity>
@@ -119,11 +120,11 @@ export default function Order({navigation}) {
       {getOrders == '' ? (
         <EmptyPageView
           icon={<AddressBookSVG />}
-          title={t("You don't have any orders yet")}
-          message={t('You don`t have orders, explore our perfume collections')}
+          title={Constants.Laungagues.you_dont_have_any_orders_yet == null ? "You don't have any orders yet" : Constants.Laungagues.you_dont_have_any_orders_yet}
+          message={Constants.Laungagues.you_dont_have_orders_explore_our_perfume_collections == null ? 'You don`t have orders, explore our perfume collections' : Constants.Laungagues.you_dont_have_orders_explore_our_perfume_collections}
           hideAddButton={false}
           onButtonPress={() => {}}
-          buttonTitle={t('Go shopping')}
+          buttonTitle={Constants.Laungagues.go_shopping == null ? 'Go shopping' : Constants.Laungagues.go_shopping}
         />
       ) : (
         <ScrollView style={styles.mainView}>

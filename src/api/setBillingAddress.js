@@ -6,7 +6,10 @@ import {ApolloClient, InMemoryCache} from '@apollo/client';
 export const client = new ApolloClient({
     uri: "http://integration2-hohc4oi-vvqszukhxdw6q.eu-3.magentosite.cloud/graphql",
     cache: new InMemoryCache(),
-    connectToDevTools: true
+  connectToDevTools: true,
+  headers: {
+    store: Constants.StoreCode,
+  }
   });
 
 export const BILLING_ADDRESS = async () => {

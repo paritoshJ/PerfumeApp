@@ -15,6 +15,7 @@ import CustomSwitch from '../../Component/toggleSwitch';
 import Input from '../../Component/Input';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import Constants from '../../Comman/Constants';
 
 
 export default function ChooseDelivery({navigation}) {
@@ -38,7 +39,7 @@ export default function ChooseDelivery({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('Choose delivery')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.choose_delivery == null ? 'Choose delivery' : Constants.Laungagues.choose_delivery}</Text>
         <TouchableOpacity>
           <Image
             style={styles.navBarImage1}
@@ -54,10 +55,10 @@ export default function ChooseDelivery({navigation}) {
             justifyContent: 'space-between',
             marginHorizontal: Metrics.rfv(20),
           }}>
-          <Text>Card</Text>
-          <Text>Amount</Text>
-          <Text>Delivery</Text>
-          <Text>Review</Text>
+          <Text>{Constants.Laungagues.card == null ? 'Card' : Constants.Laungagues.card}</Text>
+          <Text>{Constants.Laungagues.amount == null ? 'Amount' : Constants.Laungagues.amount}</Text>
+          <Text>{Constants.Laungagues.delivery == null ? 'Delivery' : Constants.Laungagues.delivery}</Text>
+          <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
         </View>
         <Progress.Bar
           progress={0.75}
@@ -71,8 +72,8 @@ export default function ChooseDelivery({navigation}) {
         <CustomSwitch
           selectionMode={2}
           roundCorner={true}
-          option1={t('Send by Email')}
-          option2={t('Send by SMS')}
+          option1={Constants.Laungagues.send_by_email == null ? 'Send by Email' : Constants.Laungagues.send_by_email}
+          option2={Constants.Laungagues.send_by_sms == null ? 'Send by SMS' : Constants.Laungagues.send_by_sms}
           onSelectSwitch={onSelectSwitch}
           selectionColor={COLORS_NEW.blue}
         />
@@ -80,14 +81,14 @@ export default function ChooseDelivery({navigation}) {
           style={{
             marginTop: Metrics.rfv(20),
           }}>
-          <Text style={styles.textHeading}>{t('Main information')}</Text>
+          <Text style={styles.textHeading}>{Constants.Laungagues.main_information == null ? 'Main information' : Constants.Laungagues.main_information}</Text>
           <Input
-            placeholder={t('Friend’s Name')}
+            placeholder={Constants.Laungagues.friends_name == null ? 'Friend’s Name' : Constants.Laungagues.friends_name}
             placeholderTextColor="gray"
             onChangeText={e => setPassword(e)}
           />
           <Input
-            placeholder={t("Friend’s Email")}
+            placeholder={Constants.Laungagues.friends_email == null ? "Friend’s Email" : Constants.Laungagues.friends_email}
             placeholderTextColor="gray"
             onChangeText={e => setPassword(e)}
           />
@@ -96,9 +97,9 @@ export default function ChooseDelivery({navigation}) {
           style={{
             marginTop: Metrics.rfv(20),
           }}>
-          <Text style={styles.textHeading}>{t('Schedule eGift card delivery')}</Text>
+          <Text style={styles.textHeading}>{Constants.Laungagues.schedule_egift_card_delivery == null ? 'Schedule eGift card delivery' : Constants.Laungagues.schedule_egift_card_delivery}</Text>
           <Input
-            placeholder={t("Date")}
+            placeholder={Constants.Laungagues.date == null ? "Date" : Constants.Laungagues.date}
             placeholderTextColor="gray"
             onChangeText={e => setPassword(e)}
           />
@@ -110,14 +111,14 @@ export default function ChooseDelivery({navigation}) {
             }}>
             <View style={{width: '45%'}}>
               <Input
-                placeholder={t("Time")}
+                placeholder={Constants.Laungagues.time == null ? "Time" : Constants.Laungagues.time}
                 placeholderTextColor="gray"
                 onChangeText={e => setPassword(e)}
               />
             </View>
             <View style={{width: '45%'}}>
               <Input
-                placeholder={t("Time Zone")}
+                placeholder={Constants.Laungagues.timezone == null ? "Time Zone" : Constants.Laungagues.timezone}
                 placeholderTextColor="gray"
                 onChangeText={e => setPassword(e)}
               />
@@ -133,7 +134,7 @@ export default function ChooseDelivery({navigation}) {
         }}>
         <AppButton
           preset="primary"
-          text={t("Next")}
+          text={Constants.Laungagues.next == null ? "Next" : Constants.Laungagues.next}
           style={{marginTop: Metrics.rfv(16)}}
           onPress={() => navigation.navigate('GiftCardCheckout')}
         />

@@ -7,6 +7,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import Metrics from '../../Helper/metrics';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import Constants from '../../Comman/Constants';
 I18nManager
 export default function PickAmount({navigation}) {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export default function PickAmount({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('Pick amount')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.pickamount == null ? 'Pick amount' : Constants.Laungagues.pickamount}</Text>
         <TouchableOpacity>
           <Image
             style={styles.navBarImage1}
@@ -41,10 +42,10 @@ export default function PickAmount({navigation}) {
             justifyContent: 'space-between',
             marginHorizontal: Metrics.rfv(20),
           }}>
-          <Text>Card</Text>
-          <Text>Amount</Text>
-          <Text>Delivery</Text>
-          <Text>Review</Text>
+          <Text>{Constants.Laungagues.card == null ? 'Card' : Constants.Laungagues.card}</Text>
+          <Text>{Constants.Laungagues.amount == null ? 'Amount' : Constants.Laungagues.amount}</Text>
+          <Text>{Constants.Laungagues.delivery == null ? 'Delivery' : Constants.Laungagues.delivery}</Text>
+          <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
         </View>
         <Progress.Bar
           progress={0.5}
@@ -62,7 +63,7 @@ export default function PickAmount({navigation}) {
             source={require('../../../assets/gift-card-1.png')}
           />
           <View style={styles.blueCardView} />
-          <Text style={styles.giftCardText}>{t('Christmas Gift Card')}</Text>
+          <Text style={styles.giftCardText}>{Constants.Laungagues.christmas_gift_card == null ? 'Christmas Gift Card' : Constants.Laungagues.christmas_gift_card}</Text>
         </View>
         {/* Show Amount View */}
         <View style={styles.showAmountView}>
@@ -86,7 +87,7 @@ export default function PickAmount({navigation}) {
                 color: COLORS_NEW.gray,
                 marginHorizontal: Metrics.rfv(10),
               }}>
-              {t('AED')}
+              {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
             </Text>
           </View>
         </View>
@@ -98,7 +99,7 @@ export default function PickAmount({navigation}) {
         }}>
         <AppButton
           preset="primary"
-          text={t("Next")}
+          text={Constants.Laungagues.next == null ? "Next" : Constants.Laungagues.next}
           style={{marginTop: Metrics.rfv(16)}}
           onPress={() => navigation.navigate('ChooseDelivery')}
         />

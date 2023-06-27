@@ -101,7 +101,7 @@ const Collection = props => {
         />
         <Text
           style={style.collations_Contain}>
-          {t('Collections')}
+          {Constants.Laungagues.collections = null ? 'Collections' : Constants.Laungagues.collections}
         </Text>
         <EvilIcons name="search" size={25} color={colorConstant.LIGHT_GREY} />
       </View>
@@ -118,7 +118,7 @@ const Collection = props => {
             style={style.viewall_Image}
             // resizeMode="contain"
           />
-          <Text style={style.header_title}>{t('View all')}</Text>
+          <Text style={style.header_title}>{Constants.Laungagues.view_all = null ? 'View all' : Constants.Laungagues.view_all}</Text>
         </TouchableOpacity>
         <View style={style.border}></View>
         <View style={{ height: '84%', }}>

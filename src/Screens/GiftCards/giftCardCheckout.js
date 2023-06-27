@@ -7,6 +7,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import Metrics from '../../Helper/metrics';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function GiftCardCheckOut({navigation}) {
   const { t } = useTranslation();
@@ -26,7 +27,7 @@ export default function GiftCardCheckOut({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('Choose delivery')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.choose_delivery == null ? 'Choose delivery' : Constants.Laungagues.choose_delivery}</Text>
         <TouchableOpacity>
           <Image
             style={styles.navBarImage1}
@@ -42,10 +43,10 @@ export default function GiftCardCheckOut({navigation}) {
             justifyContent: 'space-between',
             marginHorizontal: Metrics.rfv(20),
           }}>
-          <Text>Card</Text>
-          <Text>Amount</Text>
-          <Text>Delivery</Text>
-          <Text>Review</Text>
+          <Text>{Constants.Laungagues.card == null ? 'Card' : Constants.Laungagues.card}</Text>
+          <Text>{Constants.Laungagues.amount == null ? 'Amount' : Constants.Laungagues.amount}</Text>
+          <Text>{Constants.Laungagues.delivery == null ? 'Delivery' : Constants.Laungagues.delivery}</Text>
+          <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
         </View>
         <Progress.Bar
           progress={1}
@@ -80,12 +81,12 @@ export default function GiftCardCheckOut({navigation}) {
                 color: COLORS_NEW.black,
                 fontFamily: 'Gambetta-Regular',
               }}>
-              {t('Your selection')}
+              {Constants.Laungagues.your_selection}
             </Text>
             <View style={styles.messageView}>
-              <Text style={{color: COLORS_NEW.gray}}>{t('Message')}</Text>
+              <Text style={{ color: COLORS_NEW.gray }}>{Constants.Laungagues.message == null ? 'Message' : Constants.Laungagues.message}</Text>
               <Text style={{color: COLORS_NEW.black}}>
-                Merry Christmas, my dear!
+                {Constants.Laungagues.merry_christmas_my_dear == null ? ' Merry Christmas, my dear!' : Constants.Laungagues.merry_christmas_my_dear}
               </Text>
             </View>
             <View
@@ -94,7 +95,7 @@ export default function GiftCardCheckOut({navigation}) {
                 borderBottomWidth: 1,
                 paddingVertical: Metrics.rfv(10),
               }}>
-              <Text style={{color: COLORS_NEW.gray}}>Delivery by Email</Text>
+              <Text style={{ color: COLORS_NEW.gray }}>{Constants.Laungagues.delivery_by_email == nul ? 'Delivery by Email' : Constants.Laungagues.delivery_by_email}</Text>
               <Text style={{color: COLORS_NEW.black}}>John</Text>
               <Text style={{color: COLORS_NEW.black}}>
                 John@example@gmail.com
@@ -114,14 +115,14 @@ export default function GiftCardCheckOut({navigation}) {
                   color: COLORS_NEW.black,
                   fontSize: Metrics.rfv(16),
                 }}>
-                {t('TOTAL')}
+                {Constants.Laungagues.total == null ? 'TOTAL' : Constants.Laungagues.total}
               </Text>
               <Text
                 style={{
                   color: COLORS_NEW.black,
                   fontSize: Metrics.rfv(16),
                 }}>
-                40.00 {t('AED')}
+                40.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
               </Text>
             </View>
           </View>
@@ -135,7 +136,7 @@ export default function GiftCardCheckOut({navigation}) {
         }}>
         <AppButton
           preset="primary"
-          text={`${t('Proceed to Checkout')}: ${'40.00'} ${t('AED')}`}
+          text={`${Constants.Laungagues.proceed_to_checkout == null ? 'Proceed to Checkout' : Constants.Laungagues.proceed_to_checkout}: ${'40.00'} ${Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}`}
           style={{marginTop: Metrics.rfv(16)}}
           onPress={() => navigation.navigate('GiftCardEnvelope')}
         />

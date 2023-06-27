@@ -27,6 +27,8 @@ import Metrics from '../../Helper/metrics';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import OTPTextInput from 'react-native-otp-textinput';
 import {AppButton} from '../../Component/button/app-button';
+import { Concast } from '@apollo/client/utilities';
+import Constants from '../../Comman/Constants';
 
 const VerificationModal = props => {
   const navigation = useNavigation();
@@ -146,7 +148,7 @@ const VerificationModal = props => {
                     marginTop: 20,
                     fontStyle: 'italic',
                   }}>
-                  {t('Please verify you number')}
+                  {Constants.Laungagues.please_verify_you_number == null ? 'Please verify you number' : Constants.Laungagues.please_verify_you_number}
                 </Text>
                 <View
                   style={{
@@ -155,7 +157,7 @@ const VerificationModal = props => {
                     justifyContent: 'center',
                   }}>
                   <Text style={style.product_name}>
-                    an OTP has been sent to {`${inputDetail}`}
+                    {Constants.Laungagues.an_otp_has_been_sent_to == null ? 'an OTP has been sent to' : Constants.Laungagues.an_otp_has_been_sent_to} {`${inputDetail}`}
                   </Text>
                 </View>
                 <View style={style.ScrollViewOTP}>
@@ -185,14 +187,14 @@ const VerificationModal = props => {
                   />
                   <View />
                   <Text style={style.didNotReceiveText}>
-                    You didn’t receive a code?
+                    {Constants.Laungagues.you_didnt_receive_a_code == null ? 'You didn’t receive a code?' : Constants.Laungagues.you_didnt_receive_a_code}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.blue,
                       marginTop: Metrics.rfv(10),
                     }}>
-                    Resend
+                    {Constants.Laungagues.resend == null ? 'Resend' : Constants.Laungagues.resend}
                   </Text>
                 </View>
               </View>
@@ -242,7 +244,7 @@ const VerificationModal = props => {
                     marginTop: 20,
                     fontStyle: 'italic',
                   }}>
-                  {t('Change number')}
+                    {Constants.Laungagues.change_number == null ? 'Change number' : Constants.Laungagues.change_number}
                 </Text>
                 <View
                   style={{
@@ -252,7 +254,7 @@ const VerificationModal = props => {
                     marginBottom: 10,
                   }}>
                   <Text style={style.product_name}>
-                    Enter a new phone number to verify
+                      {Constants.Laungagues.enter_a_new_phone_number_to_verify == null ? 'Enter a new phone number to verify' : Constants.Laungagues.enter_a_new_phone_number_to_verify}
                   </Text>
                 </View>
                 <View
@@ -267,11 +269,11 @@ const VerificationModal = props => {
                       setinputDetail(e);
                     }}
                     countryCode={countryCode}
-                    placeholder={'Select code'}
+                      placeholder={Constants.Laungagues.select_code == null ? 'Select code' : Constants.Laungagues.select_code}
                   />
                   <View style={{flex: 1}}>
                     <Input
-                      placeholder={t('Enter Phone number')}
+                        placeholder={Constants.Laungagues.enter_phone_number == null ? 'Enter Phone number' : Constants.Laungagues.enter_phone_number}
                       placeholderTextColor="gray"
                       value={`${inputDetail}`}
                       keyboardType={'numeric'}

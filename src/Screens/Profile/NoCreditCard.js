@@ -29,6 +29,7 @@ import fontConstant from '../../constant/fontConstant';
 import PlusSVG from '../../assets/svg/PlusSVG';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Example icon library
+import Constants from '../../Comman/Constants';
 
 export default function NoCreditCard({navigation}) {
   const [loading, setLoading] = useState(false);
@@ -122,7 +123,7 @@ export default function NoCreditCard({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('Credit cards')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.credit_cards == null ? 'Credit cards' : Constants.Laungagues.credit_card}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -249,7 +250,7 @@ export default function NoCreditCard({navigation}) {
                         fontFamily: fontConstant.satoshi,
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
-                      }}>{`${t('Expiration :')} ${e?.expiry_date}`}</Text>
+                      }}>{`${Constants.Laungagues.expiration == null ? 'Expiration :' : Constants.Laungagues.expiration} ${e?.expiry_date}`}</Text>
 
 
                   </View>
@@ -272,11 +273,11 @@ export default function NoCreditCard({navigation}) {
           source={require('../../../assets/NoCreditCard.png')}
           onPress={() => navigation.navigate(-1)}
         />
-        <Text style={styles.text1}>{t('You dont have credit cards yet')}</Text>
-        <Text style={styles.text2}>{t('Add a card for further quick purchases')}</Text>
+              <Text style={styles.text1}>{Constants.Laungagues.you_dont_have_credit_cards_yet == null ? 'You dont have credit cards yet' : Constants.Laungagues.you_dont_have_credit_cards_yet}</Text>
+              <Text style={styles.text2}>{Constants.Laungagues.add_a_card_for_further_quick_purchases == null ? 'Add a card for further quick purchases' : Constants.Laungagues.add_a_card_for_further_quick_purchases}</Text>
         <AppButton
           preset="primary"
-          text={t("Add card")}
+                text={Constants.Laungagues.add_card == null ? "Add card" : Constants.Laungagues.add_card}
           style={{marginTop: Metrics.rfv(16)}}
           onPress={() => navigation.navigate('AddCreditCard')}
           textStyle={{fontSize: Metrics.rfv(15), fontWeight: '400'}}
@@ -307,7 +308,7 @@ export default function NoCreditCard({navigation}) {
                 marginRight: 10,
                 color: COLORS_NEW.mainBlack,
                 textAlign: 'center',
-              }}>{`${t('Add new card')}`}</Text>
+              }}>{`${Constants.Laungagues.add_new_card == null ? 'Add new card' : Constants.Laungagues.add_new_card}`}</Text>
             <PlusSVG />
           </TouchableOpacity>
         ) : null}
@@ -321,8 +322,8 @@ export default function NoCreditCard({navigation}) {
                 source={require('../../assets/icon/del.png')}
               />
             </View>
-            <Text style={styles.text1}>{t('Delete card')}</Text>
-            <Text style={styles.text2}>{t('Are you sure you want to delete the card?')}</Text>
+            <Text style={styles.text1}>{Constants.Laungagues.delete_card == null ? 'Delete card' : Constants.Laungagues.delete_card}</Text>
+            <Text style={styles.text2}>{Constants.Laungagues.are_you_sure_you_want_to_delete_the_card == null ? 'Are you sure you want to delete the card?' : Constants.Laungagues.are_you_sure_you_want_to_delete_the_card}</Text>
           </View>
           <View
             style={{
@@ -346,7 +347,7 @@ export default function NoCreditCard({navigation}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={styles.cancelButton}>{t('Cancel')}</Text>
+              <Text style={styles.cancelButton}>{Constants.Laungagues.cancel == null ? 'Cancel' : Constants.Laungagues.cancel}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={async () => {
@@ -371,7 +372,7 @@ export default function NoCreditCard({navigation}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={styles.nextButtontext}>{t('Delete')}</Text>
+              <Text style={styles.nextButtontext}>{Constants.Laungagues.delete == null ? 'Delete' : Constants.Laungagues.delete}</Text>
             </TouchableOpacity>
           </View>
         </View>

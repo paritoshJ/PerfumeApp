@@ -24,6 +24,7 @@ import {
   isNotPasswordSame,
   showDefaultAlert,
 } from '../../Helper/helper';
+import Constants from '../../Comman/Constants';
 export default function ResetPassword({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ export default function ResetPassword({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>RESET PASSWORD</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.reset_password == null ? "RESET PASSWORD" : Constants.Laungagues.reset_password}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -52,14 +53,14 @@ export default function ResetPassword({navigation}) {
       <KeyboardAwareScrollView style={styles.ScrollView}>
         <View style={styles.mainView}>
           <Input
-            placeholder="Email or Number"
+            placeholder={Constants.Laungagues.email_or_number}
             placeholderTextColor="gray"
             onChangeText={e => setinputDetail(e)}
           />
         </View>
         <AppButton
           preset="primary"
-          text="Reset password"
+          text={Constants.Laungagues.reset_password == null ? "Reset password" : Constants.Laungagues.reset_password}
           style={{marginTop: Metrics.rfv(20)}}
           onPress={() => {
             console.log('inputDetail', inputDetail);

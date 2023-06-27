@@ -17,6 +17,7 @@ import {AppButton} from '../../Component/button/app-button';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
+import Constants from '../../Comman/Constants';
 
   export default function ReferFriend({navigation}) {
   const { t } = useTranslation();
@@ -60,7 +61,7 @@ import { useTranslation } from 'react-i18next';
             />
           </TouchableOpacity>
 
-          <Text style={styles.navBarText}>{t('REFER A FRIEND')}</Text>
+          <Text style={styles.navBarText}>{Constants.Laungagues.refer_a_friend == null ? 'REFER A FRIEND' : Constants.Laungagues.refer_a_friend}</Text>
           <TouchableOpacity>
             <Image style={styles.navBarImage1} source={''} />
           </TouchableOpacity>
@@ -81,7 +82,7 @@ import { useTranslation } from 'react-i18next';
         <Card>
           <View style={styles.cardTextView}>
             <Text style={styles.text1}>
-              {t('We value friendship. At exactly € 20')}
+              {Constants.Laungagues.we_value_friendship_at_exactly_20 == null ? 'We value friendship. At exactly € 20' : Constants.Laungagues.we_value_friendship_at_exactly_20}
             </Text>
             <Text style={styles.text2}>
               Refer your friends to us, and they’ll each get € 20. On top of
@@ -92,7 +93,7 @@ import { useTranslation } from 'react-i18next';
         </Card>
         <AppButton
           preset="primary"
-          text={t('Send an invitation')}
+          text={Constants.Laungagues.send_an_invitation == null ? 'Send an invitation' : Constants.Laungagues.send_an_invitation}
           style={{marginTop: Metrics.rfv(20)}}
           onPress={onShare}
           textStyle={{fontSize: Metrics.rfv(15), fontWeight: '400'}}

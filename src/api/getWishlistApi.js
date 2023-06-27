@@ -19,6 +19,7 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
+          store: Constants.StoreCode,
       authorization: token ? `${token}`: "",
     }
   }
@@ -31,6 +32,7 @@ export const GET_WISHLIST_PRODUCTS = (token) => {
         cache: new InMemoryCache(),
         connectToDevTools: true,
         headers: {
+            store: Constants.StoreCode,
             authorization: Constants.Token,
         }
     });

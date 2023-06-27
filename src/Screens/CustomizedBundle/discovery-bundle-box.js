@@ -14,6 +14,7 @@ import Metrics from '../../Helper/metrics';
 import { COLORS_NEW } from '../../Helper/colors.new';
 import { AppButton } from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function CustomizedBundleBox({ navigation }) {
     return (
@@ -29,7 +30,7 @@ export default function CustomizedBundleBox({ navigation }) {
                             style={styles.scrollViewImage}
                             source={require('../../../assets/discovery-bundle-box.png')}
                         />
-                       <Text style={{color: COLORS_NEW.black, fontFamily: 'Gambetta-MediumItalic', fontSize: Metrics.rfv(30), textAlign: 'center'}}>Your bundle has been successfully added to cart</Text>
+                        <Text style={{ color: COLORS_NEW.black, fontFamily: 'Gambetta-MediumItalic', fontSize: Metrics.rfv(30), textAlign: 'center' }}>{Constants.Laungagues.your_bundle_has_been_successfully_added_to_cart == null ? 'Your bundle has been successfully added to cart' : Constants.Laungagues.your_bundle_has_been_successfully_added_to_cart}</Text>
                     </View>
                     <View 
                     style={{
@@ -43,7 +44,7 @@ export default function CustomizedBundleBox({ navigation }) {
                         <View style={{width: '45%', marginVertical: Metrics.rfv(30)}}>
                             <AppButton
                                 preset="secondary"
-                                text='Build another box'
+                                text={Constants.Laungagues.build_another_box == null ? 'Build another box' : Constants.Laungagues.build_another_box}
                                 style={{ marginTop: Metrics.rfv(16) }}
                                 onPress={() => navigation.navigate('CustomizedBundle')}
                             />
@@ -51,7 +52,7 @@ export default function CustomizedBundleBox({ navigation }) {
                         <View style={{width: '45%', marginVertical: Metrics.rfv(30)}}>
                             <AppButton
                                 preset="primary"
-                                text='View cart'
+                                text={Constants.Laungagues.view_cart == null ? 'View cart' : Constants.Laungagues.view_cart}
                                 style={{ marginTop: Metrics.rfv(16) }}
                                 onPress={() => navigation.navigate('GiftBox')}
                             />

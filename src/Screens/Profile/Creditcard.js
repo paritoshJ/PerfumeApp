@@ -26,6 +26,7 @@ import Input from '../../Component/Input';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
 import moment from 'moment';
 import { ScrollView } from 'react-native-gesture-handler';
+import Constants from '../../Comman/Constants';
 
 export default function CreditCard({navigation}) {
   const [creditCardInput, setCreditCardInput] = useState();
@@ -111,7 +112,7 @@ export default function CreditCard({navigation}) {
           />
         </TouchableOpacity>
 
-          <Text style={styles.navBarText}>{t('Add new card')}</Text>
+          <Text style={styles.navBarText}>{Constants.Laungagues.add_new_card == null ? 'Add new card' : Constants.Laungagues.add_new_card}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -226,7 +227,7 @@ export default function CreditCard({navigation}) {
             disabled={getCvv === '' ||
               getName === '' ||
               getCardnumber === '' || getExpiredate === '' || getDateFormate == 'Invalid' ? true : false}
-          tx={t('Save')}
+            tx={Constants.Laungagues.save == null ? 'Save' : Constants.Laungagues.save}
           style={{
             marginTop: Metrics.rfv(16),
             marginBottom: Metrics.rfv(10),

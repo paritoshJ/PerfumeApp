@@ -7,7 +7,10 @@ import Constants from '../Comman/Constants';
 export const client = new ApolloClient({
     uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
-    connectToDevTools: true
+  connectToDevTools: true,
+  headers: {
+    store: Constants.StoreCode,
+  }
   });
 
 export const GET_HOME_CONFIG_DATA = async () => {

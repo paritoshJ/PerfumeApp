@@ -21,6 +21,7 @@ import Loader from '../../Component/Loader';
 import { UPDATE_COUNTAC_US_API } from '../../api/ContactUs';
 import { inValidEmail, isEmpty, showDefaultAlert } from '../../Helper/helper';
 import fontConstant from '../../constant/fontConstant';
+import Constants from '../../Comman/Constants';
 
 export default function WriteUs({navigation}) {
   const [inputDetail, setinputDetail] = useState('');
@@ -57,7 +58,7 @@ export default function WriteUs({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('WRITE US')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.write_us == null ? 'WRITE US' : Constants.Laungagues.write_us}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -66,16 +67,17 @@ export default function WriteUs({navigation}) {
         <View>
           <KeyboardAwareScrollView>
             <Text style={styles.mainText}>
-              {t('Cant find what you’re looking for? Send us your request by filling in the details as below:')}
+              {Constants.Laungagues.cant_find_what_youre_looking_for_send_us_your_request_by_filling_in_the_details_as_below == null ?
+                'Cant find what you’re looking for? Send us your request by filling in the details as below:' : Constants.Laungagues.cant_find_what_youre_looking_for_send_us_your_request_by_filling_in_the_details_as_below}
             </Text>
             <Input
-              placeholder={t("Name")}
+              placeholder={Constants.Laungagues.name == null ? "Name" : Constants.Laungagues.name}
               placeholderTextColor="gray"
               style={{ fontFamily: fontConstant.satoshifont, fontSize: 16, fontweight: '400' }}
               onChangeText={e => setName(e)}
             />
             <Input
-              placeholder={t("Email")}
+              placeholder={Constants.Laungagues.email == null ? "Email" : Constants.Laungagues.email}
               placeholderTextColor="gray"
               autoCapitalize='none'
               keyboardType='email-address'
@@ -86,7 +88,7 @@ export default function WriteUs({navigation}) {
               onChangeText={e => setEmail(e)}
             />
             <Input
-              placeholder={t('Phone (optional)')}
+              placeholder={Constants.Laungagues.phone_optional == null ? 'Phone (optional)' : Constants.Laungagues.phone_optional}
               placeholderTextColor="gray"
               keyboardType='numeric'
               style={{ fontFamily: fontConstant.satoshifont, fontSize: 16, fontweight: '400' }}
@@ -96,7 +98,7 @@ export default function WriteUs({navigation}) {
             />
             <TextInput
               style={styles.fillInput}
-              placeholder={t('Fill in your query')}
+              placeholder={Constants.Laungagues.fill_in_your_query == null ? 'Fill in your query' : Constants.Laungagues.fill_in_your_query}
               placeholderTextColor="gray"
               value={inputDetail}
 
@@ -106,7 +108,7 @@ export default function WriteUs({navigation}) {
             />
             <AppButton
               preset="primary"
-              text={t('Submit')}
+              text={Constants.Laungagues.submit == null ? 'Submit' : Constants.Laungagues.submit}
               disabled={name == '' || email == '' || inputDetail == '' ? true : false}
               style={{marginTop: Metrics.rfv(16)}}
               onPress={() => {

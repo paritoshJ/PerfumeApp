@@ -14,6 +14,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import Metrics from '../../Helper/metrics';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
+import Constants from '../../Comman/Constants';
 
 
 export default function PickBox({navigation}) {
@@ -34,7 +35,7 @@ export default function PickBox({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>PICK A BOX</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.pick_a_box == null ? 'PICK A BOX' : Constants.Laungagues.pick_a_box}</Text>
         <TouchableOpacity>
           <Image
             style={styles.navBarImage1}
@@ -50,10 +51,10 @@ export default function PickBox({navigation}) {
             justifyContent: 'space-between',
             marginHorizontal: Metrics.rfv(20),
           }}>
-          <Text>Box</Text>
-          <Text>Gifts</Text>
-          <Text>Sticker</Text>
-          <Text>Review</Text>
+          <Text>{Constants.Laungagues.box == null ? 'Box' : Constants.Laungagues.box}</Text>
+          <Text>{Constants.Laungagues.gifts == null ? 'Gifts' : Constants.Laungagues.gifts}</Text>
+          <Text>{Constants.Laungagues.sticker == null ? 'Sticker' : Constants.Laungagues.sticker}</Text>
+          <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
         </View>
         <Progress.Bar
           progress={0.25}
@@ -79,7 +80,7 @@ export default function PickBox({navigation}) {
         }}>
         <AppButton
           preset="primary"
-          text={t("Next")}
+          text={Constants.Laungagues.next == null ? "Next" : Constants.Laungagues.next}
           style={{marginTop: Metrics.rfv(16)}}
           onPress={() => navigation.navigate('BuildYourOwnGiftBox')}
         />

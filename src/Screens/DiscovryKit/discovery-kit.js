@@ -15,6 +15,7 @@ import { COLORS_NEW } from '../../Helper/colors.new';
 import { AppButton } from '../../Component/button/app-button';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function DiscoveryKit({ navigation }) {
   const { t } = useTranslation();
@@ -49,9 +50,9 @@ export default function DiscoveryKit({ navigation }) {
                             style={styles.emptyCartImage}
                             source={require('../../../assets/No-limit.png')}
                         />
-                        <Text style={styles.text1}>Limit is used up</Text>
+                    <Text style={styles.text1}>{Constants.Laungagues.limit_is_used_up == null ? 'Limit is used up' : Constants.Laungagues.limit_is_used_up}</Text>
                         <Text style={styles.text2}>
-                            You ordered 3 boxes and can't order more
+                        {Constants.Laungagues.you_ordered_3_boxes_and_cant_order_more == null ? "You ordered 3 boxes and can't order more" : Constants.Laungagues.you_ordered_3_boxes_and_cant_order_more}
                         </Text>
                         <AppButton
                             preset="primary"
@@ -79,8 +80,8 @@ export default function DiscoveryKit({ navigation }) {
                 </ImageBackground>
                 <View style={styles.mainView}>
                     <View>
-                        <Text style={styles.giftCardText}>Discovery box</Text>
-                        <Text style={{ fontFamily: fontConstant.satoshi, color: COLORS_NEW.black, fontSize: Metrics.rfv(14) }}>You can use the discovery box a limited number of times</Text>
+                            <Text style={styles.giftCardText}>{Constants.Laungagues.discovery_box == null ? 'Discovery box' : Constants.Laungagues.discovery_box}</Text>
+                            <Text style={{ fontFamily: fontConstant.satoshi, color: COLORS_NEW.black, fontSize: Metrics.rfv(14) }}>{Constants.Laungagues.you_can_use_the_discovery_box_a_limited_number_of_times == null ? 'You can use the discovery box a limited number of times' : Constants.Laungagues.you_can_use_the_discovery_box_a_limited_number_of_times}</Text>
                     </View>
                 </View>
                 <View

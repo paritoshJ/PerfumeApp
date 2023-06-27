@@ -35,6 +35,7 @@ import {
   UPDATE_ITEM_FROM_CART_API,
 } from '../../api/getAddToCartData';
 import Loader from '../../Component/Loader';
+import Constants from '../../Comman/Constants';
 
 export default function MyCartScreen({navigation}) {
   const [isEmpty, setIsEmpty] = useState(true);
@@ -78,7 +79,7 @@ export default function MyCartScreen({navigation}) {
         title={errorTitle}
         message={errorMessage}
         hideAddButton={false}
-        buttonTitle={t('Go shopping')}
+        buttonTitle={Constants.Laungagues.goshopping == null ? 'Go shopping' : Constants.Laungagues.goshopping}
         onButtonPress={() => {
           navigation.reset({
             index: 0,
@@ -236,7 +237,7 @@ export default function MyCartScreen({navigation}) {
     <SafeAreaView style={{flex: 1}}>
       <MyStatusBar backgroundColor={'rgba(255, 255, 255, 1)'} />
       <View style={styles.navBarView}>
-        <Text style={styles.navBarText}>{t('My cart')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.my_cart == null ? 'My cart' : Constants.Laungagues.my_cart}</Text>
       </View>
       {cartLst?.length === 0 ? (
         renderEmptyAndNoLogin()
@@ -381,7 +382,7 @@ export default function MyCartScreen({navigation}) {
               <View
                 style={styles.refundView}
                 onPress={() => setOrderClick(!orderClick)}>
-                <Text style={styles.orderNumberText}>{t('Order summary')}</Text>
+                  <Text style={styles.orderNumberText}>{Constants.Laungagues.order_summary == null ? 'Order summary' : Constants.Laungagues.order_summary}</Text>
               </View>
               {/* Total View */}
               <View style={styles.totalView}>
@@ -399,7 +400,7 @@ export default function MyCartScreen({navigation}) {
                       fontSize: fontConstant.TEXT_12_SIZE_REGULAR,
                       fontWeight: fontConstant.WEIGHT_LEIGHT,
                     }}>
-                    {t('Subtotal')}
+                      {Constants.Laungagues.subtotal == null ? 'Subtotal' : Constants.Laungagues.subtotal}
                   </Text>
                   <Text style={styles.CreditCardNumberView}>
                     {cartData?.prices
@@ -425,7 +426,7 @@ export default function MyCartScreen({navigation}) {
                       fontStyle: 'normal',
                       color: colorConstant.BLACK,
                     }}>
-                    {t('Total including taxes')}
+                      {Constants.Laungagues.total_including_taxes == null ? 'Total including taxes' : Constants.Laungagues.total_including_taxes}
                   </Text>
                   <Text
                     style={{
@@ -458,7 +459,7 @@ export default function MyCartScreen({navigation}) {
                     fontWeight: fontConstant.WEIGHT_REGULAR,
                     marginVertical: Metrics.rfv(20),
                   }}>
-                  {t('Recommended products')}
+                    {Constants.Laungagues.recommended_products == null ? 'Recommended products' : Constants.Laungagues.recommended_products}
                 </Text>
                 <View style={{width: '100%'}}>
                   <FlatList
@@ -484,7 +485,7 @@ export default function MyCartScreen({navigation}) {
             <View style={{marginVertical: Metrics.rfv(10)}}>
               <AppButton
                 preset="primary"
-                text={t('Checkout')}
+                  text={Constants.Laungagues.checkout == null ? 'Checkout' : Constants.Laungagues.checkout}
                 onPress={() =>
                   navigation.navigate('Checkout', {cart: cartData})
                 }

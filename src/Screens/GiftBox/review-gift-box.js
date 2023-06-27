@@ -14,6 +14,7 @@ import Metrics from '../../Helper/metrics';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next'
 import {ScrollView} from 'react-native-gesture-handler';
+import Constants from '../../Comman/Constants';
 export default function ReviewGiftBox({navigation}) {
   const { t } = useTranslation()
 
@@ -32,7 +33,7 @@ export default function ReviewGiftBox({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>REVIEW YOUR BOX</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.review_your_box == null ? 'REVIEW YOUR BOX' : Constants.Laungagues.review_your_box}</Text>
         <TouchableOpacity>
           <Image
             style={styles.navBarImage1}
@@ -49,10 +50,10 @@ export default function ReviewGiftBox({navigation}) {
               justifyContent: 'space-between',
               marginHorizontal: Metrics.rfv(20),
             }}>
-            <Text>Box</Text>
-            <Text>Gifts</Text>
-            <Text>Sticker</Text>
-            <Text>Review</Text>
+            <Text>{Constants.Laungagues.box == null ? 'Box' : Constants.Laungagues.box}</Text>
+            <Text>{Constants.Laungagues.gifts == null ? 'Gifts' : Constants.Laungagues.gifts}</Text>
+            <Text>{Constants.Laungagues.sticker == null ? 'Sticker' : Constants.Laungagues.sticker}</Text>
+            <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
           </View>
           <Progress.Bar
             progress={1}
@@ -78,7 +79,7 @@ export default function ReviewGiftBox({navigation}) {
                   fontFamily: 'Gambetta-MediumItalic',
                   marginVertical: Metrics.rfv(10),
                 }}>
-                {t('Order summary')}
+                {Constants.Laungagues.order_summary == null ? 'Order summary' : Constants.Laungagues.order_summary}
               </Text>
             </View>
             <Text
@@ -86,14 +87,14 @@ export default function ReviewGiftBox({navigation}) {
                 color: COLORS_NEW.lightGray,
                 marginVertical: Metrics.rfv(10),
               }}>
-              {t('perfumes')}
+              {Constants.Laungagues.perfumes == null ? 'perfumes' : Constants.Laungagues.perfumes}
             </Text>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text>Aborable Amber</Text>
               <Text>Х1</Text>
               <Text>100ml</Text>
-              <Text>24 {t('AED')}</Text>
+              <Text>24 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
             </View>
           </View>
           {/*  */}
@@ -104,7 +105,7 @@ export default function ReviewGiftBox({navigation}) {
                   color: COLORS_NEW.lightGray,
                   marginVertical: Metrics.rfv(10),
                 }}>
-                {t('Perfume oils')}
+                {Constants.Laungagues.perfume_oils = null ? 'Perfume oils' : Constants.Laungagues.perfume_oils}
               </Text>
             </View>
             <View
@@ -112,7 +113,7 @@ export default function ReviewGiftBox({navigation}) {
               <Text>Aborable Amber</Text>
               <Text>Х1</Text>
               <Text>100ml</Text>
-              <Text>24 {t('AED')}</Text>
+              <Text>24 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
             </View>
           </View>
           {/*  */}
@@ -123,7 +124,7 @@ export default function ReviewGiftBox({navigation}) {
                   color: COLORS_NEW.lightGray,
                   marginVertical: Metrics.rfv(10),
                 }}>
-                {t('Oud')}
+                {Constants.Laungagues.oud == null ? 'Oud' : Constants.Laungagues.oud}
               </Text>
             </View>
             <View
@@ -131,13 +132,13 @@ export default function ReviewGiftBox({navigation}) {
               <Text>Aborable Amber</Text>
               <Text>Х1</Text>
               <Text>100ml</Text>
-              <Text>24 {t('AED')}</Text>
+              <Text>24 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
             </View>
           </View>
           {/* Total View */}
           <View style={styles.TotalView}>
-            <Text style={styles.totalViewText}>Bundle total</Text>
-            <Text style={styles.totalViewText}>80.00 {t('AED')}</Text>
+            <Text style={styles.totalViewText}>{Constants.Laungagues.bundle_total == null ? 'Bundle total' : Constants.Laungagues.bundle_total}</Text>
+            <Text style={styles.totalViewText}>80.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
           </View>
         </View>
         {/* Next Button */}
@@ -148,7 +149,7 @@ export default function ReviewGiftBox({navigation}) {
           }}>
           <AppButton
             preset="primary"
-            text={`${t('Add to cart')}: ${105.0} ${t('AED')}`}
+            text={`${Constants.Laungagues.add_to_cart == null ? 'Add to cart' : Constants.Laungagues.add_to_cart}: ${105.0} ${Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}`}
             style={{marginTop: Metrics.rfv(16)}}
             onPress={() => navigation.navigate('GiftCardBox')}
           />

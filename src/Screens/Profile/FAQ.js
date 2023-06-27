@@ -33,6 +33,7 @@ import FaqSVG from '../../assets/svg/FAQ';
 import EmptyPageView from '../../Component/EmptyPageView';
 import { SafeAreaView } from 'react-native';
 import Loader from '../../Component/Loader';
+import Constants from '../../Comman/Constants';
 
 export default function FAQ({navigation}) {
   const [open, setOpen] = useState(false);
@@ -115,8 +116,8 @@ useEffect(async () => {
   const renderEmptyAndNoLogin = () =>{
   return <EmptyPageView 
           icon={<FaqSVG/>}
-          title={t("FAQ Not found")}
-          message={t('FAQ seems to be empty.')}
+    title={Constants.Laungagues.faq_not_found == null ? "FAQ Not found" : Constants.Laungagues.faq_not_found}
+    message={Constants.Laungagues.faq_seems_to_be_empty == null ? 'FAQ seems to be empty.' : Constants.Laungagues.faq_seems_to_be_empty}
           hideAddButton={true}
           onButtonPress={()=>{}}
           buttonTitle={''}
@@ -150,15 +151,15 @@ useEffect(async () => {
             height: 80,
             alignItems: 'center',
           }}>
-          <Text style={styles.navBarText}>{t('FAQ')}</Text>
+            <Text style={styles.navBarText}>{Constants.Laungagues.faq == null ? 'FAQ' : Constants.Laungagues.faq}</Text>
         </View>
       </ImageBackground>
       {faqList.length > 0 && <View style={{bottom: '8%'}}>
         <CustomSwitch
           selectionMode={2}
           roundCorner={true}
-          option1={'Sort'}
-          option2={'Filters'}
+            option1={Constants.Laungagues.sort == null ? 'Sort' : Constants.Laungagues.sort}
+            option2={Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}
           onSearch={(text)=>{handleSearch(text)}}
           onSelectSwitch={onSelectSwitch}
           selectionColor={COLORS_NEW.lightGray}

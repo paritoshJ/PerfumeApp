@@ -17,6 +17,7 @@ import Metrics from '../../Helper/metrics';
 import Input from '../../Component/Input';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function AddCustomizedCardMessage({ navigation }) {
   const { t } = useTranslation();
@@ -36,7 +37,7 @@ export default function AddCustomizedCardMessage({ navigation }) {
                         source={require('../../../assets/Back-Arrow.png')}
                     />
                 </TouchableOpacity>
-                <Text style={styles.navBarText}>BUILD YOUR OWN</Text>
+                <Text style={styles.navBarText}>{Constants.Laungagues.build_your_own == null ? 'BUILD YOUR OWN' : Constants.Laungagues.build_your_own}</Text>
                 <TouchableOpacity>
                     <Image style={styles.navBarImage1} source={require('../../../assets/close-button.png')} />
                 </TouchableOpacity>
@@ -49,9 +50,9 @@ export default function AddCustomizedCardMessage({ navigation }) {
                         justifyContent: 'space-between',
                         marginHorizontal: Metrics.rfv(20)
                     }}>
-                    <Text>Gifts</Text>
-                    <Text>Sticker</Text>
-                    <Text>Review</Text>
+                    <Text>{Constants.Laungagues.gifts == null ? 'Gifts' : Constants.Laungagues.gifts}</Text>
+                    <Text>{Constants.Laungagues.sticker == null ? 'Sticker' : Constants.Laungagues.sticker}</Text>
+                    <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
                 </View>
                 <Progress.Bar progress={0.60} width={null} height={1} color={COLORS_NEW.blue} />
             </View>
@@ -70,7 +71,7 @@ export default function AddCustomizedCardMessage({ navigation }) {
                         bottom: 0,
                     }}
                 />
-                <Text style={styles.cardText}>Write your card message</Text>
+                <Text style={styles.cardText}>{Constants.Laungagues.writey_your_card_message == null ? 'Write your card message' : Constants.Laungagues.writey_your_card_message}</Text>
             </ImageBackground>
             {/*  */}
             <View>
@@ -93,7 +94,7 @@ export default function AddCustomizedCardMessage({ navigation }) {
                 <View style={{ paddingHorizontal: Metrics.rfv(10) }}>
                     <TextInput
                         style={styles.input}
-                        placeholder="Review content"
+                        placeholder={Constants.Laungagues.review_content == null ? "Review content" : Constants.Laungagues.review_content}
                     />
                 </View>
             </View>
@@ -108,7 +109,7 @@ export default function AddCustomizedCardMessage({ navigation }) {
                 <View style={{ width: '45%' }}>
                     <AppButton
                         preset="secondary"
-                        text="Skip and review"
+                        text={Constants.Laungagues.skip_and_review == null ? "Skip and review" : Constants.Laungagues.skip_and_review}
                         style={{ marginTop: Metrics.rfv(16) }}
                         onPress={() => navigation.navigate('ReviewCustomizedBundle')}
                     />
@@ -116,7 +117,7 @@ export default function AddCustomizedCardMessage({ navigation }) {
                 <View style={{ width: '45%' }}>
                     <AppButton
                         preset="primary"
-                        text={t("Next")}
+                        text={Constants.Laungagues.next == null ? "Next" : Constants.Laungagues.next}
                         style={{ marginTop: Metrics.rfv(16) }}
                         onPress={() => navigation.navigate('ReviewCustomizedBundle')}
                     />

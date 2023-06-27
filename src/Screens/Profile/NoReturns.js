@@ -16,6 +16,7 @@ import {AppButton} from '../../Component/button/app-button';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import { useTranslation } from 'react-i18next';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 const DATA = [
   {
     id: 1,
@@ -91,7 +92,7 @@ export default function NoReturn({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('Returns')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.returns == null ? 'Returns' : Constants.Laungagues.returns}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -103,11 +104,11 @@ export default function NoReturn({navigation}) {
             style={styles.cartImage}
             source={require('../../../assets/Return-color.png')}
           />
-          <Text style={styles.text1}>{t('You currently have no returns')}</Text>
-          <Text style={styles.text2}>{t('You can create a return from Orders')}</Text>
+          <Text style={styles.text1}>{Constants.Laungagues.you_currently_have_no_returns == null ? 'You currently have no returns' : Constants.Laungagues.you_currently_have_no_returns}</Text>
+          <Text style={styles.text2}>{Constants.Laungagues.you_can_create_a_return_from_orders == null ? 'You can create a return from Orders' : Constants.Laungagues.you_can_create_a_return_from_orders}</Text>
           <AppButton
             preset="primary"
-            text={t('View my orders')}
+            text={Constants.Laungagues.view_my_orders == null ? 'View my orders' : Constants.Laungagues.view_my_orders}
             style={{marginTop: Metrics.rfv(16)}}
             onPress={() => navigation.navigate('Order')}
           />
@@ -178,7 +179,7 @@ export default function NoReturn({navigation}) {
           })}
           <AppButton
             preset="primary"
-            text="New Return"
+              text={Constants.Laungagues.new_return == null ? "New Return" : Constants.Laungagues.new_return}
             style={{marginTop: Metrics.rfv(16)}}
           />
         </ScrollView>

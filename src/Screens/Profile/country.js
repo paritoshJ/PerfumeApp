@@ -44,8 +44,8 @@ export default function Country({navigation}) {
 
       })
     GET_COUNTRY_API().then((Responsce) => {
-      console.log(Responsce)
-      setCountry(Responsce.allStoreConfigData);
+      console.log('storeConfig', Responsce.storeConfig)
+      setCountry(Responsce.storeConfig);
       setLoading(false)
 
     }).catch((error) => {
@@ -116,7 +116,7 @@ export default function Country({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('Country')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.country == null ? 'Country' : Constants.Laungagues.country}</Text>
         <Image style={styles.navBarImage1} source={''} />
       </View>
       <View style={styles.mainView}>
@@ -126,7 +126,6 @@ export default function Country({navigation}) {
             onRefresh={() => {
               console.log('refrash')
               setRefresh(false)
-
             }}
           />
         }>
@@ -139,14 +138,12 @@ export default function Country({navigation}) {
               style={styles.loginPageComponentView}
                 onPress={() => {
                   console.log('selectedCountry', item.store_code);
-
+                  Constants.StoreCode = item.store_code;
                   setSelectedCountry(item.store_code);
                   setRefresh(true)
                   setRefresh(false)
-
                   AsyncStorage.setItem('Country', item.store_code);
                   console.log('selectedCountry', selectedCountry);
-
                   // onSelectSwitch(item)
                 }}>
 

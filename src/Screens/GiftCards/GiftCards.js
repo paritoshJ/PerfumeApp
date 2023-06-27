@@ -16,6 +16,7 @@ import { AppButton } from '../../Component/button/app-button';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
 import fontConstant from '../../constant/fontConstant';
+import Constants from '../../Comman/Constants';
 
 export default function GiftCard({ navigation }) {
   const { t } = useTranslation();
@@ -46,8 +47,8 @@ export default function GiftCard({ navigation }) {
         </ImageBackground>
         <View style={styles.mainView}>
           <View>
-            <Text style={styles.giftCardText}>{t('Gift Card')}</Text>
-            <Text style={{ fontFamily: fontConstant.satoshi, coloe: COLORS_NEW.black, fontSize: Metrics.rfv(14) }}>AJMAL enjoys a prominent presence in the Travel Retail arena, with some of our most notable clients being Dubai Duty Free, Abu Dhabi Duty Free, Muscat Duty Free, Bahrain Duty Free, and Cairo Duty Free. We recently launched perfumes at Cyprus Duty Free, further extending our presence in the region.</Text>
+            <Text style={styles.giftCardText}>{Constants.Laungagues.giftcard == null ? 'Gift Card' : Constants.Laungagues.giftcard}</Text>
+            <Text style={{ fontFamily: fontConstant.satoshi, coloe: COLORS_NEW.black, fontSize: Metrics.rfv(14) }}>{Constants.Laungagues.ajmal_enjoys_a_prominent_presence_in_the_ravel_retail_arena_with_some_of_our_most_notable_clients_being_dubai_duty_free_abu_dhabi_duty_free_muscat_duty_free_bahrain_duty_free_and_cairo_duty_free_We_recently_launched_perfumes_at_cyprus_Duty_free_further_extending_our_presence_in_the_region == null ? 'AJMAL enjoys a prominent presence in the Travel Retail arena, with some of our most notable clients being Dubai Duty Free, Abu Dhabi Duty Free, Muscat Duty Free, Bahrain Duty Free, and Cairo Duty Free. We recently launched perfumes at Cyprus Duty Free, further extending our presence in the region.' : Constants.Laungagues.ajmal_enjoys_a_prominent_presence_in_the_ravel_retail_arena_with_some_of_our_most_notable_clients_being_dubai_duty_free_abu_dhabi_duty_free_muscat_duty_free_bahrain_duty_free_and_cairo_duty_free_We_recently_launched_perfumes_at_cyprus_Duty_free_further_extending_our_presence_in_the_region}</Text>
           </View>
         </View>
         <View

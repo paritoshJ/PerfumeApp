@@ -44,6 +44,7 @@ import UIStepperView from '../../Component/UiStepper';
 import {ADD_ITEM_TO_CART} from '../../api/addToCart';
 import {ADD_TO_CART_DATA} from '../../api/getAddToCartData';
 import {GET_PRODUCTS_FAQ} from '../../api/getProduct';
+import Constants from '../../Comman/Constants';
 
 const ProductPage = props => {
   const [selected, setSelected] = useState('50 ml');
@@ -493,7 +494,7 @@ const ProductPage = props => {
                   resizeMode="contain"
                 />
                 <Text style={style.last_time_offer_text}>
-                  {`Lasting hours: ${productType?.product_lasting_hours}`}
+                  {`${Constants.Laungagues.lasting_hours == null ? 'Lasting hours:' : Constants.Laungagues.lasting_hours} ${productType?.product_lasting_hours}`}
                 </Text>
               </View>
 
@@ -597,7 +598,7 @@ const ProductPage = props => {
                 <View>
                   <View style={style.border}></View>
                   <View style={[style.des_title_text, {marginTop: '8%'}]}>
-                    <Text style={[style.des_titile]}>{t('Reviews')}</Text>
+                    <Text style={[style.des_titile]}>{Constants.Laungagues.reviews == null ? 'Reviews' : Constants.Laungagues.reviews}</Text>
                     <View
                       style={{
                         flexDirection: 'row',
@@ -672,7 +673,7 @@ const ProductPage = props => {
                             style.text_viewall,
                             {color: colorConstant.WHITE},
                           ]}>
-                          {t('Add review')}
+                          {Constants.Laungagues.add_review == null ? 'Add review' : Constants.Laungagues.add_review}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -702,7 +703,7 @@ const ProductPage = props => {
                             review_count: productDetail?.review_count,
                           });
                         }}>
-                        <Text style={style.text_viewall}>{t('View all')}</Text>
+                        <Text style={style.text_viewall}>{Constants.Laungagues.view_all == null ? 'View all' : Constants.Laungagues.view_all}</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={[
@@ -717,7 +718,7 @@ const ProductPage = props => {
                             style.text_viewall,
                             {color: colorConstant.WHITE},
                           ]}>
-                          {t('Add review')}
+                          {Constants.Laungagues.add_review == null ? 'Add review' : Constants.Laungagues.add_review}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -729,7 +730,7 @@ const ProductPage = props => {
 
               <View style={{alignItems: 'flex-start'}}>
                 <Text style={[{fontSize: fontConstant.TEXT_20_SIZE_BOLD}]}>
-                  {t('FAQ')}
+                  {Constants.Laungagues.faq == null ? 'FAQ' : Constants.Laungagues.faq}
                 </Text>
               </View>
               <AccordionList
@@ -757,7 +758,7 @@ const ProductPage = props => {
                       faqList: faqList,
                     })
                   }>
-                  <Text style={style.text_viewall}>{t('View all')}</Text>
+                  <Text style={style.text_viewall}>{Constants.Laungagues.view_all == null ? 'View all' : Constants.Laungagues.view_all}</Text>
                 </TouchableOpacity>
               )}
 
@@ -776,7 +777,8 @@ const ProductPage = props => {
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
-                    Free samples for all orders
+                    {Constants.Laungagues.free_samples_for_all_orders == null ?
+                      'Free samples for all orders' : Constants.Laungagues.free_samples_for_all_orders}
                   </Text>
                 </View>
                 <View style={{flexDirection: 'row', marginTop: '5%'}}>
@@ -786,7 +788,9 @@ const ProductPage = props => {
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
-                    Free samples for all orders
+                    {Constants.Laungagues.free_samples_for_all_orders == null ?
+                      'Free samples for all orders' : Constants.Laungagues.free_samples_for_all_orders}
+
                   </Text>
                 </View>
                 <View style={{flexDirection: 'row', marginTop: '5%'}}>
@@ -796,7 +800,9 @@ const ProductPage = props => {
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
-                    Free samples for all orders
+                    {Constants.Laungagues.free_samples_for_all_orders == null ?
+                      'Free samples for all orders' : Constants.Laungagues.free_samples_for_all_orders}
+
                   </Text>
                 </View>
                 <View style={{flexDirection: 'row', marginTop: '5%'}}>
@@ -806,7 +812,9 @@ const ProductPage = props => {
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
-                    Free samples for all orders
+                    {Constants.Laungagues.free_samples_for_all_orders == null ?
+                      'Free samples for all orders' : Constants.Laungagues.free_samples_for_all_orders}
+
                   </Text>
                 </View>
               </View>
@@ -824,7 +832,7 @@ const ProductPage = props => {
                         marginLeft: 20,
                       },
                     ]}>
-                    {t('Recommended products')}
+                    {Constants.Laungagues.recommended_products == null ? 'Recommended products' : Constants.Laungagues.recommended_products}
                   </Text>
                 </View>
                 <View
@@ -862,7 +870,7 @@ const ProductPage = props => {
                       alignSelf: 'center',
                     },
                   ]}>
-                  This item is out of stock
+                  {Constants.Laungagues.this_item_is_out_of_stock == null ? 'This item is out of stock' : Constants.Laungagues.this_item_is_out_of_stock}
                 </Text>
               ) : (
                 <>
@@ -901,7 +909,7 @@ const ProductPage = props => {
                           style.text_viewall,
                           {color: colorConstant.WHITE},
                         ]}>
-                        {t('Add to cart')}
+                          {Constants.Laungagues.add_to_cart == null ? 'Add to cart' : Constants.Laungagues.add_to_cart}
                       </Text>
                     </TouchableOpacity>
                   </View>

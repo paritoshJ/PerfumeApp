@@ -14,6 +14,7 @@ import { COLORS_NEW } from '../../Helper/colors.new';
 import { AppButton } from '../../Component/button/app-button';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function CustomizedBundle({ navigation }) {
   const { t } = useTranslation();
@@ -44,7 +45,7 @@ export default function CustomizedBundle({ navigation }) {
                 </ImageBackground>
                 <View style={styles.mainView}>
                     <View>
-                        <Text style={styles.giftCardText}>Customized bundle</Text>
+                    <Text style={styles.giftCardText}>{Constants.Laungagues.customized_bundle == null ? 'Customized bundle' : Constants.Laungagues.customized_bundle}</Text>
                         <Text style={{ fontFamily: fontConstant.satoshi, color: COLORS_NEW.black, fontSize: Metrics.rfv(14) }}>AJMAL enjoys a prominent presence in the Travel Retail arena, with some of our most notable clients being Dubai Duty Free, Abu Dhabi Duty Free, Muscat Duty Free, Bahrain Duty Free, and Cairo Duty Free. We recently launched perfumes at Cyprus Duty Free, further extending our presence in the region.</Text>
                     </View>
                 </View>
@@ -59,7 +60,7 @@ export default function CustomizedBundle({ navigation }) {
                     <View style={{ width: '75%' }}>
                         <AppButton
                             preset="primary"
-                            text="Explore Now"
+                        text={Constants.Laungagues.explore_now == null ? "Explore Now" : Constants.Laungagues.explore_now}
                             style={{ marginTop: Metrics.rfv(16) }}
                             onPress={() => navigation.navigate('BuildYourOwnBundle')}
                         />

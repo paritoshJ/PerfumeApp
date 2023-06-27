@@ -26,10 +26,11 @@ import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import { GET_PROFILE_DETAIL } from '../../api/getProfiledetail';
 import { GET_WISHLIST_PRODUCTS } from '../../api/getWishlistApi';
+import fontConstant from '../../constant/fontConstant';
+import Constants from '../../Comman/Constants';
 
 export default function ProfilePage({navigation}) {
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(!isEnabled);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   const [loading, setLoading] = useState(false);
@@ -38,71 +39,84 @@ export default function ProfilePage({navigation}) {
   const [getUsername, setUsername] = useState('Perfume');
 
   const {t} = useTranslation();
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled)
+    AsyncStorage.setItem('languageselect', isEnabled ? '1' : '0');
+
+
+
+  };
 
   const DATA = [
     {
       id: 1,
-      name: t('Orders'),
+      name: Constants.Laungagues.orders == null ? 'Order' : Constants.Laungagues.orders,
       image: require('../../../assets/Cart.png'),
       navigation: 'Order',
     },
     {
       id: 2,
-      name: t('credit-cards'),
+      name: Constants.Laungagues.credit_cards == null ? "Credit Cards" : Constants.Laungagues.credit_cards,
       image: require('../../../assets/Credit-card.png'),
       navigation: 'NoCreditCard',
     },
     {
       id: 3,
-      name: t('address-book'),
+      name: Constants.Laungagues.address_book == null ? 'address-book' : Constants.Laungagues.address_book,
       image: require('../../../assets/Address-book.png'),
       navigation: 'AddressBookList',
     },
     {
       id: 4,
-      name: t('change-password'),
+      name: Constants.Laungagues.change_password == null ? 'change-password' : Constants.Laungagues.change_password,
       image: require('../../../assets/Password.png'),
       navigation: 'Changepassword',
     },
     {
       id: 5,
-      name: t('wallet'),
+      name: Constants.Laungagues.wallet == null ? 'wallet' : Constants.Laungagues.wallet,
       image: require('../../../assets/Wallet.png'),
       navigation: 'Wallet',
     },
     {
       id: 6,
-      name: t('loyalty-points'),
+      name: Constants.Laungagues.loyalty_points == null ? 'Loyalty points' : Constants.Laungagues.loyalty_points,
       image: require('../../../assets/Loyalty-point.png'),
       navigation: 'LoyaltyPoint',
     },
     {
       id: 7,
-      name: t('gift-cards'),
+      name: Constants.Laungagues.gifts_cards == null ? 'gift-cards' : Constants.Laungagues.gifts_cards,
       image: require('../../../assets/Gift-card.png'),
       navigation: 'GiftCard',
     },
     {
       id: 8,
-      name: t('WISHLIST'),
+      name: Constants.Laungagues.wishlist == null ? 'WISHLIST' : Constants.Laungagues.wishlist,
       image: require('../../../assets/Wishlist.png'),
       navigation: 'WishList',
     },
     {
       id: 9,
-      name: t('returns'),
+      name: Constants.Laungagues.returns == null ? 'Returns' : Constants.Laungagues.returns,
       image: require('../../../assets/Return.png'),
       navigation: 'Returns',
     },
     {
       id: 10,
-      name: t('refer-a-friend'),
+      name: Constants.Laungagues.refer_a_friend == null ? 'Refer a Friend' : Constants.Laungagues.refer_a_friend,
       image: require('../../../assets/Refer.png'),
       navigation: 'ReferFriend',
     },
   ];
   useFocusEffect(
     React.useCallback(() => {
+      AsyncStorage.getItem('languageselect')
+        .then(response => {
+          setIsEnabled(response == 1 ? true : false)
+        })
+        .catch(error => {
+        });
       setLoading(true);
       getProfileDetail();
 
@@ -208,7 +222,7 @@ export default function ProfilePage({navigation}) {
             <TouchableOpacity>
               <Image style={styles.navBarImage1} source={''} />
             </TouchableOpacity>
-            <Text style={styles.navBarText}>{t('text-profile-caps')}</Text>
+            <Text style={styles.navBarText}>{Constants.Laungagues.profile}</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity onPress={() => navigation.navigate('Feed')}>
                 <Image
@@ -311,7 +325,7 @@ export default function ProfilePage({navigation}) {
                   />
                 </View>
                 <Text style={styles.loginPageComponentview2}>
-                  {t('Country')}
+                  {Constants.Laungagues.country}
                 </Text>
               </View>
               <View style={styles.loginPageComponentText}>
@@ -338,7 +352,7 @@ export default function ProfilePage({navigation}) {
                     source={require('../../../assets/FAQ.png')}
                   />
                 </View>
-                <Text style={styles.loginPageComponentview2}>{t('FAQ')}</Text>
+                <Text style={styles.loginPageComponentview2}>{Constants.Laungagues.faq}</Text>
               </View>
               <View style={styles.loginPageComponentText}>
                 <Image
@@ -353,7 +367,6 @@ export default function ProfilePage({navigation}) {
                 />
               </View>
             </TouchableOpacity>
-
             <TouchableOpacity
               style={styles.loginPageComponentView}
               onPress={() => navigation.navigate('Notification')}>
@@ -365,7 +378,7 @@ export default function ProfilePage({navigation}) {
                   />
                 </View>
                 <Text style={styles.loginPageComponentview2}>
-                  {t('Notification')}
+                  {Constants.Laungagues.notification == null ? 'Notification' : Constants.Laungagues.notification}
                 </Text>
               </View>
               <View style={styles.loginPageComponentText}>
@@ -393,7 +406,7 @@ export default function ProfilePage({navigation}) {
                   />
                 </View>
                 <Text style={styles.loginPageComponentview2}>
-                  {t('CONTACT US')}
+                  {Constants.Laungagues.contact_us == null ? "Contact Us" : Constants.Laungagues.contact_us}
                 </Text>
               </View>
               <View style={styles.loginPageComponentText}>
@@ -419,19 +432,46 @@ export default function ProfilePage({navigation}) {
                   />
                 </View>
                 <Text style={styles.loginPageComponentview2}>
-                  {t('language')}
+                  {Constants.Laungagues.language == null ? 'language' : Constants.Laungagues.language}
                 </Text>
               </View>
               <View style={styles.loginPageComponentText}>
-                <Text>English</Text>
+                <Text style={{
+                  fontFamily: fontConstant.satoshi,
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  letterSpacing: 1,
+                  fontSize: 14,
+
+                  alignSelf: 'center', marginRight: '5%'
+                }}>English</Text>
                 <Switch
                   trackColor={{false: '#767577', true: '#DFC8AF'}}
                   thumbColor="white"
                   ios_backgroundColor="#3e3e3e"
-                  onValueChange={toggleSwitch}
+                  // onValueChange={toggleSwitch}
+                  onValueChange={(value) => {
+                    console.log(value)
+                    if (value == true) {
+                      setIsEnabled(value)
+                      AsyncStorage.setItem('languageselect', '1');
+
+                    } else {
+                      setIsEnabled(value)
+                      AsyncStorage.setItem('languageselect', '0');
+
+                    }
+                  }}
                   value={isEnabled}
                 />
-                <Text>العربية</Text>
+                <Text style={{
+                  fontFamily: fontConstant.satoshi,
+                  fontStyle: 'normal',
+                  fontWeight: '500',
+                  letterSpacing: 1,
+                  fontSize: 14,
+                  alignSelf: 'center', marginLeft: '5%'
+                }}>العربية</Text>
               </View>
             </View>
           </View>
@@ -499,7 +539,6 @@ export default function ProfilePage({navigation}) {
                 marginTop: Metrics.rfv(10),
                 alignSelf: 'center',
                 marginBottom: Metrics.rfv(15),
-
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
@@ -545,16 +584,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 8,
+    textTransform: 'uppercase'
   },
   avatar: {
     height: Metrics.rfv(70),
     width: Metrics.rfv(70),
-
     borderRadius: Metrics.rfv(70) / 2,
     overflow: "hidden",
     borderWidth: 3,
-
-
   },
   pencilIcon: {
     width: Metrics.rfv(20),
@@ -583,6 +620,12 @@ const styles = StyleSheet.create({
     marginLeft: Metrics.rfv(15),
     marginTop: Metrics.rfv(1),
     color: COLORS_NEW.black,
+    fontFamily: fontConstant.satoshi,
+    fontStyle: 'normal',
+    fontWeight: '500',
+    letterSpacing: 1,
+    fontSize: 14,
+    textTransform: 'uppercase'
   },
   loginPageArrow: {
     width: Metrics.rfv(10),

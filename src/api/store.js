@@ -9,8 +9,10 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true,
   headers: {
+    store: Constants.StoreCode,
     authorization: getAuthTokenHeaders(),
   },
+
 });
 
 export const GET_ALL_STORES_LIST = async (quantity, sku) => {

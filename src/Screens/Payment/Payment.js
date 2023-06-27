@@ -22,6 +22,7 @@ import ArrowRightGray from '../../assets/svg/ArrowRightGray';
 import VerificationModal from './VerificationModal';
 import fontConstant from '../../constant/fontConstant';
 import Metrics from '../../Helper/metrics';
+import Constants from '../../Comman/Constants';
 
 export default function Payment({route, navigation}) {
   const {t} = useTranslation();
@@ -51,7 +52,7 @@ export default function Payment({route, navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('Payment')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.payment == null ? 'Payment' : Constants.Laungagues.payment}</Text>
       </View>
     );
   };
@@ -118,7 +119,7 @@ export default function Payment({route, navigation}) {
                 color: colorConstant.BLACK,
                 fontFamily: fontConstant.gambetta,
               }}>
-              {t('Cash on delivery')}
+              {Constants.Laungagues.cash_on_delivery == null ? 'Cash on delivery' : Constants.Laungagues.cash_on_delivery}
             </Text>
             <Text
               style={{
@@ -127,7 +128,7 @@ export default function Payment({route, navigation}) {
                 paddingTop: 8,
                 fontFamily: fontConstant.satoshi,
               }}>
-              {t('Please verify you number')}
+              {Constants.Laungagues.please_verify_you_number == null ? 'Please verify you number' : Constants.Laungagues.please_verify_you_number}
             </Text>
             <Text
               style={{
@@ -161,7 +162,7 @@ export default function Payment({route, navigation}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={styles.cancelButton}>{t('Change')}</Text>
+              <Text style={styles.cancelButton}>{Constants.Laungagues.change == null ? 'Change' : Constants.Laungagues.change}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
@@ -180,7 +181,7 @@ export default function Payment({route, navigation}) {
                 alignItems: 'center',
                 justifyContent: 'center',
               }}>
-              <Text style={styles.nextButtontext}>{t('Confirm')}</Text>
+              <Text style={styles.nextButtontext}>{Constants.Laungagues.confirm == null ? 'Confirm' : Constants.Laungagues.confirm}</Text>
             </TouchableOpacity>
           </View>
         </View>

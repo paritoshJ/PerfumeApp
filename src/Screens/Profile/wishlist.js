@@ -34,6 +34,7 @@ import fontConstant from '../../constant/fontConstant';
 import { EMPTY_CART } from '../../api/getEmptyCart';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import Constants from '../../Comman/Constants';
 
 export default function WishList({navigation}) {
   const navigationn = useNavigation();
@@ -43,7 +44,7 @@ export default function WishList({navigation}) {
   const [loading, setLoading] = useState(false);
 
   const [feed, setFeed] = useState(true);
-  const [errorTitle, setErrorTitle] = useState('You have no saved items');
+  const [errorTitle, setErrorTitle] = useState(Constants.Laungagues.you_have_no_saved_items);
   const [errorMessage, setErrorMessage] = useState('Start saving as you shop by selecting the little heart.');
   const [data, setData] = useState([]);
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
@@ -323,7 +324,7 @@ export default function WishList({navigation}) {
             />
           </TouchableOpacity>
 
-          <Text style={styles.navBarText}>{t('Wishlist')}</Text>
+            <Text style={styles.navBarText}>{Constants.Laungagues.wishlist == null ? 'Wishlist' : Constants.Laungagues.wishlist}</Text>
           <TouchableOpacity>
             <Image style={styles.navBarImage1} source={''} />
           </TouchableOpacity>
@@ -341,8 +342,8 @@ export default function WishList({navigation}) {
           <CustomSwitch
             selectionMode={2}
             roundCorner={true}
-            option1={t('Sort')}
-            option2={t('Filters')}
+              option1={Constants.Laungagues.sort == null ? 'Sort' : Constants.Laungagues.sort}
+              option2={Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}
             onSelectSwitch={onSelectSwitch}
             selectionColor={COLORS_NEW.lightGray}
           />

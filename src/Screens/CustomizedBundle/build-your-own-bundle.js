@@ -20,6 +20,7 @@ import PerfumeData from '../../utils/perfumedata';
 import { FlatGrid } from 'react-native-super-grid';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 export default function BuildYourOwnBundle({ navigation }) {
   const { t } = useTranslation();
 
@@ -38,7 +39,7 @@ export default function BuildYourOwnBundle({ navigation }) {
                         source={require('../../../assets/Back-Arrow.png')}
                     />
                 </TouchableOpacity>
-                <Text style={styles.navBarText}>BUILD YOUR OWN</Text>
+                <Text style={styles.navBarText}>{Constants.Laungagues.build_your_own == null ? 'BUILD YOUR OWN' : Constants.Laungagues.build_your_own}</Text>
                 <TouchableOpacity>
                     <Image style={styles.navBarImage1} source={require('../../../assets/close-button.png')} />
                 </TouchableOpacity>
@@ -51,9 +52,9 @@ export default function BuildYourOwnBundle({ navigation }) {
                         justifyContent: 'space-between',
                         marginHorizontal: Metrics.rfv(20)
                     }}>
-                    <Text>Gifts</Text>
-                    <Text>Sticker</Text>
-                    <Text>Review</Text>
+                    <Text>{Constants.Laungagues.gifts == null ? 'Gifts' : Constants.Laungagues.gifts}</Text>
+                    <Text>{Constants.Laungagues.sticker == null ? 'Sticker' : Constants.Laungagues.sticker}</Text>
+                    <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
                 </View>
                 <Progress.Bar progress={0.30} width={null} height={1} color={COLORS_NEW.blue} />
             </View>
@@ -78,8 +79,8 @@ export default function BuildYourOwnBundle({ navigation }) {
             marginTop: Metrics.rfv(130),
         }}>
         <FilterBar 
-         option1={t('Sort')}
-         option2={t('Filters')}
+                        option1={Constants.Laungagues.sort == null ? 'Sort' : Constants.Laungagues.sort}
+                        option2={Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}
          selectionColor={COLORS_NEW.lightGray}/>
         </View>
       </ImageBackground>
@@ -103,7 +104,7 @@ export default function BuildYourOwnBundle({ navigation }) {
                 }}>
                 <AppButton
                     preset="primary"
-                    text={t("Next")}
+                    text={Constants.Laungagues.next == null ? "Next" : Constants.Laungagues.next}
                     style={{ marginTop: Metrics.rfv(16) }}
                     onPress={() => navigation.navigate('AddCustomizedCardMessage')}
                 />

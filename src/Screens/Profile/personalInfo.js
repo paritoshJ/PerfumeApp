@@ -33,6 +33,7 @@ import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 import { KeyboardAwareView } from 'react-native-keyboard-aware-view';
+import Constants from '../../Comman/Constants';
 
 export default function PersonalInfo({navigation}) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -175,7 +176,7 @@ export default function PersonalInfo({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('Personal information')}</Text>
+          <Text style={styles.navBarText}>{Constants.Laungagues.personal_information == null ? 'Personal information' : Constants.Laungagues.personal_information}</Text>
         <TouchableOpacity onPress={() => setIsModalVisible(true)}>
           <Image
             style={styles.navBarImage1}
@@ -211,7 +212,7 @@ export default function PersonalInfo({navigation}) {
           <View>
             <TextInput
               style={styles.TextInput}
-              placeholder="First Name"
+                placeholder={Constants.Laungagues.first_name == null ? "First Name" : Constants.Laungagues.first_name}
                 value={getfirstName}
               placeholderTextColor="gray"
                 onChangeText={(text) => {
@@ -221,7 +222,7 @@ export default function PersonalInfo({navigation}) {
             />
             <TextInput
               style={styles.TextInput}
-              placeholder="Last Name"
+                placeholder={Constants.Laungagues.last_name == null ? "Last Name" : Constants.Laungagues.last_name}
                 value={getLastName}
               placeholderTextColor="gray"
                 onChangeText={(text) => {
@@ -231,7 +232,7 @@ export default function PersonalInfo({navigation}) {
             />
             <TextInput
               style={styles.TextInput}
-              placeholder={t('Email')}
+                placeholder={Constants.Laungagues.email == null ? 'Email' : Constants.Laungagues.email}
               placeholderTextColor="gray"
                 value={getemailaddress}
                 onChangeText={(text) => {
@@ -260,7 +261,7 @@ export default function PersonalInfo({navigation}) {
         </ScrollView>
         <AppButton
           disabled={false}
-          tx={t('Save changes')}
+          tx={Constants.Laungagues.save_changes == null ? 'Save changes' : Constants.Laungagues.save_changes}
           style={{
             marginTop: Metrics.rfv(16),
             marginBottom: Metrics.rfv(10),
@@ -291,9 +292,9 @@ export default function PersonalInfo({navigation}) {
                 source={require('./../../assets/icon/del.png')}
               />
             </View>
-            <Text style={styles.text1}>{t('Delete account')}</Text>
+              <Text style={styles.text1}>{Constants.Laungagues.delete_account == null ? 'Delete account' : Constants.Laungagues.delete_account}</Text>
             <Text style={styles.text2}>
-              {t('Once deleted, the account cannot be recovered')}
+                {Constants.Laungagues.onece_deleted_the_account_cannot_be_recovered == null ? 'Once deleted, the account cannot be recovered' : Constants.Laungagues.onece_deleted_the_account_cannot_be_recovered}
             </Text>
           </View>
           <View
@@ -318,7 +319,7 @@ export default function PersonalInfo({navigation}) {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={styles.cancelButton}>{t('Cancel')}</Text>
+                <Text style={styles.cancelButton}>{Constants.Laungagues.cancel == null ? 'Cancel' : Constants.Laungagues.cancel}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{
@@ -333,7 +334,7 @@ export default function PersonalInfo({navigation}) {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
-              <Text style={styles.nextButtontext}>{t('Delete')}</Text>
+                <Text style={styles.nextButtontext}>{Constants.Laungagues.delete == null ? 'Delete' : Constants.Laungagues.delete == null}</Text>
             </TouchableOpacity>
           </View>
         </View>

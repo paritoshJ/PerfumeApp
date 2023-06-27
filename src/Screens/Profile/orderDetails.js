@@ -18,6 +18,7 @@ import {useTranslation} from 'react-i18next';
 import MyStatusBar from '../../Component/MyStatusBar';
 import Moment from 'moment';
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from '../../Comman/Constants';
 
 
 // const ImageData = [
@@ -89,31 +90,31 @@ export default function OrderDetails({route, navigation}) {
             <TouchableOpacity
               style={styles.orderView}
               onPress={() => setOrderClick(!orderClick)}>
-              <Text style={styles.orderNumberText}>{t('orders')} #{items.increment_id}</Text>
+              <Text style={styles.orderNumberText}>{Constants.Laungagues.orders == null ? 'orders' : Constants.Laungagues.orders} #{items.increment_id}</Text>
             </TouchableOpacity>
           </View>
           {/* Order Detail View */}
           <View style={styles.orderDetailView}>
             <View style={styles.dateView}>
-              <Text style={styles.orderDetailViewLabel}>{t('DATE')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.date == null ? 'DATE' : Constants.Laungagues.date}</Text>
               <Text style={styles.orderDetailViewText}>{Moment(items.created_at).format('MMM d, yyyy')}</Text>
             </View>
             <View style={styles.statusView}>
-              <Text style={styles.orderDetailViewLabel}>{t('Status')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.status == null ? 'Status' : Constants.Laungagues.status}</Text>
               <Badge style={styles.badge}>{items.is_guest_customer == true ? 'Courier accepted' : 'Courier processing'}</Badge>
             </View>
             <View style={styles.customerView}>
-              <Text style={styles.orderDetailViewLabel}>{t('Customer')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.customer == null ? 'Customer' : Constants.Laungagues.customer}</Text>
               <Text style={styles.orderDetailViewText}>{items.customer_name}</Text>
             </View>
             <View style={styles.addressView}>
-              <Text style={styles.orderDetailViewLabel}>{t('Address')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.address == null ? 'Address' : Constants.Laungagues.address}</Text>
               <Text style={styles.orderDetailViewText}>
                 {items.shipping[0].street + ', ' + items.shipping[0].city + ', ' + items.shipping[0].postcode}
               </Text>
             </View>
             <View style={styles.phoneView}>
-              <Text style={styles.orderDetailViewLabel}>{t('Phone')}</Text>
+              <Text style={styles.orderDetailViewLabel}>{Constants.Laungagues.phone == null ? 'Phone' : Constants.Laungagues.phone}</Text>
               <Text style={styles.orderDetailViewText}>{items.shipping[0].telephone}</Text>
             </View>
           </View>
@@ -124,7 +125,7 @@ export default function OrderDetails({route, navigation}) {
               <View
                 style={styles.refundView}
                 onPress={() => setOrderClick(!orderClick)}>
-                <Text style={styles.orderNumberText}>Refund Method</Text>
+                <Text style={styles.orderNumberText}>{Constants.Laungagues.refund_method == null ? 'Refund Method' : Constants.Laungagues.refund_method}</Text>
               </View>
               {/* Total View */}
               <View style={styles.totalView}>
@@ -135,7 +136,7 @@ export default function OrderDetails({route, navigation}) {
                     borderBottomColor: COLORS_NEW.lightGray,
                     borderBottomWidth: 1,
                   }}>
-                  <Text style={styles.creditCardView}>CREDIT CARD</Text>
+                  <Text style={styles.creditCardView}>{Constants.Laungagues.credit_card == null ? 'CREDIT CARD' : Constants.Laungagues.credit_card}</Text>
                   <Text style={styles.CreditCardNumberView}>****3546</Text>
                 </View>
                 <View
@@ -145,7 +146,7 @@ export default function OrderDetails({route, navigation}) {
                     marginVertical: Metrics.rfv(10),
                   }}>
                   <Text style={{fontSize: Metrics.rfv(18), fontWeight: '800'}}>
-                    Order Total
+                    {Constants.Laungagues.order_total == null ? 'Order Total' : Constants.Laungagues.order_total}
                   </Text>
                   <Text
                     style={{
@@ -153,7 +154,7 @@ export default function OrderDetails({route, navigation}) {
                       fontWeight: '800',
                       color: COLORS_NEW.black,
                     }}>
-                    82.00 AED
+                    82.00 {Constants.Laungaguess.aed == null ? 'AED' : Constants.Laungaguess.aed}
                   </Text>
                 </View>
               </View>
@@ -163,7 +164,7 @@ export default function OrderDetails({route, navigation}) {
               <View
                 style={styles.orderView}
                 onPress={() => setOrderClick(!orderClick)}>
-                <Text style={styles.orderNumberText}>{t('Order summary')}</Text>
+                  <Text style={styles.orderNumberText}>{Constants.Laungagues.order_summary == null ? 'Order summary' : Constants.Laungagues.order_summary}</Text>
               </View>
               <View style={styles.totalView}>
                 <View
@@ -171,8 +172,8 @@ export default function OrderDetails({route, navigation}) {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Text style={styles.totalViewTitle}>{t('Subtotal')}</Text>
-                  <Text style={styles.totalViewPrice}>117.00 {t('AED')}</Text>
+                    <Text style={styles.totalViewTitle}>{Constants.Laungagues.subtotal == null ? 'Subtotal' : Constants.Laungagues.subtotal}</Text>
+                    <Text style={styles.totalViewPrice}>117.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
                 <View
                   style={{
@@ -180,7 +181,7 @@ export default function OrderDetails({route, navigation}) {
                     justifyContent: 'space-between',
                   }}>
                   <Text style={styles.totalViewTitle}>PAYMENT FEE (COD)</Text>
-                  <Text style={styles.totalViewPrice}>3.00 {t('AED')}</Text>
+                    <Text style={styles.totalViewPrice}>3.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
                 <View
                   style={{
@@ -188,7 +189,7 @@ export default function OrderDetails({route, navigation}) {
                     justifyContent: 'space-between',
                   }}>
                   <Text style={styles.totalViewTitle}>SHIPPING FEE</Text>
-                  <Text style={styles.totalViewPrice}>{t('Free')}</Text>
+                    <Text style={styles.totalViewPrice}>{Constants.Laungagues.free == null ? 'Free' : Constants.Laungagues.free}</Text>
                 </View>
                 <View
                   style={{
@@ -197,8 +198,8 @@ export default function OrderDetails({route, navigation}) {
                     borderBottomColor: COLORS_NEW.lightGray,
                     borderBottomWidth: 1,
                   }}>
-                  <Text style={styles.totalViewTitle}>ESTIMATED VAT</Text>
-                  <Text style={styles.totalViewPrice}>3.00 {t('AED')}</Text>
+                    <Text style={styles.totalViewTitle}>{Constants.Laungagues.estimated_vat == null ? 'ESTIMATED VAT' : Constants.Laungagues.estimated_vat}</Text>
+                    <Text style={styles.totalViewPrice}>3.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
                 <View
                   style={{
@@ -212,7 +213,7 @@ export default function OrderDetails({route, navigation}) {
                       fontWeight: '700',
                       color: COLORS_NEW.black,
                     }}>
-                    Order Total
+                      {Constants.Laungagues.order_total == null ? 'Order Total' : Constants.Laungagues.order_total}
                   </Text>
                   <Text
                     style={{
@@ -220,7 +221,7 @@ export default function OrderDetails({route, navigation}) {
                       fontWeight: '700',
                       color: COLORS_NEW.black,
                     }}>
-                    82.00 {t('AED')}
+                      82.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
               </View>
@@ -302,7 +303,7 @@ export default function OrderDetails({route, navigation}) {
           <View style={{marginHorizontal: Metrics.rfv(20)}}>
             <AppButton
               preset="primary"
-              text={t('Reorder')}
+              text={Constants.Laungagues.reorder == null ? 'Reorder' : Constants.Laungagues.reorder}
               style={{marginTop: Metrics.rfv(16)}}
             />
           </View>
