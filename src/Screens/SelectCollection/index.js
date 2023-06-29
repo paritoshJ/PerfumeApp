@@ -61,7 +61,7 @@ const SelectCollection = props => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const { diffClamp } = Animated;
-  const headerHeight = 58 * 2;
+  const scrollY = useRef(new Animated.Value(0)).current;
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   const {item, offer, wishlist, idget, isHome = false} = props;
@@ -69,20 +69,27 @@ const SelectCollection = props => {
     Shortvaluename = 'Sort';
   let page = 1;
   var Wishlistitema = [];
+  const [animatedValue] = useState(new Animated.Value(0));
+
   useEffect(() => {
-    console.log('aasdadadasd', props.route.params.idget);
+    const handleScroll = Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+      useNativeDriver: false,
+    });
+
+
     setLoading(true);
     getCategory(props.route.params.idget);
+    return () => {
+      scrollY.removeAllListeners();
+    };
   }, []);
 
   var object = {};
   var sortobject = {};
-  console.log('enter');
   const getCategory = async id => {
     const value = await AsyncStorage.getItem('wishlist');
 
     SetWishlist(JSON.parse(value));
-    console.log('Dataadsdsdsds', JSON.parse(value));
 
     let res = await GET_CATEGORY(id);
 
@@ -90,7 +97,6 @@ const SelectCollection = props => {
       res.category.display_sub_categories == 1 &&
       res.category.is_anchor == 1
     ) {
-      console.log('enter true consition');
       categoryvalue = 0;
 
       setSubcateory(categoryvalue.toString());
@@ -99,7 +105,6 @@ const SelectCollection = props => {
       res.category.display_sub_categories == 1 &&
       res.category.is_anchor == 0
     ) {
-      console.log('enter true consition1');
       categoryvalue = 1;
       setSubcateory('1');
       setSubcateory('1');
@@ -107,7 +112,6 @@ const SelectCollection = props => {
       res.category.display_sub_categories == 0 &&
       res.category.is_anchor == 1
     ) {
-      console.log('enter true consition2');
       categoryvalue = 0;
       setSubcateory('0');
       setSubcateory('0');
@@ -115,7 +119,6 @@ const SelectCollection = props => {
       res.category.display_sub_categories == 0 &&
       res.category.is_anchor == 0
     ) {
-      console.log('enter true consition3');
       categoryvalue = 1;
       setSubcateory('1');
       setSubcateory('1');
@@ -123,20 +126,15 @@ const SelectCollection = props => {
       res.category.display_sub_categories[0].subcategory == 0 &&
       res.category.is_anchor == 1
     ) {
-      console.log('enter true consition4');
       categoryvalue = 0;
       setSubcateory('0');
       setSubcateory('0');
     }
-    console.log(':::::Res Chuildren ::::', getSubcategory);
-    console.log(':::::Res Chuildren ::::', categoryvalue);
     GetProductcategory('');
   };
   const GetProductcategory = value => {
-    console.log(':::::Response ::::', object, page, sortobject);
 
     if (categoryvalue == 0) {
-      console.log('printe 0');
 
       GET_CATEGORY_PRODUCT('', object, 20, page, sortobject)
         .then(Response => {
@@ -163,18 +161,15 @@ const SelectCollection = props => {
           setLoadingpagination(false);
         })
         .catch(error => {
-          console.log(':::::Res error ::::', error);
           setLoading(false);
           setLoadingpagination(false);
         });
     } else {
-      console.log('printe 1');
       setcategoryData(res.category.children);
     }
   };
   const AddItemTowishlist = async (id, item) => {
     let res = await ADD_WISH_LST_API(0, item);
-    console.log('GET_CATEGORY_LIST_HOME aasaasdasas', res);
   };
   function getRandomColor() {
     const colorIndex = Math.floor(Math.random() * COLORS.length);
@@ -198,21 +193,15 @@ const SelectCollection = props => {
       regularPrice = item?.price_range?.minimum_price?.regular_price;
       image = item?.image[0]?.url;
     }
-    // console.log('item.id', item.id)
 
     var count = getWishlist?.filter(function (item1) {
       return item1?.product?.id == item?.id;
     });
     if (count == '' || count == null) {
-      console.log('count', count);
       Wishlist = false;
     } else {
-      console.log('count', count);
       Wishlist = true;
     }
-
-    console.log('count', isHome, count, item);
-    console.log('get value Wishlist', Wishlist);
 
     return (
       <TouchableOpacity
@@ -271,15 +260,11 @@ const SelectCollection = props => {
                 size={22}
                 color={colorConstant.DARK_PRIMARY}
                 onPress={async () => {
-                  console.log('selected OItem', getWishlist);
-                  console.log('selected OItem', item.sku);
                   let objNew = {
                     sku: item.sku,
                     quantity: 1,
                   };
-                  console.warn(objNew);
                   let res = await AddItemTowishlist(item.id.toString(), objNew);
-                  console.warn(res);
                   let objNew1 = {
                     product: {id: item.id},
                   };
@@ -309,7 +294,6 @@ const SelectCollection = props => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => {
-            console.log('item data', item)
             setSelectedProduct(item);
             setonOpenDailog(true);
           }} style={{
@@ -355,11 +339,9 @@ const SelectCollection = props => {
       setEndreach(true);
       setLoadingpagination(true);
       if (getTotalpage >= active) {
-        console.log('if');
 
         GET_CATEGORY_PRODUCT('', object, 20, page, sortobject)
           .then(Response => {
-            console.log(':::::Response ::::', Response);
             page = page + 1;
             setactive(active => active + 1);
             setEndreach(false);
@@ -372,7 +354,6 @@ const SelectCollection = props => {
             setLoadingpagination(false);
           });
       } else {
-        console.log('else');
         setLoadingpagination(false);
       }
     }
@@ -384,8 +365,6 @@ const SelectCollection = props => {
       var data = item.options.filter(function (item1) {
         return item1.isSlected == true;
       });
-      console.log('filter', item);
-      console.log('object', data);
 
       var arr = [];
       var priceobject = {};
@@ -413,7 +392,6 @@ const SelectCollection = props => {
       }
     });
     sortobject = {};
-    console.log('filter', Shortvaluename);
     if (Shortvaluename != 'Sort') {
       sortobject[Shortvaluename] = value;
     }
@@ -424,48 +402,60 @@ const SelectCollection = props => {
     }
     return null;
   };
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, -170],
+    extrapolate: 'clamp',
+  });
 
-  return (
-    <SafeAreaView style={{flex: 1}}>
-      <View style={{flex: 1}}>
-        {loading == false ? (
-          categoryvalue == 0 ? (
-            <View style={{flex: 1}}>
-              <ImageBackground
-                source={imageConstant.main_header}
-                borderBottomLeftRadius={25}
-                borderBottomRightRadius={25}
-                style={style.header_view}>
-                <View style={style.share_view}>
-                  <AntDesign
-                    name="left"
-                    size={22}
-                    color={colorConstant.BLACK}
-                    onPress={() => {
-                      props.navigation.goBack();
-                    }}
-                    style={{transform: [{scaleX: I18nManager.isRTL ? -1 : 1}]}}
-                  />
-                  <EvilIcons
-                    name="search"
-                    size={30}
-                    color={colorConstant.BLACK}
-                  />
-                </View>
-                <Text
-                  style={{
-                    textAlign: 'center',
-                    color: colorConstant.BLACK,
-                    marginTop: '5%',
-                    fontFamily: fontConstant.gambetta,
-                    fontStyle: 'italic',
-                    fontSize: fontConstant.TEXT_30_SIZE_REGULAR,
-                    fontWeight: fontConstant.WEIGHT_REGULAR,
-                  }}>
-                  {Constants.Laungagues.our_perfumes == null ? 'Our perfumes' : Constants.Laungagues.our_perfumes}
-                </Text>
-              </ImageBackground>
-              <View
+
+  const StickyHeader = () => {
+    console.log('translateY', scrollY)
+    return (
+      <Animated.View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        // backgroundColor: 'gray',
+        paddingBottom: 32,
+        transform: [{ translateY }],
+      }}>
+        <ImageBackground
+          source={imageConstant.main_header}
+          borderBottomLeftRadius={25}
+          borderBottomRightRadius={25}
+          style={style.header_view}>
+          <View style={style.share_view}>
+            <AntDesign
+              name="left"
+              size={22}
+              color={colorConstant.BLACK}
+              onPress={() => {
+                props.navigation.goBack();
+              }}
+              style={{ transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }] }}
+            />
+            <EvilIcons
+              name="search"
+              size={30}
+              color={colorConstant.BLACK}
+            />
+          </View>
+          <Text
+            style={{
+              textAlign: 'center',
+              color: colorConstant.BLACK,
+              marginTop: '5%',
+              fontFamily: fontConstant.gambetta,
+              fontStyle: 'italic',
+              fontSize: fontConstant.TEXT_30_SIZE_REGULAR,
+              fontWeight: fontConstant.WEIGHT_REGULAR,
+            }}>
+            {Constants.Laungagues.our_perfumes == null ? 'Our perfumes' : Constants.Laungagues.our_perfumes}
+          </Text>
+        </ImageBackground>
+        <View
                 style={{
                   alignSelf: 'center',
                   flexDirection: 'row',
@@ -484,7 +474,10 @@ const SelectCollection = props => {
                   shadowRadius: 3.22,
                   elevation: 2,
                   backgroundColor: colorConstant.WHITE,
-                  bottom: 25,
+            justifyContent: 'center',
+            // marginTop: '1%',
+            position: 'absolute', bottom: 0, paddingTop: "3%"
+                  // bottom: 25,
                 }}>
                 <TouchableOpacity
                   style={{
@@ -526,7 +519,7 @@ const SelectCollection = props => {
                         ? imageConstant.shortase
                         : imageConstant.shortdes
                     }
-                    style={{width: 20, height: 20}}
+              style={{ width: 20, height: 20 }}
                   />
                 </TouchableOpacity>
                 <View
@@ -543,17 +536,32 @@ const SelectCollection = props => {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+              alignSelf: 'center'
                   }}
                   onPress={() => {
                     setVisibalefilter(true);
                   }}>
-                  <Text style={{}}>{Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}</Text>
+            <Text style={{ alignSelf: 'center' }}>{Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}</Text>
                   <Image
                     source={imageConstant.filters}
-                    style={{width: 20, height: 20}}
+              style={{ width: 20, height: 20 }}
                   />
                 </TouchableOpacity>
               </View>
+      </Animated.View>);
+  }
+
+
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+
+        {loading == false ? (
+          categoryvalue == 0 ? (
+            <View style={{ flex: 1 }}>
+
+
               {/* <View style={{ height: '70%', marginLeft: '4%', marginRight: '4%', backgroundColor: 'red', }}> */}
               {categoryData == '' ? (
                 <View
@@ -569,18 +577,31 @@ const SelectCollection = props => {
                 </View>
               ) : (
                 <FlatList
-                  style={{marginLeft: '4%', marginRight: '4%'}}
+                    onScroll={
+                      Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+                        useNativeDriver: false,
+                      })
+                    }
+                    scrollEventThrottle={16}
+
+                    style={{ marginLeft: '4%', marginRight: '4%', paddingTop: '60%', marginTop: '6%' }}
                   data={categoryData}
+
                   renderItem={renderItem}
+
                   numColumns={2}
                   keyExtractor={(item, index) => `key-${index}`}
                   ListFooterComponent={renderFooter}
                   contentContainerStyle={{marginBottom: '0%'}}
                   onEndReachedThreshold={0.1}
                   onEndReached={fetchMoreData}
+                    // stickyHeaderIndices={[0, 6, 13]}
                   showsHorizontalScrollIndicator={false}
                 />
+
               )}
+              <StickyHeader scrollY={scrollY} />
+
               {visibalefilter && (
                 <FiltersScreen
                   func1={value => {
@@ -599,7 +620,6 @@ const SelectCollection = props => {
                     GetProductcategory('');
                   }}
                   func={value => {
-                    console.log(value);
                     Shortvaluename = getSortvalue;
                     setactive(1);
                     setLoading(true);
@@ -615,7 +635,6 @@ const SelectCollection = props => {
               {visibale && (
                 <ShortDataModal
                   func1={value => {
-                    console.log('shorvalue', value);
                     Shortvaluename = value;
                     setSortValue(value);
                     setactive(1);

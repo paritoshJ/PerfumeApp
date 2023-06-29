@@ -11,7 +11,8 @@ import {
   View,
   Text,
   LayoutChangeEvent,
-  I18nManager
+  I18nManager,
+  Platform
 } from 'react-native'
 import { Image, DeviceEventEmitter } from 'react-native';
 import {
@@ -373,7 +374,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
   return (
     <View style={[styles.tabBar, { paddingBottom: bottom, writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}>
       <AnimatedSvg
-        width={I18nManager.isRTL ? 555 : 174}
+        width={I18nManager.isRTL ? Platform.OS == 'ios' ? 555 : 450 : 174}
         height={40}
         viewBox="22 22 130 50"
         style={[styles.activeBackground, animatedStyles, { writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}

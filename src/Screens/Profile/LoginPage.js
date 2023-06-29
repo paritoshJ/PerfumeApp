@@ -349,7 +349,7 @@ export default function LoginPage({navigation}) {
                   onPress={() => navigation.navigate('Country')}
                 />
               </View>
-              <Text style={styles.loginPageComponentview2}>{Constants.Laungagues.country}</Text>
+              <Text style={styles.loginPageComponentview2}>{Constants.Laungagues.country == null ? 'Country' : Constants.Laungagues.countrys}</Text>
             </View>
             <View style={styles.loginPageComponentText}>
               <Image
@@ -400,7 +400,7 @@ export default function LoginPage({navigation}) {
                 />
               </View>
               <Text style={styles.loginPageComponentview2}>
-                {Constants.Laungagues.contact_us}
+                {Constants.Laungagues.contact_us == null ? 'Contact US' : Constants.Laungagues.contact_us}
               </Text>
             </View>
             <View style={styles.loginPageComponentText}>
@@ -427,7 +427,7 @@ export default function LoginPage({navigation}) {
                 />
               </View>
               <Text style={styles.loginPageComponentview2}>
-                {t('language')}
+                {Constants.Laungagues.language == null ? 'language' : Constants.Laungagues.language}
               </Text>
             </View>
             <View style={styles.loginPageComponentText}>
@@ -565,7 +565,7 @@ const styles = StyleSheet.create({
     color: COLORS_NEW.black,
     fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_LEIGHT,
-    fontFamily: fontConstant.satoshifont,
+    fontFamily: fontConstant.satoshi,
     fontStyle: 'normal',
     textTransform: 'uppercase'
   },
