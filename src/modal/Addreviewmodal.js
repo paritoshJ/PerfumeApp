@@ -13,6 +13,7 @@ import fontConstant from '../constant/fontConstant';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import {useTranslation} from 'react-i18next';
+import Constants from '../Comman/Constants';
 
 const AddReviewModal = props => {
   const {onOpenDailog, setOnOpenDailog} = props;
@@ -85,7 +86,7 @@ const AddReviewModal = props => {
                   fontWeight: fontConstant.WEIGHT_REGULAR,
                   color: colorConstant.BLACK,
                 }}>
-                {t('New review')}
+                {Constants.Laungagues.new_review == null ? 'New review' : Constants.Laungagues.new_review}
               </Text>
               <AirbnbRating
                 count={5}
@@ -118,7 +119,7 @@ const AddReviewModal = props => {
                 fontWeight: fontConstant.WEIGHT_LEIGHT,
                 color: colorConstant.BLACK,
               }}
-              placeholder={t('Name')}
+              placeholder={Constants.Laungagues.name == null ? 'Name' : Constants.Laungagues.name}
               placeholderTextColor={colorConstant.LIGHT_GREY}
               value={name}
               onChangeText={e => setName(e)}
@@ -139,7 +140,7 @@ const AddReviewModal = props => {
                 fontWeight: fontConstant.WEIGHT_LEIGHT,
                 color: colorConstant.BLACK,
               }}
-              placeholder={t('Comment')}
+              placeholder={Constants.Laungagues.comment == null ? 'Comment' : Constants.Laungagues.comment}
               placeholderTextColor={colorConstant.LIGHT_GREY}
               value={comment}
               onChangeText={e => setComment(e)}
@@ -165,7 +166,7 @@ const AddReviewModal = props => {
                   fontWeight: fontConstant.WEIGHT_LEIGHT,
                   color: colorConstant.WHITE,
                 }}>
-                {t('Submit review')}
+                {Constants.Laungagues.submit_review == null ? 'Submit review' : Constants.Laungagues.submit_review}
               </Text>
             </TouchableOpacity>
           </View>

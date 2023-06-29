@@ -30,6 +30,7 @@ import Input from '../../Component/Input';
 import Voice from '@react-native-community/voice';
 import { useFocusEffect } from '@react-navigation/native';
 import LottieView from 'lottie-react-native';
+import Constants from '../../Comman/Constants';
 
 const SearchScreen = props => {
   const [text, setText] = useState('');
@@ -125,7 +126,7 @@ const SearchScreen = props => {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={[styles.navBarText]}>{t('Search')}</Text>
+        <Text style={[styles.navBarText]}>{Constants.Laungagues.search == null ? 'Search' : Constants.Laungagues.search}</Text>
       </View>
     );
   };
@@ -154,7 +155,7 @@ const SearchScreen = props => {
         message={'errorMessage'}
         hideAddButton={true}
         onButtonPress={() => {}}
-        buttonTitle={'Go shopping'}
+        buttonTitle={Constants.Laungagues.go_shopping == null ? 'Go shopping' : Constants.Laungagues.go_shopping}
       />
     );
   };
@@ -212,7 +213,7 @@ const SearchScreen = props => {
           <TextInput
             value={text}
             onChangeText={text => searchFunction(text)}
-            placeholder="Search for perfume"
+              placeholder={Constants.Laungagues.search_for_perfume == null ? "Search for perfume" : Constants.Laungagues.search_for_perfume}
             style={{
               fontFamily: fontConstant.satoshi,
               fontStyle: 'normal',
@@ -278,7 +279,7 @@ const SearchScreen = props => {
                   marginTop: '2%',
                   marginBottom: '5%',
                 }}>
-                POPULAR SEARCHES
+                {Constants.Laungagues.popular_search == null ? 'POPULAR SEARCHES' : Constants.Laungagues.popular_search}
               </Text>
             );
           }}
@@ -312,7 +313,7 @@ const SearchScreen = props => {
               </TouchableOpacity>}
             <View style={{ marginLeft: '5%', marginRight: '5%', marginTop: store.length > 0 ? '10%' : 0, justifyContent: 'center' }}>
               <Input
-                placeholder={t('Search for perfume')}
+                placeholder={Constants.Laungagues.search_for_perfume == null ? 'Search for perfume' : Constants.Laungagues.search_for_perfume}
                 placeholderTextColor={"gray"}
                 value={getVoiceSearch}
                 onChangeText={e => StratVoiceSearch(e)}
@@ -341,7 +342,7 @@ const SearchScreen = props => {
                   fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
                   fontWeight: fontConstant.WEIGHT_REGULAR,
                   color: colorConstant.DARK_PRIMARY,
-                }}>Try again</Text>
+                }}>{Constants.Laungagues.try_again == null ? 'Try again' : Constants.Laungagues.try_again}</Text>
               </TouchableOpacity> :
                 <View />}
             </View>
@@ -368,7 +369,7 @@ const SearchScreen = props => {
                         marginTop: '2%',
                         marginBottom: '5%',
                       }}>
-                      POPULAR SEARCHES
+                      {Constants.Laungagues.popular_search == null ? 'POPULAR SEARCHES' : Constants.Laungagues.popular_search}
                     </Text>
                   );
                 }}

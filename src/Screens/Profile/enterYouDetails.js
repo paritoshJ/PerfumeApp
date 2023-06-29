@@ -394,6 +394,7 @@ export default function EnterYourDetails({navigation}) {
                       backgroundColor: 'transparent',
                       paddingHorizontal: 10,
                       paddingVertical: 10,
+                      writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr'
                     }}
                   />
                 </View>

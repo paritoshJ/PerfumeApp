@@ -17,6 +17,7 @@ import { GET_SUB_CATEGORY } from '../../api/getCategory';
 import Loader from '../../Component/Loader';
 
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from '../../Comman/Constants';
 
 const Collection = props => {
   const { t, i18n } = useTranslation();

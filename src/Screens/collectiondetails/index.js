@@ -17,6 +17,7 @@ import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
 import imageConstant from '../../constant/imageConstant';
 import style from './style';
+import Constants from '../../Comman/Constants';
 const CollectionDetails = props => {
   const {t, i18n} = useTranslation();
   console.log('props url', props)

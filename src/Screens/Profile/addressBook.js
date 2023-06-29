@@ -521,7 +521,7 @@ export default function AddressBook({route, navigation}) {
               </View>
             </View>
             <Input
-                  placeholder={Constants.Laungagues.zip_code_(optional)}
+                  placeholder={Constants.Laungagues.zip_code_optional}
               placeholderTextColor="gray"
               value={zipCode}
                   onChangeText={e => setZipCode(e)} />

@@ -11,6 +11,7 @@ import {
   View,
   Text,
   LayoutChangeEvent,
+  I18nManager
 } from 'react-native'
 import { Image, DeviceEventEmitter } from 'react-native';
 import {
@@ -370,12 +371,12 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
   })
 
   return (
-    <View style={[styles.tabBar, { paddingBottom: bottom }]}>
+    <View style={[styles.tabBar, { paddingBottom: bottom, writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}>
       <AnimatedSvg
-        width={174}
+        width={I18nManager.isRTL ? 555 : 174}
         height={40}
         viewBox="22 22 130 50"
-        style={[styles.activeBackground, animatedStyles]}
+        style={[styles.activeBackground, animatedStyles, { writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}
       >
         <Path
           fill="#FFFFFF"
@@ -383,7 +384,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
         />
       </AnimatedSvg>
 
-      <View style={styles.tabBarContainer}>
+      <View style={[styles.tabBarContainer, { writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}>
         {routes.map((route, index) => {
           console.log('ind3ex', index, route)
           const active = index === activeIndex
@@ -463,7 +464,7 @@ const TabBarComponent = ({ active, options, tabicon, tabactiveicon, activename, 
   })
 
   return (
-    <Pressable onPress={onPress} onLayout={onLayout} style={styles.component}>
+    <Pressable onPress={onPress} onLayout={onLayout} style={[styles.component, { writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}>
       <Animated.View
         style={[styles.componentCircle, animatedComponentCircleStyles]}
       />

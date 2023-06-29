@@ -9,6 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import colorConstant from '../constant/colorConstant';
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import { useTranslation } from 'react-i18next';
+import Constants from '../Comman/Constants';
 
 const ReviewFilterModal = props => {
   const {onOpenDailog, setOnOpenDailog} = props;
@@ -69,7 +70,7 @@ const ReviewFilterModal = props => {
                 fontWeight: fontConstant.WEIGHT_REGULAR,
                 color: colorConstant.BLACK,
               }}>
-              {t('Filters')}
+              {Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}
             </Text>
           </View>
           <View>
@@ -99,7 +100,7 @@ const ReviewFilterModal = props => {
                   }}
                 />
               </View>
-              <Text style={{}}>28 {t('reviews')}</Text>
+              <Text style={{}}>28 {Constants.Laungagues.reviews == null ? 'reviews' : Constants.Laungagues.reviews}</Text>
             </View>
             <View style={style.checkboxContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -183,7 +184,7 @@ const ReviewFilterModal = props => {
                   }}
                 />
               </View>
-              <Text style={{}}>28 {t('reviews')}</Text>
+              <Text style={{}}>28 {Constants.Laungagues.reviews == null ? 'reviews' : Constants.Laungagues.reviews}</Text>
             </View>
             <View style={style.checkboxContainer}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -211,7 +212,7 @@ const ReviewFilterModal = props => {
                   }}
                 />
               </View>
-              <Text style={{}}>28 {t('reviews')}</Text>
+              <Text style={{}}>28 {Constants.Laungagues.reviews == null ? 'reviews' : Constants.Laungagues.reviews}</Text>
             </View>
 
             <TouchableOpacity
@@ -234,7 +235,7 @@ const ReviewFilterModal = props => {
                   fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
                   color: colorConstant.WHITE,
                 }}>
-                {t('Apply')}
+                {Constants.Laungagues.apply == null ? 'Apply' : Constants.Laungagues.apply}
               </Text>
             </TouchableOpacity>
           </View>

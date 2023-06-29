@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import {
   View,
@@ -12,6 +12,7 @@ import {
   I18nManager,
   Alert,
   ActivityIndicator,
+  Animated
 } from 'react-native';
 import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
@@ -36,6 +37,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {ADD_WISH_LST_API} from '../../api/getCategoryList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProductModal from '../../modal/productmodal';
+import Constants from '../../Comman/Constants';
 
 const SelectCollection = props => {
   const {t, i18n} = useTranslation();
@@ -57,6 +59,9 @@ const SelectCollection = props => {
   const [getWishlist, SetWishlist] = useState([]);
   const [onOpenDailog, setonOpenDailog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const scrollOffsetY = useRef(new Animated.Value(0)).current;
+  const { diffClamp } = Animated;
+  const headerHeight = 58 * 2;
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   const {item, offer, wishlist, idget, isHome = false} = props;
@@ -457,7 +462,7 @@ const SelectCollection = props => {
                     fontSize: fontConstant.TEXT_30_SIZE_REGULAR,
                     fontWeight: fontConstant.WEIGHT_REGULAR,
                   }}>
-                  {t('Our perfumes')}
+                  {Constants.Laungagues.our_perfumes == null ? 'Our perfumes' : Constants.Laungagues.our_perfumes}
                 </Text>
               </ImageBackground>
               <View
@@ -542,7 +547,7 @@ const SelectCollection = props => {
                   onPress={() => {
                     setVisibalefilter(true);
                   }}>
-                  <Text style={{}}>{t('Filters')}</Text>
+                  <Text style={{}}>{Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}</Text>
                   <Image
                     source={imageConstant.filters}
                     style={{width: 20, height: 20}}
@@ -558,7 +563,8 @@ const SelectCollection = props => {
                     alignItems: 'center',
                   }}>
                   <Text alignSelf={'center'} style={{textAlign: 'center'}}>
-                    Out of stock in Product
+                    {Constants.Laungagues.out_of_stock_in_product == null ? 'Out of stock in Product' : Constants.Laungagues.out_of_stock_in_product}
+
                   </Text>
                 </View>
               ) : (
@@ -660,7 +666,7 @@ const SelectCollection = props => {
                     fontSize: fontConstant.TEXT_30_SIZE_REGULAR,
                     fontWeight: fontConstant.WEIGHT_REGULAR,
                   }}>
-                  {t('Our perfumes')}
+                    {Constants.Laungaguesa.our_perfumes == null ? 'Our perfumes' : Constants.Laungaguesa.our_perfumes}
                 </Text>
               </ImageBackground>
 
@@ -744,7 +750,7 @@ const SelectCollection = props => {
                       fontStyle: 'normal',
                       fontWeight: fontConstant.WEIGHT_REGULAR,
                     }}>
-                    {categoryData.length} products
+                      {categoryData.length} {Constants.Laungagues.products == null ? 'products' : Constants.Laungagues.products}
                   </Text>
                   <AntDesign
                     name="appstore-o"

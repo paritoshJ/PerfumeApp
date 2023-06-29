@@ -5,6 +5,7 @@ import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import {COLORS_NEW} from '../Helper/colors.new';
 import Metrics from '../Helper/metrics';
 import SearchBar from 'react-native-dynamic-search-bar';
+import Constants from '../Comman/Constants';
 const CustomSwitch = ({onSelectSwitch, selectionColor,onSearch}) => {
   const updatedSwitchData = val => {
     setSelectionMode(val);
@@ -38,7 +39,7 @@ const CustomSwitch = ({onSelectSwitch, selectionColor,onSearch}) => {
             borderRightWidth: 1,
           }}>
           <SearchBar
-            placeholder="Search here"
+            placeholder={Constants.Laungagues.search_here == null ? "Search here" : Constants.Laungagues.search_here}
             onChangeText={text => onSearch(text)}
             clearIconImageSource=""
             style={{backgroundColor:'transparent'}}

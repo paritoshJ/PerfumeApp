@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   StyleSheet,
   ImageBackground,
@@ -11,7 +11,7 @@ import {
   Switch,
   I18nManager,
   DeviceEventEmitter,
-  Alert
+  Alert, Animated
 } from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AccordionList} from 'accordion-collapse-react-native';
@@ -37,15 +37,10 @@ export default function ProfilePage({navigation}) {
   const [getProfileData, setProfileDAta] = useState();
   const [getName, setname] = useState('Perfume');
   const [getUsername, setUsername] = useState('Perfume');
+  const scrollOffsetY = useRef(new Animated.Value(0)).current;
 
-  const {t} = useTranslation();
-  const toggleSwitch = () => {
-    setIsEnabled(!isEnabled)
-    AsyncStorage.setItem('languageselect', isEnabled ? '1' : '0');
+  const { t, i18n } = useTranslation();
 
-
-
-  };
 
   const DATA = [
     {
@@ -124,6 +119,8 @@ export default function ProfilePage({navigation}) {
     }, []),
   );
   const changeLanguage = value => {
+    console.log('========>', value);
+
     i18n
       .changeLanguage(value)
       .then(() => {
@@ -135,17 +132,26 @@ export default function ProfilePage({navigation}) {
 
   const languageChange = async () => {
     //changing language based on what was chosen
-    console.log('::: rtl called');
     if (I18nManager.isRTL) {
       changeLanguage('en');
       await I18nManager.forceRTL(false);
     } else {
+      console.log('::: rtl called else');
+
       changeLanguage('ar');
       await I18nManager.forceRTL(true);
     }
-    //  RNRestart.Restart();
-  };
 
+    RNRestart.Restart();
+  };
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled)
+
+
+    AsyncStorage.setItem('languageselect', isEnabled ? '0' : '1');
+    languageChange();
+
+  };
   const createEmptyCartForLogout = async () => {
     let res = await EMPTY_CART();
     console.log(res);
@@ -449,19 +455,21 @@ export default function ProfilePage({navigation}) {
                   trackColor={{false: '#767577', true: '#DFC8AF'}}
                   thumbColor="white"
                   ios_backgroundColor="#3e3e3e"
-                  // onValueChange={toggleSwitch}
-                  onValueChange={(value) => {
-                    console.log(value)
-                    if (value == true) {
-                      setIsEnabled(value)
-                      AsyncStorage.setItem('languageselect', '1');
+                  onValueChange={toggleSwitch}
+                  // onValueChange={(value) => {
+                  //   console.log(value)
+                  //   if (value == true) {
+                  //     console.log('update');
+                  //     setIsEnabled(value)
+                  //     AsyncStorage.setItem('languageselect', '1');
 
-                    } else {
-                      setIsEnabled(value)
-                      AsyncStorage.setItem('languageselect', '0');
+                  //   } else {
+                  //     setIsEnabled(value)
+                  //     AsyncStorage.setItem('languageselect', '0');
 
-                    }
-                  }}
+                  //   }
+                  //   languageChange();
+                  // }}
                   value={isEnabled}
                 />
                 <Text style={{

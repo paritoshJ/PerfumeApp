@@ -170,12 +170,13 @@ const MainScreen = props => {
 
   const getConfigData = async () => {
     let res = await GET_HOME_CONFIG_DATA();
-    // setProductData(res.products.items);
-    // setCategoryData(res?.categoryList[0]?.products?.items)
+    console.log('premiun coel', res)
     if (res) {
       let arr = res?.storeConfig?.AppConfiguration?.AppData?.map(async item => {
         if (item?.name === 'app_slider' && item?.value) {
           let res = await GET_HOME_DATA(item?.value);
+          console.log('res slider', res)
+
           setBannerData(res?.homeBannerSlider?.banners);
         } else if (item?.value) {
           let data = await GET_SLIDER_PRODUCTS(item?.value);
@@ -184,6 +185,7 @@ const MainScreen = props => {
           } else if (item?.name === 'our_perfumes') {
             setOurPerfumes(data.getSliderProducts);
           } else if (item?.name === 'premium_collection') {
+            console.log('update ===>', data);
             setPremiumCollection(data.getSliderProducts);
           } else if (item?.name === 'shop_womans') {
             setShopWomans(data.getSliderProducts);
@@ -645,7 +647,7 @@ const MainScreen = props => {
         <View style={style.container_two}>
           {!isObjectNullOrUndefined(newArrivals) && (
             <>
-              <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
+              <Text style={style.arrivals_text}>{Constants.Laungagues.new_arrivals == null ? 'New arrivals' : Constants.Laungagues.new_arrivals}</Text>
               <FlatList
                 data={newArrivals?.items}
                 extraData={newArrivals?.items}
@@ -663,10 +665,13 @@ const MainScreen = props => {
               />
             </>
           )}
+          {/* <Text style={{ writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }}>{t('Our perfumes')}</Text> */}
 
           {!isObjectNullOrUndefined(categoryData) && (
-            <View style={{}}>
-              <Text style={style.arrivals_text}>{Constants.Laungagues.our_perfumes}</Text>
+            <>
+              <Text style={[style.arrivals_text, {
+                writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr'
+              }]}>{Constants.Laungagues.our_perfumes}</Text>
               <FlatList
                 data={categoryData}
                 extraData={categoryData}
@@ -682,7 +687,7 @@ const MainScreen = props => {
                   );
                 }}
               />
-            </View>
+            </>
           )}
 
           {!isObjectNullOrUndefined(premiumCollection) && (
@@ -693,7 +698,7 @@ const MainScreen = props => {
                 borderRadius={16}
                 resizeMode="cover">
                 <Text style={style.premium_text}>
-                  {t('Premium collection')}
+                  {Constants.Laungagues.premium_collection == null ? 'Premium collection' : Constants.Laungagues.premium_collection}
                 </Text>
                 <View
                   style={{
@@ -703,7 +708,7 @@ const MainScreen = props => {
                     marginTop: 16,
                   }}>
                   <Text style={style.collection_text}>
-                    {t('Go to collection')}
+                    {Constants.Laungagues.go_to_collection == null ? 'Go to collection' : Constants.Laungagues.go_to_collection}
                   </Text>
                   <AntDesign
                     name="arrowright"

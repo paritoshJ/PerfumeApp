@@ -43,7 +43,7 @@ export default function LoginPage({navigation}) {
     React.useCallback(() => {
       AsyncStorage.getItem('languageselect')
         .then(response => {
-          setIsEnabled(response == 1 ? false : true)
+          setIsEnabled(response == 1 ? true : false)
         })
         .catch(error => {
         });
@@ -58,8 +58,10 @@ export default function LoginPage({navigation}) {
     }, []),
   );
   const toggleSwitch = () => {
+    console.log('update')
     setIsEnabled(!isEnabled)
-    AsyncStorage.setItem('languageselect', isEnabled ? '1' : '0');
+    AsyncStorage.setItem('languageselect', isEnabled ? '0' : '1');
+    languageChange();
   };
   ////******* Gmail Login *********//////////
 

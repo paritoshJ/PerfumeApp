@@ -9,6 +9,7 @@ import CheckBox from '@react-native-community/checkbox';
 import colorConstant from '../constant/colorConstant';
 import { useTranslation } from 'react-i18next';
 import index from '../Navigator';
+import Constants from '../Comman/Constants';
 
 const ShortDataModal = props => {
   const {t, i18n} = useTranslation();
@@ -88,7 +89,7 @@ const ShortDataModal = props => {
                 fontWeight: fontConstant.WEIGHT_REGULAR,
                 color: colorConstant.BLACK,
               }}>
-              {t('Sort')}
+              {Constants.Laungagues.sort == null ? 'Sort' : Constants.Laungagues.sort}
             </Text>
           </View>
           <View>
@@ -132,7 +133,7 @@ const ShortDataModal = props => {
             fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
             color: colorConstant.WHITE,
           }}>
-          {t('Apply')}
+                {Constants.Laungagues.apply == null ? 'Apply' : Constants.Laungagues.apply}
         </Text>
       </TouchableOpacity>
           </View>

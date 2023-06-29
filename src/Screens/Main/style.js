@@ -89,6 +89,7 @@ export default StyleSheet.create({
     fontFamily: fontConstant.gambetta,
     fontStyle: 'italic',
     color: colorConstant.TEXT_COLOR,
+
   },
   premium_text: {
     fontSize: fontConstant.TEXT_24_SIZE_REGULAR,

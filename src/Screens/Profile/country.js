@@ -44,8 +44,8 @@ export default function Country({navigation}) {
 
       })
     GET_COUNTRY_API().then((Responsce) => {
-      console.log('storeConfig', Responsce.storeConfig)
-      setCountry(Responsce.storeConfig);
+      console.log('storeConfig', Responsce.allStoreConfigData)
+      setCountry(Responsce.allStoreConfigData);
       setLoading(false)
 
     }).catch((error) => {

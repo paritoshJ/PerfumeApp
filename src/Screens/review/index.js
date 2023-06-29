@@ -18,6 +18,7 @@ import imageConstant from '../../constant/imageConstant';
 import ReviewFilterModal from '../../modal/ReviewFiltermodal';
 import {useTranslation} from 'react-i18next';
 import {findDaysDiffrent, getInitials} from '../../Helper/helper';
+import Constants from '../../Comman/Constants';
 
 const ReviewScreen = ({navigation, route}) => {
   const [visibale, setVisibale] = useState(false);
@@ -124,7 +125,7 @@ const ReviewScreen = ({navigation, route}) => {
             textAlign: 'center',
             flex: 1,
           }}>
-          {t('Review')}({ratingCount})
+          {Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}({ratingCount})
         </Text>
       </View>
       <View
