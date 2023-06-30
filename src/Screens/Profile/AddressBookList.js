@@ -38,6 +38,7 @@ import Loader from '../../Component/Loader';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GET_ALL_STORES_LIST } from '../../api/store';
+import Constants from '../../Comman/Constants';
 
 export default function AddressBookList({route, navigation}) {
   const [open, setOpen] = useState(false);
@@ -160,7 +161,7 @@ export default function AddressBookList({route, navigation}) {
         onButtonPress={() => {
           addAddress();
         }}
-        buttonTitle={t('Add address')}
+        buttonTitle={Constants.Laungagues.add_address == null ? 'Add address' : Constants.Laungagues.add_address}
       />
     );
   };
@@ -179,7 +180,7 @@ export default function AddressBookList({route, navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('ADDRESS BOOK')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.address_book == null ? 'ADDRESS BOOK' : Constants.Laungagues.address_book}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -311,7 +312,7 @@ export default function AddressBookList({route, navigation}) {
                         fontFamily: fontConstant.satoshi,
                         fontSize: 14,
                         color: COLORS_NEW.mainBlack,
-                      }}>{`${t('PHONE :')} ${getAddress == true ? e?.telephone : e?.phone_number == null ? '' : e?.phone_number}`}</Text>
+                      }}>{`${Constants.Laungagues.phone == null ? 'PHONE :' : Constants.Laungagues.phone} ${getAddress == true ? e?.telephone : e?.phone_number == null ? '' : e?.phone_number}`}</Text>
                   </View>
                 </TouchableOpacity>
 
@@ -347,7 +348,7 @@ export default function AddressBookList({route, navigation}) {
                 marginRight: 10,
                 color: COLORS_NEW.mainBlack,
                 textAlign: 'center',
-              }}>{`${t('Add new address')}`}</Text>
+              }}>{`${Constants.Laungagues.add_new_address == null ? 'Add new address' : Constants.Laungagues.add_new_address}`}</Text>
             <PlusSVG />
           </TouchableOpacity>
         )}

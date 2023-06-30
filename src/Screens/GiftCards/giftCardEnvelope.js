@@ -4,6 +4,7 @@ import {StyleSheet, View, Image, ImageBackground} from 'react-native';
 import Metrics from '../../Helper/metrics';
 import {AppButton} from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 export default function GiftCardEnvelope({navigation}) {
   return (
     <>
@@ -31,7 +32,7 @@ export default function GiftCardEnvelope({navigation}) {
             <View style={{width: '45%'}}>
               <AppButton
                 preset="secondary"
-                text="Explore more"
+                text={Constants.Laungagues.exploremore == null ? "Explore more" : Constants.Laungagues.exploremore}
                 style={{marginTop: Metrics.rfv(16)}}
                 onPress={() => navigation.navigate('CustomizedBundle')}
               />
@@ -39,7 +40,7 @@ export default function GiftCardEnvelope({navigation}) {
             <View style={{width: '45%'}}>
               <AppButton
                 preset="primary"
-                text="View cart"
+                text={Constants.Laungagues.viewcart == null ? "View cart" : Constants.Laungagues.viewcart}
                 style={{marginTop: Metrics.rfv(16)}}
                 onPress={() => navigation.navigate('DiscoveryKitBack')}
               />

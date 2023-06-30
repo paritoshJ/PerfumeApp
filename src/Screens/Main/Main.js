@@ -11,6 +11,7 @@ import {
   I18nManager,
   Alert,
   SafeAreaView,
+  Animated
 } from 'react-native';
 import React, {useRef, useState, useEffect} from 'react';
 import style from './style';
@@ -68,7 +69,6 @@ const MainScreen = props => {
   const [stateWidth, setStateWidth] = useState(300);
   const [productData, setProductData] = useState('');
   const [saleDataArr, setSaleDataArr] = useState();
-
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [bannerData, setBannerData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
@@ -79,25 +79,48 @@ const MainScreen = props => {
   const [shopMans, setShopMans] = useState({});
   const [sales, setSales] = useState({});
   const [getWishlist, SetWishlist] = useState([]);
-
-  // const data = [
-  //   {id: 1, name: 'abc'},
-  //   {id: 2, name: 'text'},
-  //   {id: 3, name: 'xyz'},
-  // ];
+  const scrollA = useRef(new Animated.Value(0)).current;
   const [text, setText] = useState('');
   const {t, i18n} = useTranslation();
   useFocusEffect(
     React.useCallback(() => {
+      GET_TRANSLATION_JSON().then(async (Responce) => {
+        var varo = JSON.parse(Responce.AllTranslationsData.Translations);
+        AsyncStorage.setItem('language', JSON.stringify(varo.Translations));
+        await AsyncStorage.getItem('language')
+          .then(async response => {
+            console.log('response', JSON.parse(response));
+            var jsonboject = JSON.parse(response);
+            await AsyncStorage.getItem('languageselect')
+              .then(responselanguage => {
+                console.log('responselanguage', responselanguage)
+                Object.entries(JSON.parse(response)).map(([key, value], i) => {
+                  console.log('Responsce', key, value, newRandomNumber(1, 1000));
+                  if (responselanguage == 1) {
+                    if (key == 'ar_ae') {
+                      Constants.Laungagues = value;
+                    }
+                  } else {
+                    if (key == 'en_US') {
+                      Constants.Laungagues = value;
+                    }
+                  }
+                })
+              })
+              .catch(() => {
+              });
+          })
+          .catch(() => {
+          });
+        console.log('Constants.Laungagues', Constants.Laungagues)
+      }).catch((error) => {
+      });
       AsyncStorage.getItem('wishlist')
         .then(response => {
-          console.log('response', response);
           SetWishlist(JSON.parse(response));
         })
         .catch(error => {
-          console.log('error', error);
         });
-
       AsyncStorage.getItem('Country').then(data => {
         if (data == null || data == '') {
           GET_COUNTRY_API()
@@ -115,9 +138,8 @@ const MainScreen = props => {
           Constants.StoreCode = data;
         }
       });
-
       // getCategory();
-      getCategory();
+      // getCategory();
       getConfigData();
       getCategoryHome();
       handleCartId();
@@ -127,18 +149,13 @@ const MainScreen = props => {
             Constants.Token = 'Bearer ' + value;
           })
           .catch(error => {});
-      } catch (error) {}
-
+      } catch (error) { }
       return () => {};
     }, []),
   );
-  useEffect(() => {
-    // GET_TRANSLATION_JSON().then((Responce) => {
-    //   console.log('Responsce', JSON.parse(Responce.AllTranslationsData.Translations))
-    // }).catch((error) => {
-    // });
-    // getHomeData();
-  }, []);
+  const newRandomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
   const handleCartId = async () => {
     let res = await EMPTY_CART();
     if (res && res?.createEmptyCart) {
@@ -153,21 +170,22 @@ const MainScreen = props => {
 
   const getConfigData = async () => {
     let res = await GET_HOME_CONFIG_DATA();
-    // setProductData(res.products.items);
-    // setCategoryData(res?.categoryList[0]?.products?.items)
+    console.log('premiun coel', res)
     if (res) {
       let arr = res?.storeConfig?.AppConfiguration?.AppData?.map(async item => {
         if (item?.name === 'app_slider' && item?.value) {
           let res = await GET_HOME_DATA(item?.value);
+          console.log('res slider', res)
+
           setBannerData(res?.homeBannerSlider?.banners);
         } else if (item?.value) {
           let data = await GET_SLIDER_PRODUCTS(item?.value);
-          console.log('data====>', item.name, data);
           if (item?.name === 'new_arrivals') {
             setNewArrivals(data.getSliderProducts);
           } else if (item?.name === 'our_perfumes') {
             setOurPerfumes(data.getSliderProducts);
           } else if (item?.name === 'premium_collection') {
+            console.log('update ===>', data);
             setPremiumCollection(data.getSliderProducts);
           } else if (item?.name === 'shop_womans') {
             setShopWomans(data.getSliderProducts);
@@ -192,7 +210,6 @@ const MainScreen = props => {
 
   const AddItemTowishlist = async (id, item) => {
     let res = await ADD_WISH_LST_API(id, item);
-    console.log('res===>', res);
   };
   const renderBannerInnerList = item => {
     return (
@@ -207,10 +224,8 @@ const MainScreen = props => {
         item={item}
         offer={false}
         favoriteOnSelect={data => {
-          console.log('iteam', data);
         }}
         onSizeSelect={() => {
-          console.log('iteam');
         }}
         onFullItemPress={() => {
           setSelectedProduct(item);
@@ -225,10 +240,8 @@ const MainScreen = props => {
       return item1?.product?.id == item?.id;
     });
     if (count == '' || count == null) {
-      console.log('count', count);
       Wishlist = false;
     } else {
-      console.log('count else', count);
       Wishlist = true;
     }
 
@@ -255,7 +268,6 @@ const MainScreen = props => {
               JSON.stringify(getWishlist),
             );
           } catch (e) {
-            console.log(e);
           }
         }}
         onSizeSelect={data => {}}
@@ -275,7 +287,6 @@ const MainScreen = props => {
           item={item}
           offer={true}
           favoriteOnSelect={data => {
-            console.log('iteam', data);
           }}
           onSizeSelect={data => {}}
           onFullItemPress={() => {
@@ -381,8 +392,7 @@ const MainScreen = props => {
   const closeDialog = () => {
     setonOpenDailog(false);
   };
-  const renderItemPreminum = ({item, index}) => {
-    console.log(item);
+  const renderItemPreminum = ({ item, index }) => {
     var Wishlist = false;
 
     const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
@@ -401,10 +411,8 @@ const MainScreen = props => {
       return item1?.product?.id == item?.id;
     });
     if (count == '' || count == null) {
-      console.log('count', count);
       Wishlist = false;
     } else {
-      console.log('count', count);
       Wishlist = true;
     }
     return (
@@ -455,7 +463,6 @@ const MainScreen = props => {
               size={22}
               color={colorConstant.BLACK}
               onPress={async () => {
-                console.log('object', item);
                 let objNew = {
                   sku: item.sku,
                   quantity: 1,
@@ -569,6 +576,9 @@ const MainScreen = props => {
           />
         )}
         {bannerData && (
+
+
+
           <ImageBackground
             source={imageConstant.main_header}
             borderBottomRightRadius={25}
@@ -590,7 +600,7 @@ const MainScreen = props => {
                       onPress={() => {
                         // navigationRef.navigate('ProductPage', { skuID: item?.sku });
                       }}>
-                      <Text style={style.button_text}>{t('Shop now')}</Text>
+                      <Text style={style.button_text}>{Constants.Laungagues.shop_now == null ? 'Shop Now' : Constants.Laungagues.shop_now}</Text>
                     </TouchableOpacity>
                   </View>
                   <View onLayout={onLayout} style={style.banner_image_view}>
@@ -600,6 +610,7 @@ const MainScreen = props => {
               )}
             />
           </ImageBackground>
+
         )}
 
         <View style={style.searchContain}>
@@ -618,7 +629,7 @@ const MainScreen = props => {
               editable={false}
               pointerEvents="none"
               onChangeText={setText}
-              placeholder={t('Search for perfume')}
+              placeholder={Constants.Laungagues.search_for_perfume}
               style={style.textinputContain}
             />
           </TouchableOpacity>
@@ -636,7 +647,7 @@ const MainScreen = props => {
         <View style={style.container_two}>
           {!isObjectNullOrUndefined(newArrivals) && (
             <>
-              <Text style={style.arrivals_text}>{t('New arrivals')}</Text>
+              <Text style={style.arrivals_text}>{Constants.Laungagues.new_arrivals == null ? 'New arrivals' : Constants.Laungagues.new_arrivals}</Text>
               <FlatList
                 data={newArrivals?.items}
                 extraData={newArrivals?.items}
@@ -654,10 +665,13 @@ const MainScreen = props => {
               />
             </>
           )}
+          {/* <Text style={{ writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }}>{t('Our perfumes')}</Text> */}
 
           {!isObjectNullOrUndefined(categoryData) && (
-            <View style={{}}>
-              <Text style={style.arrivals_text}>{t('Our perfumes')}</Text>
+            <>
+              <Text style={[style.arrivals_text, {
+                writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr'
+              }]}>{Constants.Laungagues.our_perfumes}</Text>
               <FlatList
                 data={categoryData}
                 extraData={categoryData}
@@ -673,7 +687,7 @@ const MainScreen = props => {
                   );
                 }}
               />
-            </View>
+            </>
           )}
 
           {!isObjectNullOrUndefined(premiumCollection) && (
@@ -684,7 +698,7 @@ const MainScreen = props => {
                 borderRadius={16}
                 resizeMode="cover">
                 <Text style={style.premium_text}>
-                  {t('Premium collection')}
+                  {Constants.Laungagues.premium_collection == null ? 'Premium collection' : Constants.Laungagues.premium_collection}
                 </Text>
                 <View
                   style={{
@@ -694,7 +708,7 @@ const MainScreen = props => {
                     marginTop: 16,
                   }}>
                   <Text style={style.collection_text}>
-                    {t('Go to collection')}
+                    {Constants.Laungagues.go_to_collection == null ? 'Go to collection' : Constants.Laungagues.go_to_collection}
                   </Text>
                   <AntDesign
                     name="arrowright"

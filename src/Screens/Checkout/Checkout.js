@@ -39,6 +39,7 @@ import {
 import Loader from '../../Component/Loader';
 import colorConstant from '../../constant/colorConstant';
 import {GET_ALL_STORES_LIST} from '../../api/store';
+import Constants from '../../Comman/Constants';
 
 export default function Checkout({route, navigation}) {
   const {t} = useTranslation();
@@ -81,7 +82,7 @@ export default function Checkout({route, navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('Checkout')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.checkout == null ? 'Checkout' : Constants.Laungagues.checkout}</Text>
       </View>
     );
   };
@@ -104,7 +105,7 @@ export default function Checkout({route, navigation}) {
               fontWeight: '500',
               color: COLORS_NEW.mainBlack,
             }}>
-            {t('Your order')}
+            {Constants.Laungagues.your_order}
           </Text>
           <Text
             style={{
@@ -202,11 +203,11 @@ export default function Checkout({route, navigation}) {
               textAlign: 'center',
               color: colorConstant.BLACK,
             }}>
-            {t('Delivery')}
+            {Constants.Laungagues.delivery == null ? 'Delivery' : Constants.Laungagues.delivery}
           </Text>
         </TouchableOpacity>
         <Text style={{textAlign: 'center', color: colorConstant.BLACK}}>
-          {t('or')}
+          {Constants.Laungagues.or == null ? 'or' : Constants.Laungagues.or}
         </Text>
         <TouchableOpacity
           style={{
@@ -225,7 +226,7 @@ export default function Checkout({route, navigation}) {
               textAlign: 'center',
               color: colorConstant.BLACK,
             }}>
-            {t('Pickup')}
+            {Constants.Laungagues.pickup == null ? 'Pickup' : Constants.Laungagues.pickup}
           </Text>
         </TouchableOpacity>
       </>
@@ -243,8 +244,8 @@ export default function Checkout({route, navigation}) {
           <CustomSwitch
             selectionMode={2}
             roundCorner={true}
-            option1={t('Delivery')}
-            option2={t('Pickup')}
+            option1={Constants.Laungagues.delivery == null ? 'Delivery' : Constants.Laungagues.delivery}
+            option2={Constants.Laungagues.pickup == null ? 'Pickup' : Constants.Laungagues.pickup}
             onSelectSwitch={onSelectSwitch}
             selectionColor={COLORS_NEW.blue}
           />
@@ -257,7 +258,7 @@ export default function Checkout({route, navigation}) {
             marginBottom: 8,
             justifyContent: 'space-between',
           }}>
-          <Text>{t('Address')}</Text>
+          <Text>{Constants.Laungagues.address == null ? 'Address' : Constants.Laungagues.address}</Text>
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('AddressBookList', {
@@ -309,7 +310,7 @@ export default function Checkout({route, navigation}) {
               fontWeight: isDeliveryActive ? '500' : '200',
               color: getActiveColor(isDeliveryActive),
             }}>
-            {t('Delivery details')}
+            {Constants.Laungagues.delivery_details == null ? 'Delivery details' : Constants.Laungagues.delivery_details}
           </Text>
         </TouchableOpacity>
         {isObjectNullOrUndefined(deliveryTypeData)
@@ -390,7 +391,7 @@ export default function Checkout({route, navigation}) {
               fontWeight: isDeliveryMethodActive ? '500' : '200',
               color: getActiveColor(isDeliveryMethodActive),
             }}>
-            {t('Delivery method')}
+            {Constants.Laungagues.delivery_method == null ? 'Delivery method' : Constants.Laungagues.delivery_method}
           </Text>
         </TouchableOpacity>
         {deliveryMethodsData.map((item, index) => {
@@ -428,7 +429,7 @@ export default function Checkout({route, navigation}) {
               fontWeight: isPaymentActive ? '500' : '200',
               color: getActiveColor(isPaymentActive),
             }}>
-            {t('Payment')}
+            {Constants.Laungagues.payment == null ? 'Payment' : Constants.Laungagues.payment}
           </Text>
           {
             <TouchableOpacity
@@ -471,7 +472,7 @@ export default function Checkout({route, navigation}) {
               fontWeight: isAdditionalActive ? '500' : '200',
               color: getActiveColor(isAdditionalActive),
             }}>
-            {t('Additional')}
+            {Constants.Laungagues.additional == null ? t('Additional') : Constants.Laungagues.additional}
           </Text>
         </TouchableOpacity>
       </View>
@@ -492,7 +493,7 @@ export default function Checkout({route, navigation}) {
             fontSize: 24,
             color: COLORS_NEW.mainBlack,
           }}>
-          {t('Order summary')}
+          {Constants.Laungagues.order_summary == null ? t('Order summary') : Constants.Laungagues.order_summary}
         </Text>
         <View
           style={{
@@ -507,7 +508,7 @@ export default function Checkout({route, navigation}) {
               fontSize: 12,
               color: COLORS_NEW.pineTree,
             }}>
-            {t('Subtotal').toUpperCase()}
+            {Constants.Laungagues.subtotal == null ? t('Subtotal').toUpperCase() : Constants.Laungagues.subtotal}
           </Text>
           <Text
             style={{
@@ -534,7 +535,7 @@ export default function Checkout({route, navigation}) {
                 fontSize: 12,
                 color: COLORS_NEW.pineTree,
               }}>
-              {t('Shipping').toUpperCase()}
+              {Constants.Laungagues.shipping == null ? t('Shipping').toUpperCase() : Constants.Laungagues.shipping}
             </Text>
             <Text
               style={{
@@ -559,7 +560,7 @@ export default function Checkout({route, navigation}) {
               fontSize: 12,
               color: COLORS_NEW.pineTree,
             }}>
-            {t('Discount code').toUpperCase()}
+            {Constants.Laungagues.discount_code == null ? t('Discount code').toUpperCase() : Constants.Laungagues.discount_code}
           </Text>
           {isObjectNullOrUndefined(discountApplied) ? (
             <TouchableOpacity onPress={() => {}}>
@@ -592,7 +593,7 @@ export default function Checkout({route, navigation}) {
               fontSize: 16,
               color: COLORS_NEW.mainBlack,
             }}>
-            {t('Total including taxes')}
+            {Constants.Laungagues.total_including_taxes == null ? 'Total including taxes' : Constants.Laungagues.total_including_taxes}
           </Text>
           <Text
             style={{
@@ -621,7 +622,7 @@ export default function Checkout({route, navigation}) {
           }
           preset="primary"
           text={
-            t('Confirm payment') +
+            Constants.Laungagues.confirm_payment == null ? 'Confirm payment' : Constants.Laungagues.confirm_payment +
             ` ${
               cartData?.prices
                 ? `${cartData?.prices?.subtotal_including_tax?.value} ${cartData?.prices?.subtotal_including_tax?.currency}`

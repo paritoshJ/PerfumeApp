@@ -15,6 +15,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import LinearGradient from 'react-native-linear-gradient';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
+import Constants from '../../Comman/Constants';
 
 const ImageData = [
   {
@@ -54,7 +55,7 @@ export default function LoyaltyPoint({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('LOYALTY POINTS')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.loyalty_points == null ? 'LOYALTY POINTS' : Constants.Laungagues.loyalty_points}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -67,14 +68,14 @@ export default function LoyaltyPoint({navigation}) {
             source={require('../../../assets/loyalty-color.png')}
           />
           <Text style={styles.text1}>
-            {t('You dont have any loyalty points')}
+            {Constants.Laungagues.you_dont_have_any_loyalty_points == null ? 'You dont have any loyalty points' : Constants.Laungagues.you_dont_have_any_loyalty_points}
           </Text>
           <Text style={styles.text2}>
-            {t('Make purchases and earn points')}
+            {Constants.Laungagues.make_purchases_and_earn_points == null ? 'Make purchases and earn points' : Constants.Laungagues.make_purchases_and_earn_points}
           </Text>
           <AppButton
             preset="primary"
-            text={t('Go shopping')}
+            text={Constants.Laungagues.go_shopping == null ? 'Go shopping' : Constants.Laungagues.go_shopping}
             style={{marginTop: Metrics.rfv(16)}}
           />
         </View>
@@ -93,7 +94,7 @@ export default function LoyaltyPoint({navigation}) {
                   justifyContent: 'space-between',
                 }}>
                 <Text style={styles.yourBalanceText}>
-                  {t('LOYALTY POINTS')}
+                    {Constants.Laungagues.loyalty_points == null ? 'LOYALTY POINTS' : Constants.Laungagues.loyalty_points}
                 </Text>
                 <Image
                   style={styles.cardWalletImage}
@@ -113,7 +114,7 @@ export default function LoyaltyPoint({navigation}) {
             </LinearGradient>
             <View style={styles.pointView}>
               <Text style={{fontSize: Metrics.rfv(12), color: COLORS_NEW.blue}}>
-                28 points - 1 {t('AED')}
+                  28 points - 1 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
               </Text>
             </View>
           </View>
@@ -127,7 +128,7 @@ export default function LoyaltyPoint({navigation}) {
             <View style={styles.orderView}>
               <TouchableOpacity style={styles.orderView}>
                 <Text style={styles.orderNumberText}>
-                  {t('orders')} #4562378
+                    {Constants.Laungagues.orders == null ? 'orders' : Constants.Laungagues.orders} #4562378
                 </Text>
               </TouchableOpacity>
             </View>
@@ -140,7 +141,7 @@ export default function LoyaltyPoint({navigation}) {
                     fontSize: Metrics.rfv(16),
                     marginTop: Metrics.rfv(10),
                   }}>
-                  {t('DATE')}
+                    {Constants.Laungagues.date == null ? 'DATE' : Constants.Laungagues.date}
                 </Text>
                 <Text
                   style={{
@@ -157,14 +158,14 @@ export default function LoyaltyPoint({navigation}) {
                     fontSize: Metrics.rfv(16),
                     marginTop: Metrics.rfv(10),
                   }}>
-                  {t('TOTAL')}
+                    {Constants.Laungagues.total == null ? 'TOTAL' : Constants.Laungagues.total}
                 </Text>
                 <Text
                   style={{
                     color: COLORS_NEW.black,
                     fontSize: Metrics.rfv(16),
                   }}>
-                  117.00 {t('AED')}
+                    117.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                 </Text>
               </View>
               <View>
@@ -174,14 +175,14 @@ export default function LoyaltyPoint({navigation}) {
                     fontSize: Metrics.rfv(16),
                     marginTop: Metrics.rfv(10),
                   }}>
-                  Spent
+                    {Constants.Laungagues.spent == null ? 'Spent' : Constants.Laungagues.spent}
                 </Text>
                 <Text
                   style={{
                     color: COLORS_NEW.black,
                     fontSize: Metrics.rfv(16),
                   }}>
-                  32.00 {t('AED')}
+                    32.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                 </Text>
               </View>
               <View>
@@ -191,14 +192,14 @@ export default function LoyaltyPoint({navigation}) {
                     fontSize: Metrics.rfv(16),
                     marginTop: Metrics.rfv(10),
                   }}>
-                  {t('Balance')}
+                    {Constants.Laungagues.balance == null ? 'Balance' : Constants.Laungagues.balance}
                 </Text>
                 <Text
                   style={{
                     color: COLORS_NEW.black,
                     fontSize: Metrics.rfv(16),
                   }}>
-                  16.00 {t('AED')}
+                    16.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                 </Text>
               </View>
               {/* Image View */}

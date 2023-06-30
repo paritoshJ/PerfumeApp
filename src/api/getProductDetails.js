@@ -36,6 +36,9 @@ export const client = new ApolloClient({
   uri: Constants.BASE_GRAPH_QL,
   cache: new InMemoryCache(),
   connectToDevTools: true,
+  headers: {
+    store: Constants.StoreCode,
+  },
 });
 
 export const GET_PRODUCT_DETAILS = async filter => {

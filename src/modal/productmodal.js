@@ -24,6 +24,7 @@ import {isStringNotNull} from '../Helper/helper';
 import UIStepper from 'react-native-ui-stepper';
 import {ADD_TO_CART_DATA} from '../api/getAddToCartData';
 import Loader from '../Component/Loader';
+import Constants from '../Comman/Constants';
 
 const ProductModal = props => {
   const navigation = useNavigation();
@@ -168,7 +169,7 @@ const ProductModal = props => {
                   }, 500);
                 }}>
                 <Text style={{color: colorConstant.DARK_PRIMARY}}>
-                  {t('More')}
+                  {Constants.Laungagues.more == null ? 'More' : Constants.Laungagues.more}
                 </Text>
                 <AntDesign
                   name="arrowright"
@@ -247,7 +248,7 @@ const ProductModal = props => {
                       alignSelf: 'center',
                     },
                   ]}>
-                  This item is out of stock
+                  {Constants.Laungagues.this_item_is_out_of_stock == null ? 'This item is out of stock' : Constants.Laungagues.this_item_is_out_of_stock}
                 </Text>
               ) : (
                 <>
@@ -291,7 +292,7 @@ const ProductModal = props => {
                           style.text_viewall,
                           {color: colorConstant.WHITE},
                         ]}>
-                        {t('Add to cart')}
+                          {Constants.Laungagues.add_to_cart == null ? 'Add to cart' : Constants.Laungagues.add_to_cart}
                       </Text>
                     </View>
                   </TouchableOpacity>

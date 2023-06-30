@@ -9,7 +9,10 @@ import { setContext } from '@apollo/client/link/context';
 export const client = new ApolloClient({
     uri: Constants.BASE_GRAPH_QL,
     cache: new InMemoryCache(),
-    connectToDevTools: true
+    connectToDevTools: true,
+    headers: {
+        store: Constants.StoreCode,
+    }
   });
 
   const httpLink = createHttpLink({
@@ -92,6 +95,9 @@ export const GET_COUNTRY_API = (token) => {
         link: authLink.concat(httpLink),
         cache: new InMemoryCache(),
         connectToDevTools: true,
+        headers: {
+            store: Constants.StoreCode,
+        }
     });
     return new Promise(async (resolve, reject) => {
         try {
@@ -124,6 +130,7 @@ export const GET_COUNTRY_API = (token) => {
                        base_static_url
                        base_media_url
                        secure_base_url
+                       country
                        secure_base_link_url
                        secure_base_static_url
                        secure_base_media_url

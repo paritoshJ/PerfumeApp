@@ -12,6 +12,7 @@ import colorConstant from '../../constant/colorConstant';
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import fontConstant from '../../constant/fontConstant';
+import Constants from '../../Comman/Constants';
 
 const ImageModal = props => {
   return (
@@ -52,7 +53,7 @@ const ImageModal = props => {
                         paddingBottom: Metrics.rfv(15),
                         fontWeight: '400',
                       }}>
-                      Choose an image
+                      {Constants.Laungagues.choose_an_image == null ? 'Choose an image' : Constants.Laungagues.choose_an_image}
                     </Text>
                   </View>
 
@@ -72,7 +73,7 @@ const ImageModal = props => {
                         color: colorConstant.BLUE_LIGHT,
                         fontFamily: fontConstant.satoshi,
                       }}>
-                      Choose an image
+                      {Constants.Laungagues.choose_an_image == null ? 'Choose an image' : Constants.Laungagues.choose_an_image}
                     </Text>
                   </TouchableOpacity>
 
@@ -90,7 +91,7 @@ const ImageModal = props => {
                         color: colorConstant.BLUE_LIGHT,
                         fontFamily: fontConstant.satoshi,
                       }}>
-                      Camera
+                      {Constants.Laungagues.camera == null ? 'Camera' : Constants.Laungagues.camera}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -113,7 +114,7 @@ const ImageModal = props => {
                     fontFamily: fontConstant.gambetta,
                     fontWeight: '800',
                   }}>
-                  Cancel
+                  {Constants.Laungagues.cancel == null ? 'Cancel' : Constants.Laungagues.cancel}
                 </Text>
               </TouchableOpacity>
             </View>

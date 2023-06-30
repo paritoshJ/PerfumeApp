@@ -13,6 +13,7 @@ import {
 import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function TermAndCindition({navigation}) {
   return (
@@ -31,7 +32,7 @@ export default function TermAndCindition({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>TERMS & CONDITION</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.terms_condition == null ? "TERMS & CONDITION" : Constants.Laungagues.terms_condition}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>

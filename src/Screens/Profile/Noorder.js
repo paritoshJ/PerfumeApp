@@ -12,6 +12,7 @@ import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import {AppButton} from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 export default function NoOrder({navigation}) {
   return (
     <>
@@ -29,7 +30,7 @@ export default function NoOrder({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>ORDER</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.order == null ? 'ORDER' : Constants.Laungagues.order}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -39,9 +40,9 @@ export default function NoOrder({navigation}) {
           style={styles.cartImage}
           source={require('../../../assets/Cart.png')}
         />
-        <Text style={styles.text1}>You don't have any orders yet</Text>
+        <Text style={styles.text1}>{Constants.Laungagues.you_dont_have_any_orders_yet == null ? "You don't have any orders yet" : Constants.Laungagues.you_dont_have_any_orders_yet}</Text>
         <Text style={styles.text2}>
-          You don't have orders, explore our perfume collections
+          {Constants.Laungagues.you_dont_have_orders_explore_our_perfume_collections == null ? "You don't have orders, explore our perfume collections" : Constants.Laungagues.you_dont_have_orders_explore_our_perfume_collections}
         </Text>
         <AppButton
           preset="primary"

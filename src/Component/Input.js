@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  I18nManager
 } from 'react-native';
 import React from 'react';
 import Metrics from '../Helper/metrics';
@@ -35,6 +36,7 @@ export default function Input(props) {
         style={[
           showRightIcon ? styles.TextInputWithIcon : styles.TextInput,
           style,
+          { writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }
         ]}
         placeholder={placeholder}
         placeholderTextColor={placeholderTextColor}

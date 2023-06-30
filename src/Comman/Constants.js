@@ -4,6 +4,7 @@ const Constants = {
   fontMedium: 'Poppins-Medium',
   Token: '',
   StoreCode: '',
+  Laungagues: {},
 
   Baseurl: 'https://profitworldapp.com/api',
   imageUrl: 'https://profitworldapp.com/storage/',

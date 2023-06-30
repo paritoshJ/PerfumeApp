@@ -13,6 +13,7 @@ import fontConstant from '../constant/fontConstant';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {Rating, AirbnbRating} from 'react-native-ratings';
 import {useTranslation} from 'react-i18next';
+import Constants from '../Comman/Constants';
 
 const AddAddressModal = props => {
   console.log(props)
@@ -110,7 +111,7 @@ const AddAddressModal = props => {
                   fontWeight: fontConstant.WEIGHT_LEIGHT,
                   color: colorConstant.WHITE,
                 }}>
-                {t('Select')}
+                {Constants.Laungagues.select == null ? 'Select' : Constants.Laungagues.select}
               </Text>
             </TouchableOpacity>
           </View>

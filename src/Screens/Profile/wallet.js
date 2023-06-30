@@ -19,6 +19,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import LinearGradient from 'react-native-linear-gradient';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
+import Constants from '../../Comman/Constants';
 
 const ImageData = [
   {
@@ -58,7 +59,7 @@ export default function Wallet({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('Wallet')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.wallet == null ? 'Wallet' : Constants.Laungagues.wallet}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -70,11 +71,11 @@ export default function Wallet({navigation}) {
             style={styles.emptyCartImage}
             source={require('../../../assets/wallet-color.png')}
           />
-          <Text style={styles.text1}>Your wallet is empty</Text>
-          <Text style={styles.text2}>Make purchases and earn points</Text>
+          <Text style={styles.text1}>{Constants.Laungagues.your_wallet_is_empty == null ? 'Your wallet is empty' : Constants.Laungagues.your_wallet_is_empty}</Text>
+          <Text style={styles.text2}>{Constants.Laungagues.make_purchases_and_earn_points == null ? "Make purchases and earn points" : Constants.Laungagues.make_purchases_and_earn_points}</Text>
           <AppButton
             preset="primary"
-            text="Go Shopping"
+            text={Constants.Laungagues.go_shopping == null ? "Go Shopping" : Constants.Laungagues.go_shopping}
             style={{marginTop: Metrics.rfv(16)}}
           />
         </View>
@@ -92,14 +93,14 @@ export default function Wallet({navigation}) {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                 }}>
-                <Text style={styles.yourBalanceText}>{t('Your balance')}</Text>
+                  <Text style={styles.yourBalanceText}>{Constants.Laungagues.your_balance == null ? 'Your balance' : Constants.Laungagues.your_balance}</Text>
                 <Image
                   style={styles.cardWalletImage}
                   source={require('../../../assets/wallet-gray.png')}
                 />
               </View>
               <View style={styles.textView}>
-                <Text style={styles.imageText}>19.35 {t('AED')}</Text>
+                  <Text style={styles.imageText}>19.35 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
               </View>
             </LinearGradient>
           </View>
@@ -112,7 +113,7 @@ export default function Wallet({navigation}) {
             <View style={styles.orderView}>
               <TouchableOpacity style={styles.orderView}>
                 <Text style={styles.orderNumberText}>
-                  {t('orders')} #4562378
+                    {Constants.Laungagues.orders == null ? 'orders' : Constants.Laungagues.orders} #4562378
                 </Text>
               </TouchableOpacity>
             </View>
@@ -130,7 +131,7 @@ export default function Wallet({navigation}) {
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    {t('DATE')}
+                      {Constants.Laungagues.date == null ? 'DATE' : Constants.Laungagues.date}
                   </Text>
                   <Text
                     style={{
@@ -143,14 +144,14 @@ export default function Wallet({navigation}) {
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    {t('TOTAL')}
+                      {Constants.Laungagues.total == null ? 'TOTAL' : Constants.Laungagues.total}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.black,
                       fontSize: Metrics.rfv(16),
                     }}>
-                    117.00 AED
+                      117.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
               </View>
@@ -158,27 +159,27 @@ export default function Wallet({navigation}) {
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    Spent
+                      {Constants.Laungagues.spent == null ? 'Spent' : Constants.Laungagues.spent}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.black,
                       fontSize: Metrics.rfv(16),
                     }}>
-                    32.00 AED
+                      32.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    {t('Balance')}
+                      {Constants.Laungagues.balance == null ? 'Balance' : Constants.Laungagues.balance}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.black,
                       fontSize: Metrics.rfv(16),
                     }}>
-                    16.00 AED
+                      16.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
               </View>

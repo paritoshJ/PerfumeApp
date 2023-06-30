@@ -40,6 +40,7 @@ import fontConstant from '../../constant/fontConstant';
 import { Rating, AirbnbRating } from 'react-native-ratings';
 
 import { useFocusEffect } from '@react-navigation/native';
+import Constants from '../../Comman/Constants';
 
 export default function AddressBook({route, navigation}) {
   const mapRef = useRef(null);
@@ -520,7 +521,7 @@ export default function AddressBook({route, navigation}) {
               </View>
             </View>
             <Input
-              placeholder={t('Zip code (optional)')}
+                  placeholder={Constants.Laungagues.zip_code_optional}
               placeholderTextColor="gray"
               value={zipCode}
                   onChangeText={e => setZipCode(e)} />
@@ -597,22 +598,22 @@ export default function AddressBook({route, navigation}) {
                   /> 
                 }
             <Input
-              placeholder={t('City')}
+                  placeholder={Constants.Laungagues.city == null ? 'City' : Constants.Laungagues.city}
               placeholderTextColor="gray"
               value={city}
               onChangeText={e => setCity(e)}
             />
           </View>
-          <Text style={styles.addressHeading1}>{t('Delivery address')}</Text>
+              <Text style={styles.addressHeading1}>{Constants.Laungagues.delivery_address == null ? 'Delivery address' : Constants.Laungagues.delivery_address}</Text>
           <View>
             <Input
-              placeholder={t('Enter the address or select it on the map')}
+                  placeholder={Constants.Laungagues.enter_the_address_or_select_it_on_the_map == null ? 'Enter the address or select it on the map' : Constants.Laungagues.enter_the_address_or_select_it_on_the_map}
               placeholderTextColor="gray"
               value={address}
               onChangeText={e => setAddress(e)}
             />
             <Input
-              placeholder={t('Building name/floor number/flat number')}
+                  placeholder={Constants.Laungagues.building_name_floor_number_flat_number == null ? 'Building name/floor number/flat number' : Constants.Laungagues.building_name_floor_number_flat_number}
               placeholderTextColor="gray"
               value={buildingName}
               onChangeText={e => setBuildingName(e)}
@@ -638,7 +639,7 @@ export default function AddressBook({route, navigation}) {
                   onSaveAddress1();
                 }
               }}
-              tx={t('Save address')}
+                  tx={Constants.Laungagues.save_address == null ? 'Save address' : Constants.Laungagues.save_address}
               style={{marginTop: Metrics.rfv(16)}}
             />
           </View>
@@ -738,7 +739,7 @@ export default function AddressBook({route, navigation}) {
                     fontWeight: fontConstant.WEIGHT_LEIGHT,
                     color: colorConstant.WHITE,
                   }}>
-                  {t('Select')}
+                  {Constants.Laungagues.select == null ? 'Select' : Constants.Laungagues.select}
                 </Text>
               </TouchableOpacity>
             </View>

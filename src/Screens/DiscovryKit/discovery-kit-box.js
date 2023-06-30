@@ -5,6 +5,7 @@ import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import {AppButton} from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function DiscoveryKitBox({navigation}) {
   return (
@@ -27,7 +28,7 @@ export default function DiscoveryKitBox({navigation}) {
                 fontSize: Metrics.rfv(30),
                 textAlign: 'center',
               }}>
-              Your discovery box is ready!
+              {Constants.Laungagues.your_discovery_box_is_ready == null ? 'Your discovery box is ready!' : Constants.Laungagues.your_discovery_box_is_ready}
             </Text>
           </View>
           <View
@@ -41,7 +42,7 @@ export default function DiscoveryKitBox({navigation}) {
             <View style={{width: '45%'}}>
               <AppButton
                 preset="secondary"
-                text="Build another box"
+                text={Constants.Laungagues.build_another_box == null ? "Build another box" : Constants.Laungagues.build_another_box}
                 style={{marginTop: Metrics.rfv(16)}}
                 onPress={() => navigation.navigate('CustomizedBundle')}
               />
@@ -49,7 +50,7 @@ export default function DiscoveryKitBox({navigation}) {
             <View style={{width: '45%'}}>
               <AppButton
                 preset="primary"
-                text="View cart"
+                text={Constants.Laungagues.view_cart == null ? "View cart" : Constants.Laungagues.view_cart}
                 style={{marginTop: Metrics.rfv(16)}}
                 onPress={() => navigation.navigate('CustomizedBundle')}
               />

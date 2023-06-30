@@ -19,6 +19,7 @@ import PerfumeData from '../../utils/perfumedata';
 import {FlatGrid} from 'react-native-super-grid';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function BuildYourOwnBox({navigation}) {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export default function BuildYourOwnBox({navigation}) {
             source={require('../../../assets/Back-Arrow.png')}
           />
         </TouchableOpacity>
-        <Text style={styles.navBarText}>BUILD YOUR OWN</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.build_your_own == null ? 'BUILD YOUR OWN' : Constants.Laungagues.build_your_own}</Text>
         <TouchableOpacity>
           <Image
             style={styles.navBarImage1}
@@ -54,9 +55,9 @@ export default function BuildYourOwnBox({navigation}) {
             justifyContent: 'space-between',
             marginHorizontal: Metrics.rfv(20),
           }}>
-          <Text>Gifts</Text>
-          <Text>Sticker</Text>
-          <Text>Review</Text>
+          <Text>{Constants.Laungagues.gifts == null ? 'Gifts' : Constants.Laungagues.gifts}</Text>
+          <Text>{Constants.Laungagues.sticker == null ? 'Sticker' : Constants.Laungagues.sticker}</Text>
+          <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
         </View>
         <Progress.Bar
           progress={0.3}
@@ -86,7 +87,7 @@ export default function BuildYourOwnBox({navigation}) {
             marginTop: Metrics.rfv(130),
           }}>
           <FilterBar
-            option1={'Sort'}
+            option1={Constants.Laungagues.sort == null ? 'Sort' : Constants.Laungagues.sort}
             option2={'Filters'}
             selectionColor={COLORS_NEW.lightGray}
           />
@@ -114,7 +115,7 @@ export default function BuildYourOwnBox({navigation}) {
         }}>
         <AppButton
           preset="primary"
-          text={t("Next")}
+          text={Constants.Laungagues.next == null ? "Next" : Constants.Laungagues.next}
           style={{marginTop: Metrics.rfv(16)}}
           onPress={() => navigation.navigate('ReviewDiscoveryKit')}
         />

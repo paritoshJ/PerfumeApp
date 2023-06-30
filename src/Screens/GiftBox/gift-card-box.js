@@ -14,6 +14,7 @@ import Metrics from '../../Helper/metrics';
 import { COLORS_NEW } from '../../Helper/colors.new';
 import { AppButton } from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function GiftCardBox({ navigation }) {
     return (
@@ -29,7 +30,7 @@ export default function GiftCardBox({ navigation }) {
                             style={styles.scrollViewImage}
                             source={require('../../../assets/giftBox.png')}
                         />
-                       <Text style={{color: COLORS_NEW.black, fontFamily: 'Gambetta-MediumItalic', fontSize: Metrics.rfv(30), textAlign: 'center'}}>Your gift box is ready!</Text>
+                        <Text style={{ color: COLORS_NEW.black, fontFamily: 'Gambetta-MediumItalic', fontSize: Metrics.rfv(30), textAlign: 'center' }}>{Constants.Laungagues.your_gift_box_is_ready == null ? 'Your gift box is ready!' : Constants.Laungagues.your_gift_box_is_ready}</Text>
                     </View>
                     <View 
                     style={{

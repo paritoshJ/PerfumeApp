@@ -23,6 +23,7 @@ export const MERGE_CART = async (source_cart_id, destination_cart_id) => {
     cache: new InMemoryCache(),
     connectToDevTools: true,
     headers: {
+      store: Constants.StoreCode,
       authorization: token,
     },
   });

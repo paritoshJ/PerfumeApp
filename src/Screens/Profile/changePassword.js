@@ -24,6 +24,7 @@ import {
 import { ADD_CREDIT_CARD_API } from '../../api/ChangePassword';
 import Loader from '../../Component/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from '../../Comman/Constants';
 
 
 export default function ChnagePassword({navigation}) {
@@ -113,7 +114,7 @@ export default function ChnagePassword({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('CHANGE PASSWORD')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.change_password == null ? 'CHANGE PASSWORD' : Constants.Laungagues.change_password}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -142,12 +143,12 @@ export default function ChnagePassword({navigation}) {
             style={styles.forgotPasswordField}
             onPress={() => navigation.navigate('Resetpassword')}>
             <Text style={{color: COLORS_NEW.black}}>
-              {t('Forgot password?')}
+              {Constants.Laungagues.forgot_password == null ? 'Forgot password?' : Constants.Laungagues.forgot_password}
             </Text>
           </TouchableOpacity>
           <View style={{marginTop: Metrics.rfv(15)}}>
             <Input
-              placeholder={t('New password')}
+              placeholder={Constants.Laungagues.new_password == null ? 'New password' : Constants.Laungagues.new_password}
               placeholderTextColor={COLORS_NEW.gray}
               onChangeText={e => setNewPassword(e)}
               value={newPassword}
@@ -163,7 +164,7 @@ export default function ChnagePassword({navigation}) {
               ih={24}
             />
             <Input
-              placeholder={t('Repeat new password')}
+              placeholder={Constants.Laungagues.repeat_new_password == null ? 'Repeat new password' : Constants.Laungagues.repeat_new_password}
               placeholderTextColor={COLORS_NEW.gray}
               onChangeText={e => setRepeatPassword(e)}
               value={repeatPassword}
@@ -184,7 +185,7 @@ export default function ChnagePassword({navigation}) {
         </View>
         <AppButton
           preset="primary"
-          text={t('Save')}
+          text={Constants.Laungagues.save == null ? 'Save' : Constants.Laungagues.save}
           onPress={handleSave}
           style={{marginTop: Metrics.rfv(20)}}
           textStyle={{fontSize: Metrics.rfv(15), fontWeight: '400'}}

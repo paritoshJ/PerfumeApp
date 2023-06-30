@@ -17,6 +17,7 @@ import {AppButton} from '../../Component/button/app-button';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import CustomSwitch from '../../Component/toggleFilter';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 export default function Feed({navigation}) {
   const [feed, setFeed] = useState(true);
   const onSelectSwitch = index => {};
@@ -41,7 +42,7 @@ export default function Feed({navigation}) {
               />
             </TouchableOpacity>
 
-            <Text style={styles.navBarText}>Feeds</Text>
+            <Text style={styles.navBarText}>{Constants.Laungagues.feeds == null ? 'Feeds' : Constants.Laungagues.feeds}</Text>
             <TouchableOpacity>
               <Image style={styles.navBarImage1} source={''} />
             </TouchableOpacity>
@@ -59,8 +60,8 @@ export default function Feed({navigation}) {
             <CustomSwitch
               selectionMode={2}
               roundCorner={true}
-              option1={'Sort'}
-              option2={'Filters'}
+              option1={Constants.Laungagues.sort == null ? 'Sort' : Constants.Laungagues.sort}
+              option2={Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}
               onSelectSwitch={onSelectSwitch}
               selectionColor={COLORS_NEW.lightGray}
             />
@@ -79,7 +80,7 @@ export default function Feed({navigation}) {
               />
             </TouchableOpacity>
 
-            <Text style={styles.nullnavBarText}>Feed</Text>
+            <Text style={styles.nullnavBarText}>{Constants.Laungagues.feed == null ? 'Feed' : Constants.Laungagues.feed}</Text>
             <TouchableOpacity>
               <Image style={styles.navBarImage1} source={''} />
             </TouchableOpacity>
@@ -89,9 +90,9 @@ export default function Feed({navigation}) {
               style={styles.emptyCartImage}
               source={require('../../../assets/Feed.png')}
             />
-            <Text style={styles.text1}>You don't have any notification</Text>
+            <Text style={styles.text1}>{Constants.Laungagues.you_dont_have_any_notification == null ? "You don't have any notification" : Constants.Laungagues.you_dont_have_any_notification}</Text>
             <Text style={styles.text2}>
-              Visit later to check your notification
+              {Constants.Laungagues.visit_later_to_check_your_notification == null ? 'Visit later to check your notification' : Constants.Laungagues.visit_later_to_check_your_notification}
             </Text>
           </View>
         </>
@@ -108,7 +109,7 @@ export default function Feed({navigation}) {
                 </View>
                 <View>
                   <Text style={styles.loginPageComponentview2}>
-                    Your personal discount
+                      {Constants.Laungagues.your_personal_discount = null ? 'Your personal discount' : Constants.Laungagues.your_personal_discount}
                   </Text>
                   <Text style={styles.dateText}>December 10, 2022</Text>
                 </View>
@@ -131,7 +132,7 @@ export default function Feed({navigation}) {
                 </View>
                 <View>
                   <Text style={styles.loginPageComponentview2}>
-                    Your order has been generated
+                      {Constants.Laungagues.your_order_has_been_generated == null ? 'Your order has been generated' : Constants.Laungagues.your_order_has_been_generated}
                   </Text>
                   <Text style={styles.dateText}>December 10, 2022</Text>
                 </View>
@@ -154,7 +155,7 @@ export default function Feed({navigation}) {
                 </View>
                 <View>
                   <Text style={styles.loginPageComponentview2}>
-                    Your order has been sent
+                      {Constants.Laungagues.your_order_has_been_sent == null ? 'Your order has been sent' : Constants.Laungagues.your_order_has_been_sent}
                   </Text>
                   <Text style={styles.dateText}>December 10, 2022</Text>
                 </View>
@@ -177,7 +178,7 @@ export default function Feed({navigation}) {
                 </View>
                 <View>
                   <Text style={styles.loginPageComponentview2}>
-                    Your order has been delivered
+                      {Constants.Laungagues.your_order_has_been_deliverred == null ? 'Your order has been delivered' : Constants.Laungagues.your_order_has_been_deliverred}
                   </Text>
                   <Text style={styles.dateText}>December 10, 2022</Text>
                 </View>

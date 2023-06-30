@@ -14,6 +14,7 @@ import { COLORS_NEW } from '../../Helper/colors.new';
 import Metrics from '../../Helper/metrics';
 import { useTranslation } from 'react-i18next'
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function ReviewDiscoveryKit({ navigation }) {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ export default function ReviewDiscoveryKit({ navigation }) {
                         source={require('../../../assets/Back-Arrow.png')}
                     />
                 </TouchableOpacity>
-                <Text style={styles.navBarText}>REVIEW YOUR BOX</Text>
+                <Text style={styles.navBarText}>{Constants.Laungagues.review_your_box == null ? 'REVIEW YOUR BOX' : Constants.Laungagues.review_your_box}</Text>
                 <TouchableOpacity>
                     <Image style={styles.navBarImage1} source={require('../../../assets/close-button.png')} />
                 </TouchableOpacity>
@@ -46,9 +47,9 @@ export default function ReviewDiscoveryKit({ navigation }) {
                         justifyContent: 'space-between',
                         marginHorizontal: Metrics.rfv(20)
                     }}>
-                    <Text>Gift</Text>
-                    <Text>Sticker</Text>
-                    <Text>Review</Text>
+                    <Text>{Constants.Laungagues.gifts == null ? 'Gifts' : Constants.Laungagues.gifts}</Text>
+                    <Text>{Constants.Laungagues.sticker == null ? 'Sticker' : Constants.Laungagues.sticker}</Text>
+                    <Text>{Constants.Laungagues.review == null ? 'Review' : Constants.Laungagues.review}</Text>
                 </View>
                 <Progress.Bar progress={1} width={null} height={1} color={COLORS_NEW.blue} />
             </View>
@@ -62,9 +63,9 @@ export default function ReviewDiscoveryKit({ navigation }) {
                                 fontSize: Metrics.rfv(20),
                                 fontFamily: 'Gambetta-MediumItalic',
                                 marginVertical: Metrics.rfv(10)
-                            }}>{t('Order summary')}</Text>
+                            }}>{Constants.Laungagues.order_summary == null ? 'Order summary' : Constants.Laungagues.order_summary}</Text>
                     </View>
-                    <Text style={{ color: COLORS_NEW.lightGray, marginVertical: Metrics.rfv(10) }}>{t('perfumes')}</Text>
+                    <Text style={{ color: COLORS_NEW.lightGray, marginVertical: Metrics.rfv(10) }}>{Constants.Laungagues.perfumes == null ? 'perfumes' : Constants.Laungagues.perfumes}</Text>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Image style={styles.orderSummaryimg} source={require('../../../assets/per-1.png')} />
                         <Text>Aborable Amber</Text>
@@ -76,7 +77,7 @@ export default function ReviewDiscoveryKit({ navigation }) {
                 {/*  */}
                 <View>
                     <View>
-                        <Text style={{ color: COLORS_NEW.lightGray, marginVertical: Metrics.rfv(10) }}>{t('Perfume oils')}</Text>
+                        <Text style={{ color: COLORS_NEW.lightGray, marginVertical: Metrics.rfv(10) }}>{Constants.Laungagues.perfume_oils == null ? 'Perfume oils' : Constants.Laungagues.perfume_oils}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Image style={styles.orderSummaryimg} source={require('../../../assets/per-1.png')} />
@@ -89,7 +90,7 @@ export default function ReviewDiscoveryKit({ navigation }) {
                 {/*  */}
                 <View>
                     <View>
-                        <Text style={{ color: COLORS_NEW.lightGray, marginVertical: Metrics.rfv(10) }}>{t('Oud')}</Text>
+                        <Text style={{ color: COLORS_NEW.lightGray, marginVertical: Metrics.rfv(10) }}>{Constants.Laungagues.oud == null ? 'Oud' : Constants.Laungagues.oud}</Text>
                     </View>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Image style={styles.orderSummaryimg} source={require('../../../assets/per-1.png')} />
@@ -102,7 +103,7 @@ export default function ReviewDiscoveryKit({ navigation }) {
                 {/* Total View */}
                 <View style={styles.TotalView}>
                     <Text style={styles.totalViewText}>Discovery total</Text>
-                    <Text style={styles.totalViewText}>240.00 {t('AED')}</Text>
+                    <Text style={styles.totalViewText}>240.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
             </View>
             {/* Next Button */}
@@ -113,7 +114,7 @@ export default function ReviewDiscoveryKit({ navigation }) {
                 }}>
                 <AppButton
                     preset="primary"
-                    text={t('Add to cart')}
+                    text={Constants.Laungagues.add_to_cart == null ? 'Add to cart' : Constants.Laungagues.add_to_cart}
                     style={{ marginTop: Metrics.rfv(16) }}
                     onPress={() => navigation.navigate('DiscoveryKitBox')}
                 />

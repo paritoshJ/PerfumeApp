@@ -31,16 +31,22 @@ import { appleAuth } from '@invertase/react-native-apple-authentication';
 import { USER_SOCIAL_LOGIN } from '../../api/useLogin';
 import Loader from '../../Component/Loader';
 import Constants from '../../Comman/Constants';
+import ContactUs from './ContactUs';
 
 export default function LoginPage({navigation}) {
   const {t, i18n} = useTranslation();
   const [isEnabled, setIsEnabled] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  // const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   useFocusEffect(
     React.useCallback(() => {
-
+      AsyncStorage.getItem('languageselect')
+        .then(response => {
+          setIsEnabled(response == 1 ? true : false)
+        })
+        .catch(error => {
+        });
       GmailConfiguration();
       if (Platform.OS == 'ios') {
         return appleAuth.onCredentialRevoked(async () => {
@@ -51,7 +57,12 @@ export default function LoginPage({navigation}) {
       return () => { };
     }, []),
   );
-
+  const toggleSwitch = () => {
+    console.log('update')
+    setIsEnabled(!isEnabled)
+    AsyncStorage.setItem('languageselect', isEnabled ? '0' : '1');
+    languageChange();
+  };
   ////******* Gmail Login *********//////////
 
   const GmailConfiguration = () => {
@@ -257,7 +268,7 @@ export default function LoginPage({navigation}) {
         <TouchableOpacity style={styles.navBarImage1}>
           {/* <Image style={styles.navBarImage1} source={''} /> */}
         </TouchableOpacity>
-        <Text style={styles.navBarText}>{t('text login')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.log_in}</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
           <Image
             style={styles.navBarImage1}
@@ -268,18 +279,18 @@ export default function LoginPage({navigation}) {
       {/* <Navbar Name={'Login'} /> */}
       <View style={styles.mainView}>
         <Text style={styles.loginText}>
-          Log in to make purchases and track order
+          {Constants.Laungagues.log_in_to_make_purchases_and_track_order == null ? 'Log in to make purchases and track order' : Constants.Laungagues.log_in_to_ + make_purchases_and_track_order}
         </Text>
         <AppButton
           preset="primary"
-          text={t('text login')}
-          style={{marginTop: Metrics.rfv(16)}}
+          text={Constants.Laungagues.log_in}
+          style={{ marginTop: Metrics.rfv(16), textTransform: 'capitalize' }}
           onPress={() => navigation.replace('EnterDetail')}
         />
         <AppButton
           preset="secondary"
-          text={t('Create account')}
-          style={{marginTop: Metrics.rfv(16)}}
+          text={Constants.Laungagues.create_account}
+          style={{ marginTop: Metrics.rfv(16), fontFamily: fontConstant.satoshifont, fontSize: 16, fontWeight: '400' }}
           onPress={() => navigation.replace('CreateAccount')}
         />
         <View
@@ -338,7 +349,7 @@ export default function LoginPage({navigation}) {
                   onPress={() => navigation.navigate('Country')}
                 />
               </View>
-              <Text style={styles.loginPageComponentview2}>{t('Country')}</Text>
+              <Text style={styles.loginPageComponentview2}>{Constants.Laungagues.country == null ? 'Country' : Constants.Laungagues.countrys}</Text>
             </View>
             <View style={styles.loginPageComponentText}>
               <Image
@@ -363,7 +374,7 @@ export default function LoginPage({navigation}) {
                   source={require('../../../assets/FAQ.png')}
                 />
               </View>
-              <Text style={styles.loginPageComponentview2}>{t('FAQ')}</Text>
+              <Text style={styles.loginPageComponentview2}>{Constants.Laungagues.faq == null ? "FAQ" : Constants.Laungagues.faq}</Text>
             </View>
             <View style={styles.loginPageComponentText}>
               <Image
@@ -389,7 +400,7 @@ export default function LoginPage({navigation}) {
                 />
               </View>
               <Text style={styles.loginPageComponentview2}>
-                {t('Contact us')}
+                {Constants.Laungagues.contact_us == null ? 'Contact US' : Constants.Laungagues.contact_us}
               </Text>
             </View>
             <View style={styles.loginPageComponentText}>
@@ -416,7 +427,7 @@ export default function LoginPage({navigation}) {
                 />
               </View>
               <Text style={styles.loginPageComponentview2}>
-                {t('language')}
+                {Constants.Laungagues.language == null ? 'language' : Constants.Laungagues.language}
               </Text>
             </View>
             <View style={styles.loginPageComponentText}>
@@ -556,6 +567,7 @@ const styles = StyleSheet.create({
     fontWeight: fontConstant.WEIGHT_LEIGHT,
     fontFamily: fontConstant.satoshi,
     fontStyle: 'normal',
+    textTransform: 'uppercase'
   },
   navBarView: {
     flexDirection: 'row',
@@ -578,7 +590,8 @@ const styles = StyleSheet.create({
   navBarText: {
     fontSize: Metrics.rfv(15),
     color: COLORS_NEW.black,
-    fontFamily: fontConstant.satoshi,
+    fontFamily: fontConstant.satoshifont,
     fontStyle: 'normal',
+    textTransform: 'uppercase'
   },
 });

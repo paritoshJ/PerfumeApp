@@ -17,6 +17,7 @@ import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
 import imageConstant from '../../constant/imageConstant';
 import style from './style';
+import Constants from '../../Comman/Constants';
 const CollectionDetails = props => {
   const {t, i18n} = useTranslation();
   console.log('props url', props)
@@ -65,7 +66,7 @@ const CollectionDetails = props => {
       </View>
       <View style={style.viewall_Contain}>
         <View style={{alignItems: 'flex-start'}}>
-          <Text style={style.header_title}>{t('View all')}</Text>
+          <Text style={style.header_title}>{Constants.Laungagues.view_all == null ? 'View all' : Constants.Laungagues.view_all}</Text>
         </View>
         <View style={style.border}></View>
 

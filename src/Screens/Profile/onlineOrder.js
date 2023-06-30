@@ -27,6 +27,7 @@ import EmptyPageView from '../../Component/EmptyPageView';
 import HeartSVG from '../../assets/svg/Heart';
 import FaqSVG from '../../assets/svg/FAQ';
 import {useTranslation} from 'react-i18next';
+import Constants from '../../Comman/Constants';
 
 
 export default function OnlineOrder({route,navigation}) {
@@ -96,7 +97,7 @@ const renderEmptyAndNoLogin = () =>{
   return <EmptyPageView 
           icon={<FaqSVG/>}
           title={t("FAQ Not found")}
-          message={t('FAQ seems to be empty.')}
+    message={Constants.Laungagues.faq_seems_to_be_empty == null ? 'FAQ seems to be empty.' : Constants.Laungagues.faq_seems_to_be_empty}
           hideAddButton={true}
           onButtonPress={()=>{}}
           buttonTitle={''}

@@ -94,7 +94,7 @@ const CatalogScreen = props => {
           style={{ width: 15, height: 15, marginLeft: 5 }}
           resizeMode="contain"
         />
-        <Text style={{ marginLeft: 10 }}>{t('About us')}</Text>
+        <Text style={{ marginLeft: 10 }}>{Constants.Laungagues.about_us == null ? t('About us') : Constants.Laungagues.about_us}</Text>
       </View>
       <View style={style.about_view}>
         <Image
@@ -102,7 +102,7 @@ const CatalogScreen = props => {
           style={{ width: 15, height: 15, marginLeft: 5 }}
           resizeMode="contain"
         />
-        <Text style={{ marginLeft: 10 }}>{t('Delivery')}</Text>
+        <Text style={{ marginLeft: 10 }}>{Constants.Laungagues.delivery == null ? t('Delivery') : Constants.Laungagues.delivery}</Text>
       </View>
       <View style={style.about_view}>
         <Image
@@ -110,13 +110,13 @@ const CatalogScreen = props => {
           style={{ width: 15, height: 15, marginLeft: 5 }}
           resizeMode="contain"
         />
-        <Text style={{ marginLeft: 10 }}>{t('Contacts')}</Text>
+        <Text style={{ marginLeft: 10 }}>{Constants.Laungagues.contacts == null ? t('Contacts') : Constants.Laungagues.contacts}</Text>
       </View>
     </View>)
   }
   const renderHeader = () => {
     return (<><View style={{ alignItems: 'flex-start' }}>
-      <Text style={style.header_title}>{t('New')}</Text>
+      <Text style={style.header_title}>{Constants.Laungagues.new == null ? t('New') : Constants.Laungagues.new}</Text>
     </View><View style={style.border}></View></>)
   }
   return (
@@ -152,7 +152,7 @@ const CatalogScreen = props => {
 
 
             }}
-            placeholder={t('Search for perfume')}
+            placeholder={Constants.Laungagues.search_for_perfume == null ? t('Search for perfume') : Constants.Laungagues.search_for_perfume}
             style={style.searchtext_Contain}
           />
         </View>

@@ -16,6 +16,7 @@ import {COLORS_NEW} from '../../Helper/colors.new';
 import {AppButton} from '../../Component/button/app-button';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
+import Constants from '../../Comman/Constants';
 
 export default function GiftCard({navigation}) {
   const [feed, setFeed] = useState(false);
@@ -38,7 +39,7 @@ export default function GiftCard({navigation}) {
                 />
               </TouchableOpacity>
 
-              <Text style={styles.navBarText}>{t('Gift Card')}</Text>
+              <Text style={styles.navBarText}>{Constants.Laungagues.gift_card == null ? 'Gift Card' : Constants.Laungagues.gift_card}</Text>
               <TouchableOpacity>
                 <Image style={styles.navBarImage1} source={''} />
               </TouchableOpacity>
@@ -60,7 +61,7 @@ export default function GiftCard({navigation}) {
                   source={require('../../../assets/gift-card-1.png')}
                 />
                 <View style={styles.textView}>
-                  <Text style={styles.imageText}>40 {t('AED')}</Text>
+                  <Text style={styles.imageText}>40 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
               </View>
               <View>
@@ -69,7 +70,7 @@ export default function GiftCard({navigation}) {
                   source={require('../../../assets/gift-card-1.png')}
                 />
                 <View style={styles.textView}>
-                  <Text style={styles.imageText}>40 {t('AED')}</Text>
+                  <Text style={styles.imageText}>40 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
               </View>
               <View>
@@ -78,7 +79,7 @@ export default function GiftCard({navigation}) {
                   source={require('../../../assets/gift-card-1.png')}
                 />
                 <View style={styles.textView}>
-                  <Text style={styles.imageText}>40 {t('AED')}</Text>
+                  <Text style={styles.imageText}>40 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
               </View>
               <View>
@@ -87,7 +88,7 @@ export default function GiftCard({navigation}) {
                   source={require('../../../assets/gift-card-1.png')}
                 />
                 <View style={styles.textView}>
-                  <Text style={styles.imageText}>40 {t('AED')}</Text>
+                  <Text style={styles.imageText}>40 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}</Text>
                 </View>
               </View>
             </View>
@@ -111,7 +112,7 @@ export default function GiftCard({navigation}) {
               />
             </TouchableOpacity>
 
-            <Text style={styles.nullnavBarText}>{t('Gift Card')}</Text>
+            <Text style={styles.nullnavBarText}>{Constants.Laungagues.gift_card == null ? 'Gift Card' : Constants.Laungagues.gift_card}</Text>
             <TouchableOpacity>
               <Image style={styles.navBarImage1} source={''} />
             </TouchableOpacity>
@@ -121,13 +122,13 @@ export default function GiftCard({navigation}) {
               style={styles.emptyCartImage}
               source={require('../../../assets/gift-card-color.png')}
             />
-            <Text style={styles.text1}>{t('You have no vouchers yet')}</Text>
+            <Text style={styles.text1}>{Constants.Laungagues.you_have_no_vouchers_yet == null ? 'You have no vouchers yet' : Constants.Laungagues.you_have_no_vouchers_yet}</Text>
             <Text style={styles.text2}>
-              {t('You currently have no vouchers linked to your account. Get started by redeeming or buying one now.')}
+              {Constants.Laungagues.you_currently_have_no_vouchers_linked_to_your_account_get_started_by_redeeming__or_buying_one_now == null ? 'You currently have no vouchers linked to your account. Get started by redeeming or buying one now.' : Constants.Laungagues.you_currently_have_no_vouchers_linked_to_your_account_get_started_by_redeeming__or_buying_one_now}
             </Text>
             <AppButton
               preset="primary"
-              text={t('Buy gift card')}
+              text={Constants.Laungagues.buy_gift_card == null ? 'Buy gift card' : Constants.Laungagues.buy_gift_card}
               style={{marginTop: Metrics.rfv(16)}}
               onPress={() => navigation.navigate('BuyGiftCard')}
             />
@@ -161,7 +162,7 @@ export default function GiftCard({navigation}) {
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    {t('DATE')}
+                      {Constants.Laungagues.date == null ? 'DATE' : Constants.Laungagues.date}
                   </Text>
                   <Text
                     style={{
@@ -174,14 +175,14 @@ export default function GiftCard({navigation}) {
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    {t('TOTAL')}
+                      {Constants.Laungagues.total == null ? 'TOTAL' : Constants.Laungagues.total}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.black,
                       fontSize: Metrics.rfv(16),
                     }}>
-                    117.00 {t('AED')}
+                      117.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
               </View>
@@ -189,27 +190,27 @@ export default function GiftCard({navigation}) {
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    Spent
+                      {Constants.Laungagues.spent == null ? 'Spent' : Constants.Laungagues.spent}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.black,
                       fontSize: Metrics.rfv(16),
                     }}>
-                    32.00 {t('AED')}
+                      32.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
                 <View>
                   <Text
                     style={{color: COLORS_NEW.gray, fontSize: Metrics.rfv(16)}}>
-                    {t('Balance')}
+                      {Constants.Laungagues.balance == null ? 'Balance' : Constants.Laungagues.balance}
                   </Text>
                   <Text
                     style={{
                       color: COLORS_NEW.black,
                       fontSize: Metrics.rfv(16),
                     }}>
-                    16.00 {t('AED')}
+                      16.00 {Constants.Laungagues.aed == null ? 'AED' : Constants.Laungagues.aed}
                   </Text>
                 </View>
               </View>

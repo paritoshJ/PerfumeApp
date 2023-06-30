@@ -96,7 +96,7 @@ export default function EnterYourDetails({navigation}) {
     if (inputDetail.length > 0) {
       return (
         <Input
-          placeholder={t('Password')}
+          placeholder={Constants.Laungagues.password}
           placeholderTextColor="gray"
           onChangeText={e => setPassword(e)}
           showRightIcon
@@ -271,10 +271,10 @@ export default function EnterYourDetails({navigation}) {
 
   useEffect(() => {
     if (isNaN(inputDetail)) {
-      setButtonValue('text-login');
+      setButtonValue(Constants.Laungagues.log_in);
       setShowMobile(false);
     } else {
-      setButtonValue('text-login');
+      setButtonValue(Constants.Laungagues.log_in);
 
       // setButtonValue('Next'); tbu
       // setShowMobile(true);
@@ -305,7 +305,7 @@ export default function EnterYourDetails({navigation}) {
         <TouchableOpacity
           style={styles.forgotPasswordField}
           onPress={() => navigation.navigate('Changepassword')}>
-          <Text>{t('Forgot password?')}</Text>
+          <Text>{Constants.Laungagues.forgot_password == null ? 'Forgot password?' : Constants.Laungagues.forgot_password}</Text>
         </TouchableOpacity>
       );
     } else if (inputDetail) {
@@ -327,7 +327,7 @@ export default function EnterYourDetails({navigation}) {
               }}
               checked={isSelected}
               labelStyle={styles.label}
-              label={'Remember Me'}
+              label={Constants.Laungagues.remember_me == null ? 'Remember Me' : Constants.Laungagues.remember_me}
             />
           </View>
         </>
@@ -351,7 +351,7 @@ export default function EnterYourDetails({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>{t('Enter your details')}</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.enter_your_details == null ? 'Enter your details' : Constants.Laungagues.enter_your_details}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -373,11 +373,11 @@ export default function EnterYourDetails({navigation}) {
                   onSelect={onSelect}
                   onChangeText={e => setinputDetail(e)}
                   countryCode={countryCode}
-                  placeholder={'Select mobile'}
+                  placeholder={Constants.Laungagues.select_mobile == null ? 'Select mobile' : Constants.Laungagues.select_mobile}
                 />
                 <View style={{flex: 1}}>
                   <Input
-                    placeholder={t('Email')}
+                    placeholder={Constants.Laungagues.email}
                     placeholderTextColor="gray"
                     value={inputDetail}
                     onChangeText={e => setinputDetail(e)}
@@ -394,6 +394,7 @@ export default function EnterYourDetails({navigation}) {
                       backgroundColor: 'transparent',
                       paddingHorizontal: 10,
                       paddingVertical: 10,
+                      writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr'
                     }}
                   />
                 </View>
@@ -401,7 +402,7 @@ export default function EnterYourDetails({navigation}) {
             ) : (
               <View style={{flex: 1}}>
                 <Input
-                  placeholder={t('Email or number')}
+                    placeholder={Constants.Laungagues.email_or_number}
                   placeholderTextColor="gray"
                   value={inputDetail}
                   onChangeText={e => setinputDetail(e)}

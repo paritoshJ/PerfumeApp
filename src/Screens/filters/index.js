@@ -10,6 +10,7 @@ import {Text} from 'react-native';
 import MyStatusBar from '../../Component/MyStatusBar';
 import {useTranslation} from 'react-i18next';
 import imageConstant from '../../constant/imageConstant';
+import Constants from '../../Comman/Constants';
 // import { Image } from 'react-native-svg';
 
 const FiltersScreen = props => {
@@ -71,7 +72,7 @@ const FiltersScreen = props => {
             textAlign: 'center',
               marginLeft: '40%'
           }}>
-          {t('Filters')}
+            {Constants.Laungagues.filters == null ? 'Filters' : Constants.Laungagues.filters}
         </Text>
       </View>
       <View style={{flex: 1, flexDirection: 'row'}}>
@@ -169,7 +170,7 @@ const FiltersScreen = props => {
                 fontWeight: fontConstant.WEIGHT_LEIGHT,
                 color: colorConstant.DARK_PRIMARY,
               }}>
-              {t('Clear')}
+                {Constants.Laungagues.clear == null ? 'Clear' : Constants.Laungagues.clear}
             </Text>
           </TouchableOpacity>
         </View>
@@ -265,7 +266,7 @@ const FiltersScreen = props => {
                 fontWeight: fontConstant.WEIGHT_LEIGHT,
                 color: colorConstant.WHITE,
               }}>
-                Show {getCount} items
+                {Constants.Laungagues.show == null ? 'Show' : Constants.Laungagues.clear} {getCount} {Constants.Laungagues.items == null ? 'items' : Constants.Laungagues.items}
             </Text>
           </TouchableOpacity>
         </View>

@@ -13,6 +13,7 @@ import Metrics from '../../Helper/metrics';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import MyStatusBar from '../../Component/MyStatusBar';
 import { useTranslation } from 'react-i18next';
+import Constants from '../../Comman/Constants';
 
 
 export default function Notification({navigation}) {
@@ -44,7 +45,7 @@ export default function Notification({navigation}) {
         <TouchableOpacity style={styles.loginPageComponentView}>
           <View style={styles.loginPageComponentview1}>
             <View>
-              <Text style={styles.notificationText}>{t('Discount and sales')}</Text>
+              <Text style={styles.notificationText}>{Constants.Laungagues.discount_and_sales == null ? 'Discount and sales' : Constants.Laungagues.discount_and_sales}</Text>
             </View>
             <View>
               <Switch
@@ -60,7 +61,7 @@ export default function Notification({navigation}) {
         <TouchableOpacity style={styles.loginPageComponentView}>
           <View style={styles.loginPageComponentview1}>
             <View>
-              <Text style={styles.notificationText}>{t('Your exclusives')}</Text>
+              <Text style={styles.notificationText}>{Constants.Laungagues.your_exclusives == null ? 'Your exclusives' : Constants.Laungagues.your_exclusives}</Text>
             </View>
             <Switch
               trackColor={{false: '#767577', true: '#DFC8AF'}}
@@ -74,7 +75,7 @@ export default function Notification({navigation}) {
         <TouchableOpacity style={styles.loginPageComponentView}>
           <View style={styles.loginPageComponentview1}>
             <View>
-              <Text style={styles.notificationText}>{t('Stock notifications')}</Text>
+              <Text style={styles.notificationText}>{Constants.Laungagues.stock_notifications == null ? 'Stock notifications' : Constants.Laungagues.stock_notifications}</Text>
             </View>
             <View>
               <Switch

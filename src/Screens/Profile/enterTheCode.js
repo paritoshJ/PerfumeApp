@@ -12,6 +12,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import {COLORS_NEW} from '../../Helper/colors.new';
 import Metrics from '../../Helper/metrics';
 import MyStatusBar from '../../Component/MyStatusBar';
+import Constants from '../../Comman/Constants';
 
 export default function EnterTheCode({navigation}) {
   return (
@@ -30,7 +31,7 @@ export default function EnterTheCode({navigation}) {
           />
         </TouchableOpacity>
 
-        <Text style={styles.navBarText}>ENTER THE CODE</Text>
+        <Text style={styles.navBarText}>{Constants.Laungagues.enter_the_code == null ? 'ENTER THE CODE' : Constants.Laungagues.enter_the_code}</Text>
         <TouchableOpacity>
           <Image style={styles.navBarImage1} source={''} />
         </TouchableOpacity>
@@ -47,9 +48,9 @@ export default function EnterTheCode({navigation}) {
           editable={true}
         />
         <View />
-        <Text style={styles.didNotReceiveText}>You didn’t receive a code?</Text>
+        <Text style={styles.didNotReceiveText}>{Constants.Laungagues.you_didnt_receive_a_code == null ? 'You didn’t receive a code?' : Constants.Laungagues.you_didnt_receive_a_code}</Text>
         <Text style={{color: COLORS_NEW.blue, marginTop: Metrics.rfv(10)}}>
-          Resend
+          {Constants.Laungagues.resend == null ? 'Resend' : Constants.Laungagues.resend}
         </Text>
       </View>
     </>
