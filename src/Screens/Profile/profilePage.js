@@ -37,7 +37,6 @@ export default function ProfilePage({navigation}) {
   const [getProfileData, setProfileDAta] = useState();
   const [getName, setname] = useState('Perfume');
   const [getUsername, setUsername] = useState('Perfume');
-  const scrollOffsetY = useRef(new Animated.Value(0)).current;
 
   const { t, i18n } = useTranslation();
 

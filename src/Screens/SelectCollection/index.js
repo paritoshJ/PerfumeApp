@@ -12,7 +12,7 @@ import {
   I18nManager,
   Alert,
   ActivityIndicator,
-  Animated
+  Animated, Easing
 } from 'react-native';
 import colorConstant from '../../constant/colorConstant';
 import fontConstant from '../../constant/fontConstant';
@@ -59,9 +59,11 @@ const SelectCollection = props => {
   const [getWishlist, SetWishlist] = useState([]);
   const [onOpenDailog, setonOpenDailog] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [getscroll, setscroll] = useState(false);
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
   const { diffClamp } = Animated;
   const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   const {item, offer, wishlist, idget, isHome = false} = props;
@@ -69,20 +71,22 @@ const SelectCollection = props => {
     Shortvaluename = 'Sort';
   let page = 1;
   var Wishlistitema = [];
-  const [animatedValue] = useState(new Animated.Value(0));
+  const [animatedValue, setAnimatedvalue] = useState(new Animated.Value(100 / 2));
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
   useEffect(() => {
-    const handleScroll = Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
-      useNativeDriver: false,
-    });
-
+    Animated.timing(fadeAnim, {
+      toValue: 10,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
 
     setLoading(true);
     getCategory(props.route.params.idget);
     return () => {
       scrollY.removeAllListeners();
     };
-  }, []);
+  }, [fadeAnim]);
 
   var object = {};
   var sortobject = {};
@@ -455,14 +459,19 @@ const SelectCollection = props => {
             {Constants.Laungagues.our_perfumes == null ? 'Our perfumes' : Constants.Laungagues.our_perfumes}
           </Text>
         </ImageBackground>
-        <View
+        <Animated.View
+          resizeMode='contain'
+
                 style={{
                   alignSelf: 'center',
                   flexDirection: 'row',
                   borderWidth: 1,
                   borderColor: colorConstant.LIGHT_GREY,
-                  borderRadius: 25,
+                  resizeMode: 'contain',
+                  // borderRadius: getscroll == false ? 25 : 0,
+                  borderRadius: translateY ? animatedValue : 25,
                   paddingHorizontal: 20,
+            // marginHorizontal: getscroll == false ? 16 : 0,
                   marginHorizontal: 16,
                   paddingVertical: 14,
                   shadowColor: colorConstant.LIGHT_GREY,
@@ -474,9 +483,11 @@ const SelectCollection = props => {
                   shadowRadius: 3.22,
                   elevation: 2,
                   backgroundColor: colorConstant.WHITE,
-            justifyContent: 'center',
-            // marginTop: '1%',
-            position: 'absolute', bottom: 0, paddingTop: "3%"
+                  justifyContent: 'center',
+                  position: 'absolute',
+                  bottom: 0,
+                  paddingTop: "3%",
+                  opacity: fadeAnim ? 1 : 0.5
                   // bottom: 25,
                 }}>
                 <TouchableOpacity
@@ -505,7 +516,6 @@ const SelectCollection = props => {
                       GetProductcategory('1');
                     } else {
                       Shortvaluename = getSortvalue;
-
                       Setassendingdissending('ASC');
                       setLoading(true);
                       setfilter(true);
@@ -547,7 +557,7 @@ const SelectCollection = props => {
               style={{ width: 20, height: 20 }}
                   />
                 </TouchableOpacity>
-              </View>
+        </Animated.View>
       </Animated.View>);
   }
 
@@ -560,9 +570,6 @@ const SelectCollection = props => {
         {loading == false ? (
           categoryvalue == 0 ? (
             <View style={{ flex: 1 }}>
-
-
-              {/* <View style={{ height: '70%', marginLeft: '4%', marginRight: '4%', backgroundColor: 'red', }}> */}
               {categoryData == '' ? (
                 <View
                   style={{
@@ -572,30 +579,69 @@ const SelectCollection = props => {
                   }}>
                   <Text alignSelf={'center'} style={{textAlign: 'center'}}>
                     {Constants.Laungagues.out_of_stock_in_product == null ? 'Out of stock in Product' : Constants.Laungagues.out_of_stock_in_product}
-
                   </Text>
                 </View>
               ) : (
                 <FlatList
+                    onLayout={() => console.log('enter')}
                     onScroll={
                       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
                         useNativeDriver: false,
                       })
+
                     }
+                    onScrollBeginDrag={() => {
+                      Animated.timing(
+                        animatedValue,
+                        {
+                          toValue: 0,
+                          duration: 1000,
+                          easing: Easing.linear
+                        }
+                      ).start()
+
+                      console.log("start", scrollY._value)
+                      if (scrollY._value > 0) {
+                        setscroll(false)
+                      }
+                      else {
+                        setscroll(true)
+                        if (scrollY._value > -10) {
+                          setscroll(true)
+                        }
+                        else {
+                          setscroll(false)
+                        }
+                      }
+                    }}
+                    onScrollEndDrag={() => {
+                      console.log("end", scrollY)
+                      if (scrollY._value < 250) {
+                        setAnimatedvalue(
+                          new Animated.Value(25)
+                        )
+                        Animated.timing(
+                          animatedValue,
+                          {
+                            toValue: 0,
+                            duration: 1000,
+                            easing: Easing.linear
+                          }
+                        ).start()
+                      }
+
+                    }}
+
                     scrollEventThrottle={16}
-
                     style={{ marginLeft: '4%', marginRight: '4%', paddingTop: '60%', marginTop: '6%' }}
-                  data={categoryData}
-
-                  renderItem={renderItem}
-
+                    data={categoryData}
+                    renderItem={renderItem}
                   numColumns={2}
                   keyExtractor={(item, index) => `key-${index}`}
                   ListFooterComponent={renderFooter}
                   contentContainerStyle={{marginBottom: '0%'}}
                   onEndReachedThreshold={0.1}
-                  onEndReached={fetchMoreData}
-                    // stickyHeaderIndices={[0, 6, 13]}
+                    onEndReached={fetchMoreData}
                   showsHorizontalScrollIndicator={false}
                 />
 
