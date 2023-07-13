@@ -5,6 +5,7 @@ const Constants = {
   Token: '',
   StoreCode: '',
   Laungagues: {},
+  valuess: '',
 
   Baseurl: 'https://profitworldapp.com/api',
   imageUrl: 'https://profitworldapp.com/storage/',

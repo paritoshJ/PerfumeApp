@@ -31,13 +31,14 @@ const Collection = props => {
   useFocusEffect(
     React.useCallback(() => {
       var getID = data.url.split('.html');
-      console.log(getID[0])
-      getProductSubCategory(getID[0]);
+      console.log('getid', getID[0])
+      getProductSubCategory(getID[0] == '' ? data.url : getID[0]);
 
       return () => { };
     }, []),
   );
   const getProductSubCategory = (itemId) => {
+    console.log('itemId', itemId)
     setLoading(true);
     GET_SUB_CATEGORY(itemId).then((item) => {
       setSubCategory(item.category)

@@ -84,18 +84,16 @@ const MainScreen = props => {
   const {t, i18n} = useTranslation();
   useFocusEffect(
     React.useCallback(() => {
+      props.navigation.navigate('Main')
       GET_TRANSLATION_JSON().then(async (Responce) => {
         var varo = JSON.parse(Responce.AllTranslationsData.Translations);
         AsyncStorage.setItem('language', JSON.stringify(varo.Translations));
         await AsyncStorage.getItem('language')
           .then(async response => {
-            console.log('response', JSON.parse(response));
             var jsonboject = JSON.parse(response);
             await AsyncStorage.getItem('languageselect')
               .then(responselanguage => {
-                console.log('responselanguage', responselanguage)
                 Object.entries(JSON.parse(response)).map(([key, value], i) => {
-                  console.log('Responsce', key, value, newRandomNumber(1, 1000));
                   if (responselanguage == 1) {
                     if (key == 'ar_ae') {
                       Constants.Laungagues = value;
@@ -112,7 +110,6 @@ const MainScreen = props => {
           })
           .catch(() => {
           });
-        console.log('Constants.Laungagues', Constants.Laungagues)
       }).catch((error) => {
       });
       AsyncStorage.getItem('wishlist')
@@ -138,8 +135,6 @@ const MainScreen = props => {
           Constants.StoreCode = data;
         }
       });
-      // getCategory();
-      // getCategory();
       getConfigData();
       getCategoryHome();
       handleCartId();
@@ -153,9 +148,7 @@ const MainScreen = props => {
       return () => {};
     }, []),
   );
-  const newRandomNumber = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+
   const handleCartId = async () => {
     let res = await EMPTY_CART();
     if (res && res?.createEmptyCart) {
@@ -170,12 +163,10 @@ const MainScreen = props => {
 
   const getConfigData = async () => {
     let res = await GET_HOME_CONFIG_DATA();
-    console.log('premiun coel', res)
     if (res) {
       let arr = res?.storeConfig?.AppConfiguration?.AppData?.map(async item => {
         if (item?.name === 'app_slider' && item?.value) {
           let res = await GET_HOME_DATA(item?.value);
-          console.log('res slider', res)
 
           setBannerData(res?.homeBannerSlider?.banners);
         } else if (item?.value) {
@@ -185,7 +176,6 @@ const MainScreen = props => {
           } else if (item?.name === 'our_perfumes') {
             setOurPerfumes(data.getSliderProducts);
           } else if (item?.name === 'premium_collection') {
-            console.log('update ===>', data);
             setPremiumCollection(data.getSliderProducts);
           } else if (item?.name === 'shop_womans') {
             setShopWomans(data.getSliderProducts);
@@ -327,6 +317,9 @@ const MainScreen = props => {
 
   const cardrenderItem = ({item}) => {
     return (
+      <TouchableOpacity onPress={() => {
+        props.navigation.navigate('SelectCollection', { idget: item?.id });
+      }}>
       <ImageBackground
         source={{uri: 'https://mcstaging.ajmal.com/' + item?.app_banner}}
         key={item}
@@ -354,6 +347,7 @@ const MainScreen = props => {
           {item?.name}
         </Text>
       </ImageBackground>
+      </TouchableOpacity>
     );
   };
 
@@ -401,8 +395,6 @@ const MainScreen = props => {
       const colorIndex = Math.floor(Math.random() * COLORS.length);
       return COLORS[colorIndex];
     }
-    // let finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];
-    // let regularPrice = item?.price_range[0]?.minimum_price[0]?.regular_price[0];
 
     let finalPrice = item?.price_range?.minimum_price?.final_price;
     let regularPrice = item?.price_range?.minimum_price?.regular_price;
@@ -671,7 +663,7 @@ const MainScreen = props => {
             <>
               <Text style={[style.arrivals_text, {
                 writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr'
-              }]}>{Constants.Laungagues.our_perfumes}</Text>
+              }]}>{Constants.Laungagues.our_perfumes == null ? 'Our perfumes' : Constants.Laungagues.our_perfumes}</Text>
               <FlatList
                 data={categoryData}
                 extraData={categoryData}

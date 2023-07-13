@@ -28,7 +28,6 @@ const ReviewScreen = ({navigation, route}) => {
   const {t, i18n} = useTranslation();
   handleRating = rating => {};
   useEffect(() => {
-    console.log(route?.params?.reviewData);
     if (route?.params?.reviewData) {
       setRatingData(route?.params?.reviewData);
     }

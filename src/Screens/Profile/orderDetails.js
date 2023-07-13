@@ -58,7 +58,6 @@ export default function OrderDetails({route, navigation}) {
   useFocusEffect(
     React.useCallback(() => {
       Moment.locale('en');
-      console.log('itemss', items);
 
       return () => { };
     }, []),

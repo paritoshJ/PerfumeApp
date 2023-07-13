@@ -57,6 +57,7 @@ export default function MyCartScreen({navigation}) {
   // }, []);
   useFocusEffect(
     React.useCallback(() => {
+      console.log('asdadadasdasd======>')
       setCartIDInState();
 
       return () => {};
@@ -65,6 +66,7 @@ export default function MyCartScreen({navigation}) {
 
   const setCartIDInState = async () => {
     const cart_id = await AsyncStorage.getItem('CART_ID');
+    console.log('cart_id', cart_id)
     if (cart_id) {
       setCartId(cart_id);
       handleCartData(cart_id);

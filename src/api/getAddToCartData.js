@@ -18,6 +18,7 @@ export const client = new ApolloClient({
 export const ADD_TO_CART_DATA = async (quantity, sku) => {
   try {
     const cartId = await AsyncStorage.getItem('CART_ID');
+    console.log('cartId', cartId)
     const {data, error} = await client.mutate({
       mutation: ADD_PRODUCTS_TO_CART,
       variables: {

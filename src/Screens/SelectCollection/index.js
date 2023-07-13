@@ -38,6 +38,12 @@ import {ADD_WISH_LST_API} from '../../api/getCategoryList';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProductModal from '../../modal/productmodal';
 import Constants from '../../Comman/Constants';
+import { color } from 'react-native-reanimated';
+var object = {};
+var sortobject = { name: "ASC" };
+import { useIsFocused } from '@react-navigation/native';
+
+import { useFocusEffect } from '@react-navigation/native';
 
 const SelectCollection = props => {
   const {t, i18n} = useTranslation();
@@ -61,35 +67,43 @@ const SelectCollection = props => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [getscroll, setscroll] = useState(false);
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
-  const { diffClamp } = Animated;
   const scrollY = useRef(new Animated.Value(0)).current;
-  const scrollX = useRef(new Animated.Value(0)).current;
+  const [count, setCount] = useState(1);
+  const [productID, setProductId] = useState(1);
 
   const COLORS = [colorConstant.PRIMARY, colorConstant.CARD_COLOR];
   const {item, offer, wishlist, idget, isHome = false} = props;
   var categoryvalue = 0,
     Shortvaluename = 'Sort';
   let page = 1;
-  var Wishlistitema = [];
+  const isFocused = useIsFocused();
+
+
   const [animatedValue, setAnimatedvalue] = useState(new Animated.Value(100 / 2));
   const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
-
+  useFocusEffect(
+    React.useCallback(() => {
+      props.navigation.navigate('SelectCollection',)
+    }))
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 10,
       duration: 1000,
       useNativeDriver: true,
     }).start();
-
+    setCount(count + 1);
+    setProductId(props.route.params.idget)
+    object = { category_id: { eq: props.route.params.idget } }
+    sortobject = { name: "ASC" };
     setLoading(true);
     getCategory(props.route.params.idget);
     return () => {
       scrollY.removeAllListeners();
     };
   }, [fadeAnim]);
+  useEffect(() => { }, [isFocused])
 
-  var object = {};
-  var sortobject = {};
+
   const getCategory = async id => {
     const value = await AsyncStorage.getItem('wishlist');
 
@@ -140,9 +154,8 @@ const SelectCollection = props => {
 
     if (categoryvalue == 0) {
 
-      GET_CATEGORY_PRODUCT('', object, 20, page, sortobject)
+      GET_CATEGORY_PRODUCT('', object, 20, 1, sortobject)
         .then(Response => {
-          page = page + 1;
           setactive(active => active + 1);
           setSortCategory(Response.products.sort_fields);
           setcategoryData(Response.products.items);
@@ -213,10 +226,8 @@ const SelectCollection = props => {
         onPress={() => {
           setSelectedProduct(item);
           setonOpenDailog(true);
-
         }}
         style={{
-          // flex: 1,
           marginLeft: '1.2%',
           marginRight: '1.2%',
           marginTop: index == 0 || index == 1 ? 0 : '5%',
@@ -230,17 +241,26 @@ const SelectCollection = props => {
             justifyContent: 'space-between',
             width: '100%',
             alignSelf: 'center',
+            // justifyContent: 'center'
           }}>
+          <View style={{ width: '100%', height: 200, justifyContent: 'center', position: 'absolute', }}>
+            <Image
+              source={{ uri: item.image.url }}
+              resizeMode='contain'
+              style={{ width: '80%', height: '80%', alignSelf: 'center' }}
+            />
+          </View>
           <View
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
             }}>
-            {/* {isStringNotNull(item?.price_range.maximum_price.final_price.value) && (
-              <View
+
+            {
+              item?.price_range.maximum_price.discount.percent_off > 0 ? <View
                 style={{
-                  width: 35,
-                  height: 20,
+                  width: 40,
+                  height: 25,
                   backgroundColor: colorConstant.BLACK,
                   borderTopLeftRadius: 10,
                   borderBottomRightRadius: 10,
@@ -254,10 +274,11 @@ const SelectCollection = props => {
                     fontStyle: 'normal',
                     fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
                   }}>
-                  {item?.price_range.maximum_price.final_price.value + '%'}
+                  {item?.price_range.maximum_price.discount.percent_off + '%'}
                 </Text>
-              </View>
-            )} */}
+              </View> : <View />
+            }
+
             <View style={{padding: 10}}>
               <MaterialIcons
                 name={Wishlist == true ? 'favorite' : 'favorite-border'}
@@ -281,13 +302,11 @@ const SelectCollection = props => {
             </View>
           </View>
 
-          <Image
-            source={{uri: item.image.url}}
-            style={{ width: '80%', height: '80%', alignSelf: 'center' }}
-          />
+
+
         </View>
 
-        <View style={{flexDirection: 'row', marginVertical: 12}}>
+        <View style={{ flexDirection: 'row', marginVertical: 10 }}>
           <TouchableOpacity
             style={style.tochablesize}
             onPress={() => {
@@ -328,7 +347,7 @@ const SelectCollection = props => {
             finalPrice?.value,
           ).toFixed(2)} ${finalPrice?.currency}`}</Text>
           {finalPrice?.value < regularPrice?.value && (
-            <Text style={style.regularpricetext}>
+            <Text style={[style.regularpricetext, { color: '#A4A4A4' }]}>
               {`${parseFloat(regularPrice?.value).toFixed(2)} ${
                 regularPrice?.currency
               }`}
@@ -343,15 +362,16 @@ const SelectCollection = props => {
       setEndreach(true);
       setLoadingpagination(true);
       if (getTotalpage >= active) {
+        setCount(count + 1);
+        if (Object.keys(object).length == 0) {
+          object = { category_id: { eq: productID } }
+        }
 
-        GET_CATEGORY_PRODUCT('', object, 20, page, sortobject)
+        GET_CATEGORY_PRODUCT('', object, 20, count, sortobject)
           .then(Response => {
-            page = page + 1;
             setactive(active => active + 1);
             setEndreach(false);
-
             setLoadingpagination(false);
-
             setcategoryData([...categoryData, ...Response.products.items]);
           })
           .catch(error => {
@@ -364,7 +384,7 @@ const SelectCollection = props => {
   };
 
   const FilterArray = value => {
-    object = {};
+
     getFiltterCategory.map((item, index) => {
       var data = item.options.filter(function (item1) {
         return item1.isSlected == true;
@@ -393,11 +413,20 @@ const SelectCollection = props => {
         } else {
           object[item.attribute_code] = {in: arr};
         }
+
       }
     });
-    sortobject = {};
-    if (Shortvaluename != 'Sort') {
-      sortobject[Shortvaluename] = value;
+    if (Object.keys(object).length == 0) {
+      object = { category_id: { eq: props.route.params.idget } }
+    }
+    else {
+      var value = Object.keys(object).filter((item) => {
+        return 'category_uid' == item ? true : false;
+
+      });
+      if (value == false) {
+        object["category_id"] = { eq: props.route.params.idget };
+      }
     }
   };
   const renderFooter = () => {
@@ -414,7 +443,6 @@ const SelectCollection = props => {
 
 
   const StickyHeader = () => {
-    console.log('translateY', scrollY)
     return (
       <Animated.View style={{
         position: 'absolute',
@@ -468,10 +496,8 @@ const SelectCollection = props => {
                   borderWidth: 1,
                   borderColor: colorConstant.LIGHT_GREY,
                   resizeMode: 'contain',
-                  // borderRadius: getscroll == false ? 25 : 0,
                   borderRadius: translateY ? animatedValue : 25,
                   paddingHorizontal: 20,
-            // marginHorizontal: getscroll == false ? 16 : 0,
                   marginHorizontal: 16,
                   paddingVertical: 14,
                   shadowColor: colorConstant.LIGHT_GREY,
@@ -509,6 +535,7 @@ const SelectCollection = props => {
                   onPress={() => {
                     if (getasendingdesending == 'ASC') {
                       Shortvaluename = getSortvalue;
+                      sortobject = { name: "DESC" };
                       Setassendingdissending('DESC');
                       setLoading(true);
                       setfilter(true);
@@ -517,6 +544,7 @@ const SelectCollection = props => {
                     } else {
                       Shortvaluename = getSortvalue;
                       Setassendingdissending('ASC');
+                      sortobject = { name: "ASC" };
                       setLoading(true);
                       setfilter(true);
                       FilterArray(getasendingdesending);
@@ -583,7 +611,7 @@ const SelectCollection = props => {
                 </View>
               ) : (
                 <FlatList
-                    onLayout={() => console.log('enter')}
+                    onLayout={() => { }}
                     onScroll={
                       Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
                         useNativeDriver: false,
@@ -600,7 +628,6 @@ const SelectCollection = props => {
                         }
                       ).start()
 
-                      console.log("start", scrollY._value)
                       if (scrollY._value > 0) {
                         setscroll(false)
                       }
@@ -615,7 +642,6 @@ const SelectCollection = props => {
                       }
                     }}
                     onScrollEndDrag={() => {
-                      console.log("end", scrollY)
                       if (scrollY._value < 250) {
                         setAnimatedvalue(
                           new Animated.Value(25)
@@ -633,13 +659,14 @@ const SelectCollection = props => {
                     }}
 
                     scrollEventThrottle={16}
-                    style={{ marginLeft: '4%', marginRight: '4%', paddingTop: '60%', marginTop: '6%' }}
+                    style={{ marginLeft: '4%', marginRight: '4%', paddingTop: '60%', marginTop: '6%', }}
                     data={categoryData}
                     renderItem={renderItem}
                   numColumns={2}
                   keyExtractor={(item, index) => `key-${index}`}
                   ListFooterComponent={renderFooter}
-                  contentContainerStyle={{marginBottom: '0%'}}
+                    contentContainerStyle={{ paddingBottom: '80%' }}
+
                   onEndReachedThreshold={0.1}
                     onEndReached={fetchMoreData}
                   showsHorizontalScrollIndicator={false}
@@ -651,8 +678,7 @@ const SelectCollection = props => {
               {visibalefilter && (
                 <FiltersScreen
                   func1={value => {
-                    object = {};
-                    sortobject = {};
+                    object = { category_id: { eq: props.route.params.idget } }
                     if (Shortvaluename != 'Sort') {
                       if (value != 'Sort') {
                         sortobject[Shortvaluename] = 'DESC';
@@ -666,6 +692,7 @@ const SelectCollection = props => {
                     GetProductcategory('');
                   }}
                   func={value => {
+                    object = {}
                     Shortvaluename = getSortvalue;
                     setactive(1);
                     setLoading(true);
@@ -735,66 +762,6 @@ const SelectCollection = props => {
                 </Text>
               </ImageBackground>
 
-              {/* {categoryvalue == 0 ? <View
-            style={{
-              alignSelf: 'center',
-              flexDirection: 'row',
-              borderWidth: 1,
-              borderColor: colorConstant.LIGHT_GREY,
-              borderRadius: 25,
-              paddingHorizontal: 20,
-              marginHorizontal: 16,
-              paddingVertical: 14,
-              shadowColor: colorConstant.LIGHT_GREY,
-              shadowOffset: {
-                width: 2,
-                height: 2,
-              },
-              shadowOpacity: 0.95,
-              shadowRadius: 3.22,
-              elevation: 2,
-              backgroundColor: colorConstant.WHITE,
-              bottom: 25,
-            }}>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                flex: 1,
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                // props.navigation.navigate('short');
-                setVisibale(true);
-              }}>
-              <Text style={{}}>{t('Sort')}</Text>
-              <Image source={imageConstant.short} style={{ width: 20, height: 20 }} />
-            </TouchableOpacity>
-            <View
-              style={{
-                width: 1,
-                height: 20,
-                backgroundColor: colorConstant.LIGHT_GREY,
-                alignSelf: 'center',
-                marginHorizontal: 20,
-              }}></View>
-            <TouchableOpacity
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                props.navigation.navigate('FiltersScreen');
-              }}>
-              <Text style={{}}>{t('Filters')}</Text>
-              <Image
-                source={imageConstant.filters}
-                style={{ width: 20, height: 20 }}
-              />
-            </TouchableOpacity>
-          </View> : <View />} */}
 
               <View
                 style={{
@@ -914,7 +881,9 @@ const SelectCollection = props => {
             item={selectedProduct}
             onOpenDailog={onOpenDailog}
             setOnOpenDailog={closeDialog}
-            // image={selectedProduct?.image.url}
+            producm={(value) => {
+              props.navigation.navigate('SelectCollection')
+            }}
             image={selectedProduct?.image.url}
             title={selectedProduct?.name}
             sku={selectedProduct.sku}

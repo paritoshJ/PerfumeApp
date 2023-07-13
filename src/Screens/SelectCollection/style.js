@@ -34,23 +34,26 @@ export default StyleSheet.create({
     borderColor: colorConstant.LIGHT_GREY,
   },
   sizetext: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 7,
+    paddingVertical: 3,
     fontFamily: fontConstant.satoshi,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: fontConstant.WEIGHT_LEIGHT,
     color: colorConstant.BLACK,
   },
   displaycategytext: {
     fontFamily: fontConstant.satoshi,
-    fontSize: 12,
+    fontSize: 11,
     fontStyle: 'normal',
+    lineHeight: 14,
     fontWeight: fontConstant.WEIGHT_LEIGHT,
     color: colorConstant.LIGHT_TEXT,
+    textTransform: 'uppercase',
+    fontWeight: '400'
   },
   nametext: {
     color: colorConstant.BLACK,
-    fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
+    fontSize: fontConstant.TEXT_18_SIZE_REGULAR,
     fontStyle: 'italic',
     fontFamily: fontConstant.gambetta,
     fontWeight: fontConstant.WEIGHT_REGULAR,
@@ -61,15 +64,21 @@ export default StyleSheet.create({
     color: colorConstant.DARK_PRIMARY,
     fontStyle: 'normal',
     fontSize: fontConstant.TEXT_20_SIZE_BOLD,
-    fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+    // fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+    fontWeight: '700',
+    lineHeight: 18,
+
+    fontFamily: fontConstant.satoshifont,
   },
   regularpricetext: {
     marginLeft: 10,
-    color: colorConstant.LIGHT_GREY,
+    color: colorConstant.LIGHT_TEXT,
     textDecorationLine: 'line-through',
-    color: colorConstant.DARK_PRIMARY,
     fontStyle: 'normal',
     fontSize: fontConstant.TEXT_20_SIZE_BOLD,
-    fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+    fontWeight: '400',
+    lineHeight: 18,
+
+    fontFamily: fontConstant.satoshi,
   }
 });

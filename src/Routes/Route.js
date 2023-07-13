@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef } from 'react'
+import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabs } from 'rn-animated-tabbar';
@@ -45,7 +45,7 @@ import WishlistScreen from '../Screens/Wishlist/Wishlist';
 import MainScreen from '../Screens/Main/Main';
 import MyCartScreen from '../Screens/MyCart/MyCart';
 import OrderDetails from '../Screens/Profile/orderDetails';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import NoCredirCard from '../Screens/Profile/NoCreditCard';
 import AddCreditCard from '../Screens/Profile/Creditcard';
 import Returns from '../Screens/Profile/NoReturns';
@@ -112,7 +112,11 @@ import Svg, { Path } from 'react-native-svg'
 // reanimated
 import Animated, { useAnimatedStyle, withTiming, useDerivedValue } from 'react-native-reanimated';
 import fontConstant from '../constant/fontConstant';
+import Tabbar from './Tabbar';
 const AnimatedSvg = Animated.createAnimatedComponent(Svg)
+var data = 0;
+
+import { CART_DATA } from '../api/getCartData';
 
 const ProfileStack = () => {
   return (
@@ -143,7 +147,6 @@ const ProfileStack = () => {
       <Stack.Screen name="WriteUs" component={WriteUs} />
       <Stack.Screen name="AddressBookList" component={AddressBookList} />
       <Stack.Screen name="FAQ" component={FAQ} />
-
       <Stack.Screen name="Feed" component={Feed} />
       <Stack.Screen name="GiftCard" component={FeeGiftCard} />
       <Stack.Screen name="Wallet" component={Wallet} />
@@ -153,7 +156,6 @@ const ProfileStack = () => {
       <Stack.Screen name="OnlineOrder" component={OnlineOrder} />
       <Stack.Screen name="AddressBook" component={AddressBook} />
       <Stack.Screen name="OurStores" component={OurStores} />
-
       <Stack.Screen name="BuyGiftCard" component={BuyGiftCard} />
       <Stack.Screen name="PickAmount" component={PickAmount} />
       <Stack.Screen name="ChooseDelivery" component={ChooseDelivery} />
@@ -236,7 +238,17 @@ const MainStack = () => {
         cardStyle: { backgroundColor: '#ffff' },
       }}>
       <Stack.Screen name="MainScreen" component={MainScreen} />
-      <Stack.Screen name="ProductPage" component={ProductPage} />
+      <Stack.Screen name="SelectCollection" component={SelectCollection} screenProps={{ unreadMessagesCount: 8 }} options={{ unmountOnBlur: true }}
+        listeners={({ navigation }) => {
+          AsyncStorage.getItem('CART_ID').then((cartid) => {
+            console.log('3 cart id,', cartid)
+
+            CART_DATA(cartid).then((Response) => {
+              data = Response.cart.items.length == null || Response.cart.items.length == '' ? 0 : Response.cart.items.length;
+            });
+          })
+        }} />
+
       <Stack.Screen name="ReviewScreen" component={ReviewScreen} />
       <Stack.Screen name="SearchScreen" component={SearchScreen} />
       <Stack.Screen name="FAQList" component={FAQList} />
@@ -264,38 +276,7 @@ const MyCartStack = () => {
   );
 };
 
-const BottomTabsData = [
-  {
-    id: 'Catalog',
-    title: 'Catalog',
-    icon: Search_ic,
-    activeIcon: Search_ic_active,
-  },
-  {
-    id: 'Wishlist',
-    title: 'Wishlist',
-    icon: Wishlist_ic,
-    activeIcon: Wishlist_ic_active,
-  },
-  {
-    id: 'Main',
-    title: 'Main',
-    icon: Home_ic,
-    activeIcon: Home_ic_active,
-  },
-  {
-    id: 'My cart',
-    title: 'My cart',
-    icon: Cart_ic,
-    activeIcon: Cart_ic_active,
-  },
-  {
-    id: 'Profile',
-    title: 'Profile',
-    icon: Profile_ic,
-    activeIcon: Profile_ic_active,
-  },
-];
+
 
 const Route = navigation => {
   const { navigate } = useNavigation();
@@ -307,34 +288,57 @@ const Route = navigation => {
 
       tabBar={props => (
         <AnimatedTabBar {...props} />
-        // <BottomTabs
-        //   tabsData={BottomTabsData}
-        //   tabBarBackground="#F3ECE3"
-        //   textColor="#BC8B57"
-        //   activeTabBackground="#FFFFFF"
-        //   activeIconBackColor="#BC8B57"
-        //   navigationHandler={screen => {
-        //     // call your navigation method
-        //     console.log(screen, '::::: SCREEN :::', props);
-        //     navigate(screen);
-        //   }}
-        //   {...props}
-        // />
       )}
-      screenOptions={{ headerShown: false }}
-      // tabBarOptions={{}}
-      initialRouteName="Main">
+      screenOptions={{ headerShown: false, }}
+      tabBarOptions={{ unmountOnBlur: true }}
+
+      initialRouteName="Main"
+      tabBarComponent={Tabbar}>
       <TabsNavigator.Screen name="Catalog" component={CatalogStack} />
       <TabsNavigator.Screen name="Wishlist" component={WishlistStack} />
       <TabsNavigator.Screen name="Main" component={MainStack} />
-      <TabsNavigator.Screen name="My cart" component={MyCartStack} />
+      <TabsNavigator.Screen name="My cart" component={MyCartStack} options={{ unmountOnBlur: true }}
+        listeners={({ navigation }) => {
+          AsyncStorage.getItem('CART_ID').then((cartid) => {
+            console.log('2 cart id,', cartid)
+
+            CART_DATA(cartid).then((Response) => {
+              data = Response.cart.items.length == null || Response.cart.items.length == '' ? 0 : Response.cart.items.length;
+            });
+          })
+        }} />
       <TabsNavigator.Screen name="Profile" component={ProfileStack} />
     </TabsNavigator.Navigator>
   );
 };
+const RootStackComponent = navigation => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}
+      initialRouteName="Main">
+      <Stack.Screen name="Main" component={Route} />
+
+      <Stack.Screen name="ProductPage" component={ProductPage} options={{ unmountOnBlur: true }}
+        listeners={({ navigation }) => {
+          AsyncStorage.getItem('CART_ID').then((cartid) => {
+            console.log('1 cart id,', cartid)
+            CART_DATA(cartid).then((Response) => {
+              data = Response.cart.items.length == null || Response.cart.items.length == '' ? 0 : Response.cart.items.length;
+            });
+          })
+        }} />
+
+    </Stack.Navigator>
+  )
+}
 const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, descriptors }: BottomTabBarProps) => {
   const { bottom } = useSafeAreaInsets()
+  AsyncStorage.getItem('CART_ID').then((cartid) => {
+    console.log('4 cart id,', cartid)
 
+    CART_DATA(cartid).then((Response) => {
+      data = Response.cart.items.length == null || Response.cart.items.length == '' ? 0 : Response.cart.items.length;
+    });
+  })
   // get information about the components position on the screen -----
 
   const reducer = (state: any, action: { x: number, index: number }) => {
@@ -343,7 +347,6 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
   }
 
   const [layout, dispatch] = useReducer(reducer, [])
-  console.log(layout)
 
   const handleLayout = (event: LayoutChangeEvent, index: number) => {
     dispatch({ x: event.nativeEvent.layout.x, index })
@@ -372,7 +375,7 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
   })
 
   return (
-    <View style={[styles.tabBar, { paddingBottom: bottom, writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}>
+    <View style={[styles.tabBar, { paddingBottom: bottom, writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr', }]}>
       <AnimatedSvg
         width={I18nManager.isRTL ? Platform.OS == 'ios' ? 555 : 450 : 174}
         height={40}
@@ -387,7 +390,6 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
 
       <View style={[styles.tabBarContainer, { writingDirection: I18nManager.isRTL ? 'rtl' : 'ltr' }]}>
         {routes.map((route, index) => {
-          console.log('ind3ex', index, route)
           const active = index === activeIndex
           const { options } = descriptors[route.key]
           var imagessvginactive = '';
@@ -432,13 +434,13 @@ const AnimatedTabBar = ({ state: { index: activeIndex, routes }, navigation, des
           )
         })}
       </View>
+
     </View>
   )
 }
 const TabBarComponent = ({ active, options, tabicon, tabactiveicon, activename, onLayout, onPress }: TabBarComponentProps) => {
   // handle lottie animation -----------------------------------------
   const ref = useRef(null)
-
   useEffect(() => {
     if (active && ref?.current) {
       // @ts-ignore
@@ -481,6 +483,9 @@ const TabBarComponent = ({ active, options, tabicon, tabactiveicon, activename, 
         fontStyle: 'normal',
         fontWeight: '500',
       }}>{active ? activename : ''}</Text>
+      {options.unmountOnBlur == true ? active ? null : data == 0 ? null : <View style={{ height: 26, width: 26, backgroundColor: '#BC8B57', justifyContent: 'center', position: "absolute", right: 0, borderRadius: 26 / 2, marginTop: 30 }}>
+        <Text style={{ alignSelf: 'center', color: 'white' }}>{data}</Text>
+      </View> : null}
     </Pressable>
   )
 }
@@ -537,4 +542,4 @@ const styles = StyleSheet.create({
     width: 36,
   }
 })
-export default Route;
+export default RootStackComponent;

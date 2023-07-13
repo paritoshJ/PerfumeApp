@@ -8,7 +8,7 @@ export default {
   satoshifont: 'Satoshi Variable',
   // gambetta: 'Gambetta-Variable',
   satoshi: 'Satoshi-Regular',
-  gambetta: 'arial',
+  gambetta: 'Gambetta-Italic',
 
   //** Text Size */
   TEXT_9_SIZE_REGULAR: 9, //9

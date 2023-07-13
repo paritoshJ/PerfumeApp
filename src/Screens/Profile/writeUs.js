@@ -33,7 +33,6 @@ export default function WriteUs({navigation}) {
   const saveConctUs = () => {
     setLoading(true);
     UPDATE_COUNTAC_US_API(inputDetail, email, name, phone).then((Responce) => {
-      console.log('Responce', Responce)
       setLoading(false);
       Alert.alert('Success', 'Contact us sent successfully', [
         { text: 'OK', onPress: () => navigation.goBack() },

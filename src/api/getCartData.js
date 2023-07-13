@@ -243,11 +243,9 @@ export const CART_DATA = async (cartId) => {
 }});
     if (error) {
       // alert(`error => ${JSON.stringify(error)}`);
-      console.log('error', JSON.stringify(error));
       return;
     }
     // alert(`Response: ${JSON.stringify(data)}`);
-    console.log('data', JSON.stringify(data));
     return data;
   } catch (error) {
     console.log('error', error);

@@ -65,10 +65,8 @@ export default function WishList({navigation}) {
     GET_WISHLIST_PRODUCTS().then((res) => {
       setLoading(false);
       setData(res.wishlist.items);
-      console.log('GET_WISHLIST_PRODUCTS',res);
     }).catch((err)=>{
       setLoading(false);
-      console.log('err==>', err)
       if (err == "ApolloError: The current user cannot perform operations on wishlist") {
         Alert.alert('Session Expired', 'Your session has expired. Please login again to continue working.', [
 
@@ -82,7 +80,6 @@ export default function WishList({navigation}) {
                 navigation.navigate('Profile');
 
               } catch (error) {
-                console.log(error);
               }
               setTimeout(() => {
 
@@ -95,12 +92,10 @@ export default function WishList({navigation}) {
   }
   const createEmptyCartForLogout = async () => {
     let res = await EMPTY_CART();
-    console.log('res', res);
     if (res && res?.createEmptyCart) {
       try {
         await AsyncStorage.setItem('CART_ID', res?.createEmptyCart);
       } catch (e) {
-        console.log(e);
       }
     }
   };
@@ -120,7 +115,6 @@ export default function WishList({navigation}) {
   }
   const renderItem = ({ item, index }) => {
     let name = item.name;
-    console.log('item:=>', item)
     let finalPrice = {};
     let regularPrice = {};
     var image = '';
@@ -129,7 +123,6 @@ export default function WishList({navigation}) {
     finalPrice = item?.product.price?.regularPrice?.amount;
     regularPrice = item?.product.price?.regularPrice?.amount;
     image = item.product.image.url
-    console.log('image:=>', image)
 
     // if (isHome) {
     //   finalPrice = item?.price_range[0]?.minimum_price[0]?.final_price[0];

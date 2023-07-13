@@ -10,28 +10,31 @@ import {
   I18nManager,
   SafeAreaView,
   Alert,
+  Animated,
+  Dimensions,
+  Easing
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import style from './style';
 import colorConstant from '../../constant/colorConstant';
 import imageConstant from '../../constant/imageConstant';
 import fontConstant from '../../constant/fontConstant';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import stringConstant from '../../constant/stringConstant';
-import {Rating, AirbnbRating} from 'react-native-ratings';
-import {AccordionList} from 'accordion-collapse-react-native';
+import { Rating, AirbnbRating } from 'react-native-ratings';
+import { AccordionList } from 'accordion-collapse-react-native';
 import review from '../../utils/review';
 import Feather from 'react-native-vector-icons/Feather';
 import faq from '../../utils/faq';
 import perfumedata from '../../utils/perfumedata';
 import ProductCard from '../../Component/ProducCard';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {StatusBar} from 'react-native';
+import { StatusBar } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {SwiperFlatList} from 'react-native-swiper-flatlist';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
 import AddReviewModal from '../../modal/Addreviewmodal';
-import {useTranslation} from 'react-i18next';
-import {GET_PRODUCT_DETAILS} from '../../api/getProductDetails';
+import { useTranslation } from 'react-i18next';
+import { GET_PRODUCT_DETAILS } from '../../api/getProductDetails';
 import Loader from '../../Component/Loader';
 import {
   dateFromNow,
@@ -41,10 +44,11 @@ import {
   removeHtmlTags,
 } from '../../Helper/helper';
 import UIStepperView from '../../Component/UiStepper';
-import {ADD_ITEM_TO_CART} from '../../api/addToCart';
-import {ADD_TO_CART_DATA} from '../../api/getAddToCartData';
-import {GET_PRODUCTS_FAQ} from '../../api/getProduct';
+import { ADD_ITEM_TO_CART } from '../../api/addToCart';
+import { ADD_TO_CART_DATA } from '../../api/getAddToCartData';
+import { GET_PRODUCTS_FAQ } from '../../api/getProduct';
 import Constants from '../../Comman/Constants';
+import ParallaxScrollView from 'react-native-parallax-scroll-view';
 
 const ProductPage = props => {
   const [selected, setSelected] = useState('50 ml');
@@ -60,25 +64,44 @@ const ProductPage = props => {
   const [faqListClipped, setFaqListClipped] = useState([]);
   const [value, setValue] = useState(1);
   const [skuValue, setSkuValue] = useState('');
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
-  const {t, i18n} = useTranslation();
-  const data = [
-    {id: 1, name: 'abc'},
-    {id: 2, name: 'text'},
-    {id: 3, name: 'xyz'},
-  ];
+  // const MAX_HEIGHT = 50;
+  // const MIN_Heinght = 50;
+  // const animatedhedaerheight = scrollY.interpolate({
+  //   inputRange: [0, MAX_HEIGHT - MIN_Heinght],
+  //   outputRange: [MAX_HEIGHT, MIN_Heinght],
+  //   extrapolate: 'clamp'
+  // });
+  const translateY = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, -170],
+    extrapolate: 'clamp',
+  });
+  const { t, i18n } = useTranslation();
   useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 10,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
+
     if (props?.route.params.skuID) {
       console.log(props?.route.params.skuID);
       setSkuValue(props?.route.params.skuID);
       callProductDetailApi();
       getFaqList();
     }
-  }, []);
+    return () => {
+      scrollY.removeAllListeners();
+    };
+  }, [fadeAnim]);
+
 
   const callProductDetailApi = async () => {
     setLoading(true);
-    const obj = {sku: {eq: props?.route.params.skuID}};
+    const obj = { sku: { eq: props?.route.params.skuID } };
     // const obj = {sku: {eq: 'ETIQUETTE-config'}};
     await GET_PRODUCT_DETAILS(obj)
       .then(res => {
@@ -99,8 +122,9 @@ const ProductPage = props => {
   };
 
   const getFaqList = async () => {
-    const obj = {product_sku: props?.route.params.skuID};
-    // const obj = {sku: {eq: 'ETIQUETTE-config'}};
+    // const obj = { product_sku: props?.route.params.skuID };
+    const obj = { product_sku: 6293708416080 };
+    console.log('obj', obj)
     await GET_PRODUCTS_FAQ('', obj)
       .then(res => {
         console.log('GET_PRODUCTS_FAQ', res);
@@ -170,8 +194,8 @@ const ProductPage = props => {
   };
   const body = item => {
     return (
-      <View style={{padding: 10}}>
-        <Text style={{textAlign: 'left', color: colorConstant.BLACK}}>
+      <View style={{ padding: 10 }}>
+        <Text style={{ textAlign: 'left', color: colorConstant.BLACK }}>
           {removeHtmlTags(item.answer)}
         </Text>
       </View>
@@ -209,10 +233,10 @@ const ProductPage = props => {
     );
   };
 
-  const reviewItem = ({item}) => {
+  const reviewItem = ({ item }) => {
     console.warn(item, '---d');
     return (
-      <View style={{width: '100%', marginTop: '5%', flexDirection: 'row'}}>
+      <View style={{ width: '100%', marginTop: '5%', flexDirection: 'row' }}>
         <View
           style={{
             width: '20%',
@@ -226,7 +250,7 @@ const ProductPage = props => {
           }}>
           <Text style={{}}>{getInitials(item.nickname)}</Text>
         </View>
-        <View style={{width: '80%'}}>
+        <View style={{ width: '80%' }}>
           <View
             style={{
               width: '100%',
@@ -235,7 +259,7 @@ const ProductPage = props => {
             }}>
             <Text style={style.review_user_name}>{item.nickname}</Text>
             <Text
-              style={[style.review_text, {color: colorConstant.LIGHT_GREY}]}>
+              style={[style.review_text, { color: colorConstant.LIGHT_GREY }]}>
               {findDaysDiffrent(item.created_at)}
             </Text>
           </View>
@@ -246,22 +270,22 @@ const ProductPage = props => {
             ratingColor={colorConstant.DARK_PRIMARY}
             imageSize={15}
             onFinishRating={ratingCompleted}
-            style={{alignItems: 'flex-start', marginTop: 10}}
+            style={{ alignItems: 'flex-start', marginTop: 10 }}
           />
-          <Text style={[style.review_text, {color: '#2B2826', marginTop: 5}]}>
+          <Text style={[style.review_text, { color: '#2B2826', marginTop: 5 }]}>
             {item.text ?? item.summary}
           </Text>
         </View>
       </View>
     );
   };
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <>
         <ProductCard
           item={item}
           offer={false}
-          onSizeSelect={data => {}}
+          onSizeSelect={data => { }}
           onFullItemPress={() => {
             // setSelectedProduct(item);
             // setonOpenDailog(true);
@@ -276,22 +300,24 @@ const ProductPage = props => {
       <View style={style.footer}>
         <Image
           source={imageConstant.card}
-          style={{width: '100%', height: '100%'}}
+          style={{ width: '100%', height: '100%' }}
           resizeMode="contain"
         />
       </View>
     );
   }
-  const ratingCompleted = rating => {};
+  const ratingCompleted = rating => { };
   const renderHearderImageView = () => {
     console.log('productType', productType);
     let item = {};
 
     return (
+
       <ImageBackground
         style={style.header_container}
         // source={{uri:productDetail?.image?.url}}
-        resizeMode="center">
+        resizeMode="center"> 
+
         <View style={style.share_view}>
           <AntDesign
             name="left"
@@ -302,15 +328,15 @@ const ProductPage = props => {
             }}
             style={{
               marginLeft: 15,
-              transform: [{scaleX: I18nManager.isRTL ? -1 : 1}],
+              transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
             }}
           />
           <Feather
             name="share"
             size={22}
             color={colorConstant.LIGH_GREY}
-            onPress={() => {}}
-            style={{marginRight: 15}}
+            onPress={() => { }}
+            style={{ marginRight: 15 }}
           />
         </View>
         {productType?.media_gallery?.length > 0 && (
@@ -319,14 +345,14 @@ const ProductPage = props => {
             data={productType?.media_gallery}
             paginationDefaultColor={colorConstant.LIGHT_GREY}
             paginationActiveColor={colorConstant.DARK_PRIMARY}
-            paginationStyleItemActive={{width: 5, height: 5}}
-            paginationStyleItemInactive={{width: 5, height: 5}}
+            paginationStyleItemActive={{ width: 5, height: 5 }}
+            paginationStyleItemInactive={{ width: 5, height: 5 }}
             paginationStyle={{
               marginBottom: '12%',
               alignSelf: 'center',
               width: '100%',
             }}
-            renderItem={({item}) => (
+            renderItem={({ item }) => (
               <View style={style.child}>
                 <View
                   style={{
@@ -334,7 +360,7 @@ const ProductPage = props => {
                     flexDirection: 'row',
                     marginTop: '5%',
                   }}>
-                  <View style={{width: '30%'}}>
+                  <View style={{ width: '30%' }}>
                     <View style={style.vanilla}>
                       <Text style={style.text}>
                         {productType?.top_note_name}
@@ -357,31 +383,35 @@ const ProductPage = props => {
                       height: 250,
                     }}>
                     <Image
-                      source={{uri: item?.url}}
-                      style={{width: '100%', height: '100%'}}
+                      source={{ uri: item?.url }}
+                      style={{ width: '100%', height: '100%' }}
                       resizeMode="contain"
                     />
                   </View>
-                  {productType?.discount_percent &&
-                    productType?.discount_percent > 0 && (
-                      <View style={style.offer}>
-                        <View style={style.offer_view}>
-                          <Text style={style.offer_text}>
-                            {`${productType?.discount_percent}%`}
-                          </Text>
-                        </View>
-                      </View>
-                    )}
+                  {
+                    productType?.discount_percent != null ?
+                      productType?.discount_percent != 0 ?
+
+                        <View style={style.offer}>
+                          <View style={style.offer_view}>
+                            <Text style={style.offer_text}>
+                              {`${productType?.discount_percent}%`}
+                            </Text>
+                          </View>
+                        </View> : <View /> : <View />
+                  }
+
                 </View>
               </View>
             )}
           />
         )}
       </ImageBackground>
+
     );
   };
 
-  const renderItemWeight = ({item}) => {
+  const renderItemWeight = ({ item }) => {
     return (
       <TouchableOpacity
         style={[
@@ -441,9 +471,8 @@ const ProductPage = props => {
                 textDecorationLine: 'line-through',
               },
             ]}>
-            {`${parseFloat(regularPrice?.value).toFixed(2)} ${
-              regularPrice?.currency
-            }`}
+            {`${parseFloat(regularPrice?.value).toFixed(2)} ${regularPrice?.currency
+              }`}
           </Text>
         )}
       </View>
@@ -456,6 +485,7 @@ const ProductPage = props => {
     let res = await ADD_TO_CART_DATA(value, skuValue);
     // setLoading(false);
     setisAdded(false);
+    props.navigation.navigate('ProductPage')
 
     if (res) {
       console.log('CART_DATA', res);
@@ -464,8 +494,144 @@ const ProductPage = props => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScrollView style={style.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      {/* <Animated.View style={{ height: animatedhedaerheight, }}>
+        <View style={style.share_view}>
+          <AntDesign
+            name="left"
+            size={22}
+            color={colorConstant.LIGH_GREY}
+            onPress={() => {
+              props.navigation.goBack();
+            }}
+            style={{
+              marginLeft: 15,
+              transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+            }}
+          />
+          <Feather
+            name="share"
+            size={22}
+            color={colorConstant.LIGH_GREY}
+            onPress={() => { }}
+            style={{ marginRight: 15 }}
+          />
+        </View>
+
+      </Animated.View> */}
+      <ParallaxScrollView
+        backgroundColor="white"
+
+        parallaxHeaderHeight={350}
+        renderForeground={() => (
+          <View>
+            <ImageBackground
+              style={style.header_container}
+              // source={{uri:productDetail?.image?.url}}
+              resizeMode="center">
+
+
+              {productType?.media_gallery?.length > 0 && (
+                <SwiperFlatList
+                  showPagination
+                  data={productType?.media_gallery}
+                  paginationDefaultColor={colorConstant.LIGHT_GREY}
+                  paginationActiveColor={colorConstant.DARK_PRIMARY}
+                  paginationStyleItemActive={{ width: 5, height: 5 }}
+                  paginationStyleItemInactive={{ width: 5, height: 5 }}
+                  paginationStyle={{
+                    paddingTop: '10%',
+                    // marginTop: '22%',
+                    // alignSelf: 'center',
+                    width: '100%',
+                  }}
+                  renderItem={({ item }) => (
+                    <View style={style.child}>
+                      <View
+                        style={{
+                          width: '100%',
+                          flexDirection: 'row',
+                          marginTop: '5%',
+                        }}>
+                        <View style={{ width: '30%' }}>
+                          <View style={style.vanilla}>
+                            <Text style={style.text}>
+                              {productType?.top_note_name}
+                            </Text>
+                          </View>
+                          <View style={style.rose}>
+                            <Text style={style.text}>
+                              {productType?.heart_note_name}
+                            </Text>
+                          </View>
+                          <View style={style.oud}>
+                            <Text style={style.text}>
+                              {productType?.base_note_name}
+                            </Text>
+                          </View>
+                        </View>
+                        <View
+                          style={{
+                            width: '50%',
+                            height: 250,
+                          }}>
+                          <Image
+                            source={{ uri: item?.url }}
+                            style={{ width: '100%', height: '100%' }}
+                            resizeMode="contain"
+                          />
+                        </View>
+                        {
+                          productType?.discount_percent != null ?
+                            productType?.discount_percent != 0 ?
+
+                              <View style={style.offer}>
+                                <View style={style.offer_view}>
+                                  <Text style={style.offer_text}>
+                                    {`${productType?.discount_percent}%`}
+                                  </Text>
+                                </View>
+                              </View> : <View /> : <View />
+                        }
+
+                      </View>
+                    </View>
+                  )}
+                />
+              )}
+            </ImageBackground>
+          </View>
+        )}
+        renderFixedHeader={() => <View style={[style.share_view, { backgroundColor: 'white' }]}>
+          <AntDesign
+            name="left"
+            size={22}
+            color={colorConstant.LIGH_GREY}
+            onPress={() => {
+              props.navigation.goBack();
+            }}
+            style={{
+              marginLeft: 15,
+              transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
+            }}
+          />
+          <Feather
+            name="share"
+            size={22}
+            color={colorConstant.LIGH_GREY}
+            onPress={() => { }}
+            style={{ marginRight: 15 }}
+          />
+        </View>}
+
+        // scrollEventThrottle={16}
+        //   onScroll={
+        //     Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+        //       useNativeDriver: false,
+        //     })
+
+        //   }
+        style={style.container}>
         <StatusBar
           translucent
           backgroundColor="transparent"
@@ -473,7 +639,8 @@ const ProductPage = props => {
         />
         {!loading && (
           <>
-            {renderHearderImageView()}
+
+
             <View
               style={{
                 width: '90%',
@@ -481,20 +648,23 @@ const ProductPage = props => {
                 padding: 10,
                 borderRadius: 20,
                 alignSelf: 'center',
-                bottom: '2%',
+                // bottom: '1%',
+                // height: 275,
+                // marginTop: '80%',
+                borderBottomLeftRadius: 20
               }}>
-              <View style={{alignItems: 'flex-start'}}>
+              <View style={{ alignItems: 'flex-start' }}>
                 <Text style={style.product_name}>{productDetail?.name}</Text>
               </View>
               <View
-                style={{flexDirection: 'row', marginTop: 10, marginLeft: 5}}>
+                style={{ flexDirection: 'row', marginTop: 10, marginLeft: 5, height: 20, alignItems: 'center' }}>
                 <Image
                   source={imageConstant.wave}
-                  style={{width: 20, height: 20}}
+                  style={{ width: 20, height: 20, alignSelf: 'center' }}
                   resizeMode="contain"
                 />
                 <Text style={style.last_time_offer_text}>
-                  {`${Constants.Laungagues.lasting_hours == null ? 'Lasting hours:' : Constants.Laungagues.lasting_hours} ${productType?.product_lasting_hours}`}
+                  {`${Constants.Laungagues.lasting_hours == null ? 'Lasting hours:' : Constants.Laungagues.lasting_hours + ': '} ${productType?.product_lasting_hours}`}
                 </Text>
               </View>
 
@@ -543,16 +713,16 @@ const ProductPage = props => {
               </View>
 
               {renderPriceView()}
-              {/* <View style={style.free_offer_view}>
-          <Text style={style.free_offer_text}>
-            {'Or 3 interest free payments \n of AED 4'}
-          </Text>
-          <Image
-            source={imageConstant.spotii}
-            style={{width: 100, height: 30, marginLeft: 10}}
-            resizeMode="contain"
-          />
-        </View> */}
+              {/* <View style={[style.free_offer_view, { justifyContent: 'space-between' }]}>
+                <Text style={style.free_offer_text}>
+                  {'Or 3 interest free payments \n of AED 4'}
+                </Text>
+                <Image
+                  source={imageConstant.spotii}
+                  style={{ width: 100, height: 30, marginLeft: 10 }}
+                  resizeMode="contain"
+                />
+              </View> */}
             </View>
 
             <View
@@ -562,7 +732,7 @@ const ProductPage = props => {
                 justifyContent: 'center',
                 alignSelf: 'center',
                 marginBottom: '10%',
-                marginTop: '-10%',
+                // marginTop: '-10%',
               }}>
               <View style={style.dicription_view}>
                 <View style={style.des_title_text}>
@@ -588,16 +758,11 @@ const ProductPage = props => {
                 )}
               </View>
 
-              {/* <View style={style.des_title_text}>
-          <Text style={[style.des_titile, {color: colorConstant.BLACK}]}>
-            {t('fragrance details')}
-          </Text>
-          <AntDesign name="plus" size={20} color={colorConstant.BLACK} />
-        </View> */}
+
               {productDetail?.reviews?.items?.length > 0 && (
                 <View>
                   <View style={style.border}></View>
-                  <View style={[style.des_title_text, {marginTop: '8%'}]}>
+                  <View style={[style.des_title_text, { marginTop: '8%' }]}>
                     <Text style={[style.des_titile]}>{Constants.Laungagues.reviews == null ? 'Reviews' : Constants.Laungagues.reviews}</Text>
                     <View
                       style={{
@@ -612,7 +777,7 @@ const ProductPage = props => {
                         ratingCount={productDetail?.review_count}
                         imageSize={20}
                         onFinishRating={ratingCompleted}
-                        style={{paddingVertical: 10, marginRight: 10}}
+                        style={{ paddingVertical: 10, marginRight: 10 }}
                       />
                       <View
                         style={{
@@ -627,7 +792,7 @@ const ProductPage = props => {
                         <Text
                           style={[
                             style.des_titile,
-                            {color: colorConstant.DARK_PRIMARY},
+                            { color: colorConstant.DARK_PRIMARY },
                           ]}>
                           {productDetail?.reviews?.items?.length}
                         </Text>
@@ -646,14 +811,14 @@ const ProductPage = props => {
                 </View>
               )}
 
-              {reviewshow && productDetail?.reviews?.items?.length > 0 && (
+              {/* {reviewshow && productDetail?.reviews?.items?.length > 0 && ( */}
                 <>
                   <FlatList
                     data={productDetail?.reviews?.items}
                     renderItem={reviewItem}
                   />
 
-                  {productDetail?.reviews?.items?.length <= 3 && (
+                {/* {productDetail?.reviews?.items?.length <= 3 && ( */}
                     <View
                       style={{
                         flex: 1,
@@ -663,7 +828,7 @@ const ProductPage = props => {
                       <TouchableOpacity
                         style={[
                           style.review_add_view,
-                          {backgroundColor: colorConstant.DARK_PRIMARY},
+                      { backgroundColor: colorConstant.DARK_PRIMARY },
                         ]}
                         onPress={() => {
                           setvisibale(true);
@@ -671,13 +836,13 @@ const ProductPage = props => {
                         <Text
                           style={[
                             style.text_viewall,
-                            {color: colorConstant.WHITE},
+                        { color: colorConstant.WHITE },
                           ]}>
                           {Constants.Laungagues.add_review == null ? 'Add review' : Constants.Laungagues.add_review}
                         </Text>
                       </TouchableOpacity>
                     </View>
-                  )}
+                {/* )} */}
 
                   {productDetail?.reviews?.items?.length == 3 && (
                     <View
@@ -708,7 +873,7 @@ const ProductPage = props => {
                       <TouchableOpacity
                         style={[
                           style.review_add_view,
-                          {backgroundColor: colorConstant.DARK_PRIMARY},
+                        { backgroundColor: colorConstant.DARK_PRIMARY },
                         ]}
                         onPress={() => {
                           setvisibale(true);
@@ -716,7 +881,7 @@ const ProductPage = props => {
                         <Text
                           style={[
                             style.text_viewall,
-                            {color: colorConstant.WHITE},
+                          { color: colorConstant.WHITE },
                           ]}>
                           {Constants.Laungagues.add_review == null ? 'Add review' : Constants.Laungagues.add_review}
                         </Text>
@@ -724,12 +889,12 @@ const ProductPage = props => {
                     </View>
                   )}
                 </>
-              )}
+              {/* )} */}
 
               <View style={style.border}></View>
 
-              <View style={{alignItems: 'flex-start'}}>
-                <Text style={[{fontSize: fontConstant.TEXT_20_SIZE_BOLD}]}>
+              <View style={{ alignItems: 'flex-start' }}>
+                <Text style={[{ fontSize: fontConstant.TEXT_20_SIZE_BOLD }]}>
                   {Constants.Laungagues.faq == null ? 'FAQ' : Constants.Laungagues.faq}
                 </Text>
               </View>
@@ -762,7 +927,7 @@ const ProductPage = props => {
                 </TouchableOpacity>
               )}
 
-              <View
+              {/* <View
                 style={{
                   marginTop: '10%',
                   flexDirection: 'column',
@@ -770,10 +935,10 @@ const ProductPage = props => {
                   padding: 15,
                   borderRadius: 20,
                 }}>
-                <View style={{flexDirection: 'row', marginTop: '3%'}}>
+                <View style={{ flexDirection: 'row', marginTop: '3%' }}>
                   <Image
                     source={imageConstant.shine}
-                    style={{width: 20, height: 20}}
+                    style={{ width: 20, height: 20 }}
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
@@ -781,10 +946,10 @@ const ProductPage = props => {
                       'Free samples for all orders' : Constants.Laungagues.free_samples_for_all_orders}
                   </Text>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: '5%'}}>
+                <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                   <Image
                     source={imageConstant.bus}
-                    style={{width: 20, height: 20}}
+                    style={{ width: 20, height: 20 }}
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
@@ -793,10 +958,10 @@ const ProductPage = props => {
 
                   </Text>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: '5%'}}>
+                <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                   <Image
                     source={imageConstant.offer}
-                    style={{width: 20, height: 20}}
+                    style={{ width: 20, height: 20 }}
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
@@ -805,10 +970,10 @@ const ProductPage = props => {
 
                   </Text>
                 </View>
-                <View style={{flexDirection: 'row', marginTop: '5%'}}>
+                <View style={{ flexDirection: 'row', marginTop: '5%' }}>
                   <Image
                     source={imageConstant.cashondelivery}
-                    style={{width: 20, height: 20}}
+                    style={{ width: 20, height: 20 }}
                     resizeMode="contain"
                   />
                   <Text style={style.condition_text}>
@@ -817,12 +982,12 @@ const ProductPage = props => {
 
                   </Text>
                 </View>
-              </View>
-            </View>
+              </View>*/}
+            </View> 
 
             {productDetail?.related_products?.length > 0 && (
               <>
-                <View style={{alignItems: 'flex-start'}}>
+                <View style={{ alignItems: 'flex-start' }}>
                   <Text
                     style={[
                       style.product_name,
@@ -836,7 +1001,7 @@ const ProductPage = props => {
                   </Text>
                 </View>
                 <View
-                  style={{width: '100%', marginTop: '5%', marginLeft: '5%'}}>
+                  style={{ width: '100%', marginTop: '5%', marginLeft: '5%' }}>
                   <FlatList
                     data={productDetail?.related_products}
                     renderItem={renderItem}
@@ -856,7 +1021,6 @@ const ProductPage = props => {
                 </View>
               </>
             )}
-
             <View style={style.add_card_view}>
               {productDetail?.stock_status === 'OUT_OF_STOCK' ? (
                 <Text
@@ -874,73 +1038,10 @@ const ProductPage = props => {
                 </Text>
               ) : (
                 <>
-                  <View
-                    style={{
-                      width: '30%',
-                      height: 50,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <UIStepperView
-                      value={value}
-                      setValue={val => {
-                        setValue(val);
-                        console.log(val, '---added count');
-                      }}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      width: '55%',
-                      height: 50,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        handleAddItemToCart();
-                      }}
-                      style={[
-                        style.review_add_view,
-                        {backgroundColor: colorConstant.DARK_PRIMARY},
-                      ]}>
-                      <Text
-                        style={[
-                          style.text_viewall,
-                          {color: colorConstant.WHITE},
-                        ]}>
-                          {Constants.Laungagues.add_to_cart == null ? 'Add to cart' : Constants.Laungagues.add_to_cart}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
+
                 </>
               )}
-              <View
-                style={{
-                  width: '15%',
-                  height: 50,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <View
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 25,
-                    backgroundColor: 'rgba(188, 139, 87, 0.1)',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                  <MaterialIcons
-                    name="favorite-border"
-                    size={22}
-                    color={colorConstant.DARK_PRIMARY}
-                    onPress={() => {
-                      props.navigation.goBack();
-                    }}
-                  />
-                </View>
-              </View>
+
             </View>
           </>
         )}
@@ -955,7 +1056,54 @@ const ProductPage = props => {
             }}
           />
         )}
-      </ScrollView>
+      </ParallaxScrollView>
+
+      {productDetail?.stock_status === 'OUT_OF_STOCK' ? <View></View> : <View style={style.AddCard}>
+        <View
+          style={style.updateitem}>
+          <UIStepperView
+            value={value}
+            setValue={val => {
+              setValue(val);
+              console.log(val, '---added count');
+            }}
+          />
+        </View>
+        <View
+          style={style.addtotinemcart}>
+          <TouchableOpacity
+            onPress={() => {
+              handleAddItemToCart();
+            }}
+            style={[
+              style.review_add_view,
+              { backgroundColor: colorConstant.DARK_PRIMARY },
+            ]}>
+            <Text
+              style={[
+                style.text_viewall,
+                { color: colorConstant.WHITE },
+              ]}>
+              {Constants.Laungagues.add_to_cart == null ? 'Add to cart' : Constants.Laungagues.add_to_cart}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View
+          style={style.heartview}>
+          <View
+            style={style.favouriteicon}>
+            <MaterialIcons
+              name="favorite-border"
+              size={22}
+              color={colorConstant.DARK_PRIMARY}
+              onPress={() => {
+                // props.navigation.goBack();
+              }}
+            />
+          </View>
+        </View>
+      </View>}
+
       <Loader loading={loading} />
       <Loader loading={isAdded} />
     </SafeAreaView>

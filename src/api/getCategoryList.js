@@ -250,6 +250,7 @@ export const GET_CATEGORY_LIST_HOME = async () => {
               app_banner
               automatic_sorting
               available_sort_by
+              id
               breadcrumbs {
                 category_level
                 category_name

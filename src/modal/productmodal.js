@@ -26,6 +26,7 @@ import {ADD_TO_CART_DATA} from '../api/getAddToCartData';
 import Loader from '../Component/Loader';
 import Constants from '../Comman/Constants';
 
+
 const ProductModal = props => {
   const navigation = useNavigation();
   const {t, i18n} = useTranslation();
@@ -49,21 +50,30 @@ const ProductModal = props => {
 
   console.log(offer, finalPrice, regularPrice);
 
+
   const closeDailog = () => {
     setOnOpenDailog(false);
   };
 
+
   const handleAddToCart = async () => {
     if (sku) {
+      console.log('Add to cart,', sku, parseFloat(value).toFixed(1))
       setLoading(true);
       let res = await ADD_TO_CART_DATA(parseFloat(value).toFixed(1), `${sku}`);
       setLoading(false);
+      props.producm('pdd')
+
       if (res != undefined && res !== null) {
         // Alert.alert('Your item added to cart successfully.');
         Alert.alert('', 'Your item added to cart successfully.', [
 
           {
-            text: 'OK', onPress: () => props.setOnOpenDailog(false)
+            text: 'OK', onPress: () => {
+              Constants.valuess = '1';
+              props.producm('pdd')
+              props.setOnOpenDailog(false)
+            }
           },
         ]);
 
@@ -89,7 +99,7 @@ const ProductModal = props => {
       <View style={style.centeredView}>
         <View
           style={{
-            minHeight: 450,
+            // minHeight: 450,
             backgroundColor: 'rgba(255, 255, 255, 1)',
             borderTopLeftRadius: 24,
             borderTopRightRadius: 24,
@@ -97,14 +107,16 @@ const ProductModal = props => {
           }}>
           <View
             style={{
-              flex: 1,
               backgroundColor: 'rgba(248, 244, 241, 1)',
               justifyContent: 'center',
               alignItems: 'center',
               borderTopLeftRadius: 24,
               borderTopRightRadius: 24,
             }}>
-            <Image source={{ uri: image }} style={{ width: 150, height: 100, resizeMode: 'contain' }} />
+            <View style={{ width: 200, height: 175, justifyContent: 'center', }}>
+              <Image source={{ uri: image }} resizeMode='contain'
+                style={{ width: '85%', height: '85%', alignSelf: 'center' }} />
+            </View>
             <AntDesign
               name="close"
               size={22}
@@ -122,8 +134,8 @@ const ProductModal = props => {
             {isStringNotNull(offer) && offer > 0 && (
               <View
                 style={{
-                  width: 35,
-                  height: 20,
+                  width: 40,
+                  height: 25,
                   backgroundColor: colorConstant.BLACK,
                   borderTopLeftRadius: 10,
                   borderBottomRightRadius: 10,
@@ -168,12 +180,17 @@ const ProductModal = props => {
                     });
                   }, 500);
                 }}>
-                <Text style={{color: colorConstant.DARK_PRIMARY}}>
+                <Text style={{
+                  color: colorConstant.DARK_PRIMARY, fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
+                  fontWeight: '400',
+                  lineHeight: 24,
+                  fontFamily: fontConstant.satoshifont,
+                }}>
                   {Constants.Laungagues.more == null ? 'More' : Constants.Laungagues.more}
                 </Text>
                 <AntDesign
                   name="arrowright"
-                  size={16}
+                  size={24}
                   color={colorConstant.DARK_PRIMARY}
                   style={{
                     marginLeft: 10,
@@ -190,10 +207,13 @@ const ProductModal = props => {
               <Text
                 style={{
                   fontFamily: fontConstant.satoshi,
-                  fontSize: 14,
+                  fontSize: 12,
                   fontStyle: 'normal',
+                  lineHeight: 14,
                   fontWeight: fontConstant.WEIGHT_LEIGHT,
                   color: colorConstant.LIGHT_TEXT,
+                  textTransform: 'uppercase',
+                  fontWeight: '400'
                 }}>
                 {`${cat} / ${props.item.customAttributesAjmalData[0]?.gender}`}
               </Text>
@@ -338,12 +358,14 @@ const style = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   product_name: {
-    fontFamily: fontConstant.gambetta,
-    fontSize: 18,
-    fontStyle: 'italic',
-    flex: 1,
-    // fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
+    fontSize: fontConstant.TEXT_24_SIZE_REGULAR,
+    fontStyle: 'italic',
+    fontFamily: fontConstant.gambetta,
+    fontWeight: fontConstant.WEIGHT_REGULAR,
+    marginTop: 6,
+    textTransform: 'capitalize',
+    flex: 1
     // paddingTop: 15,
   },
   product_size: {
@@ -358,7 +380,10 @@ const style = StyleSheet.create({
     color: colorConstant.DARK_PRIMARY,
     fontStyle: 'normal',
     fontSize: fontConstant.TEXT_20_SIZE_REGULAR,
-    fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
+    fontWeight: '700',
+    lineHeight: 20,
+
+    fontFamily: fontConstant.satoshifont,
   },
   price_view: {flexDirection: 'row', marginTop: 16},
   add_card_view: {

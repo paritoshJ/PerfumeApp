@@ -54,20 +54,16 @@ const SearchScreen = props => {
     }, []),
   );
   const onSpeechStartHandler = (e) => {
-    console.log('Speeach Recognize start=====>', e)
   }
   const onSpeechEndHandler = (e) => {
-    console.log('Speeach Recognize end =====>', e)
     setStartRecord(false);
     try {
       Voice.start('en-Us')
     } catch (error) {
-      console.log("error raised", error)
     }
 
   }
   const onSpeechResultsHandler = (e) => {
-    console.log('Speeach Recognize resulet=====>', e.value[0])
     StratVoiceSearch(e.value[0])
     searchFunctionvoice(e.value[0])
   }
@@ -75,7 +71,6 @@ const SearchScreen = props => {
     try {
       await Voice.start('en-Us')
     } catch (error) {
-      console.log("error raised", error)
     }
   }
   const stopRecording = async () => {
@@ -84,7 +79,6 @@ const SearchScreen = props => {
       setStartRecord(false);
 
     } catch (error) {
-      console.log("error raised", error)
     }
   }
 
@@ -96,7 +90,6 @@ const SearchScreen = props => {
 
     setSearching(false);
     if (res) {
-      console.log('GET_PRODUCTS', res);
       setdata(res?.products.items);
     }
   };
@@ -106,8 +99,6 @@ const SearchScreen = props => {
 
     setSearching(false);
     if (res) {
-      console.log('GET_PRODUCTS', res);
-      console.log('GET_PRODUCTS', res?.products.items);
       setstore(res?.products.items);
     }
   };

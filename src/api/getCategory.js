@@ -24,6 +24,7 @@ export const client1 = new ApolloClient({
 });
 export const GET_CATEGORY = async (ID) => {
   console.log('=======>', Constants.StoreCode)
+  console.log('=======>', ID)
 
   return new Promise(async (resolve, reject) => {
     try {
@@ -235,7 +236,7 @@ export const GET_SUB_CATEGORY = async (itemID) => {
                      image
                      url_key
                      children_count
-                     products (pageSize:4){
+                     products (pageSize:1){
                          total_count
                          items {
                              id
@@ -493,6 +494,7 @@ export const GET_CATEGORY_PRODUCT = async (search, filter, pageSize, currentPage
                     sku
                     url_key
                     url_path
+                    stock_status
                     image {
                         disabled
                         label
@@ -553,6 +555,7 @@ export const GET_CATEGORY_PRODUCT = async (search, filter, pageSize, currentPage
                     current_page
                 }
             }
+            
         }`,
         variables: {
           search: search,

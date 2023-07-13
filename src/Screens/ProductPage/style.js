@@ -10,13 +10,15 @@ export default StyleSheet.create({
   child: {width, justifyContent: 'center', flexDirection: 'row'},
   share_view: {
     width: '100%',
-    height: 40,
-    marginTop: '5%',
+    height: 50,
+    // marginTop: '5%',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    marginTop: '10%',
+    borderColor: colorConstant.LIGHT_GRAY,
+    // borderWidth: 0.2
+    // marginTop: '2%',
   },
   vanilla: {
     width: 130,
@@ -52,10 +54,12 @@ export default StyleSheet.create({
     // justifyContent: 'center',
   },
   header_container: {
-    height: 400,
+    // height: 250,
+    marginTop: '10%',
     // backgroundColor: colorConstant.PRIMARY,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+
   },
   text: {
     color: colorConstant.WHITE,
@@ -81,19 +85,25 @@ export default StyleSheet.create({
   },
   product_name: {
     fontFamily: fontConstant.gambetta,
-    fontSize: fontConstant.TEXT_27_SIZE_REGULAR,
+    fontSize: fontConstant.TEXT_30_SIZE_REGULAR,
     fontStyle: 'italic',
     fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
     paddingTop: 15,
     marginLeft: 5,
+    fontWeight: '500',
+    lineHeight: 36,
   },
   last_time_offer_text: {
     marginLeft: 10,
-    fontSize: fontConstant.TEXT_14_SIZE_REGULAR,
-    fontStyle: 'normal',
+    fontSize: fontConstant.TEXT_16_SIZE_REGULAR,
     fontWeight: fontConstant.WEIGHT_REGULAR,
     color: colorConstant.BLACK,
+    alignSelf: 'center',
+    fontFamily: fontConstant.satoshifont,
+    fontWeight: '500',
+    // lineHeight: 30,
+    letter: '4%'
   },
   product_size: {
     width: 80,
@@ -115,10 +125,19 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: fontConstant.WEIGHT_SEMI_BOLD,
     paddingBottom: 10,
+    fontFamily: fontConstant.satoshifont,
+    fontWeight: '700', fontSize: 20, lineHeight: 30,
   },
-  price_view: {flexDirection: 'row', marginTop: 15, marginLeft: 5},
+  price_view: {
+    flexDirection: 'row', marginTop: 15, marginLeft: 5,
+    fontFamily: fontConstant.satoshifont,
+    fontWeight: '400',
+    fontSize: 20,
+    lineHeight: 30,
+    marginBottom: 10
+  },
   free_offer_view: {
-    marginTop: 10,
+    // marginTop: 5,
     flexDirection: 'row',
     alignItems: 'center',
     marginLeft: 5,
@@ -206,4 +225,38 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  AddCard: {
+    width: '100%',
+    height: '10%',
+    borderColor: colorConstant.LIGHT_GRAY,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    paddingTop: '3%'
+  },
+  updateitem: {
+    width: '30%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  addtotinemcart: {
+    width: '55%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heartview: {
+    width: '15%',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  favouriteicon: {
+    width: 40,
+    height: 40,
+    borderRadius: 25,
+    backgroundColor: 'rgba(188, 139, 87, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });

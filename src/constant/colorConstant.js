@@ -41,4 +41,5 @@ export default {
   TEXT_COLOR: '#2B2826',
   CARD_COLOR: '#F5FAFE',
   LIGHT_TEXT: '#A4A4A4',
+  LIGHT_GRAY: '#C8C8C8'
 };

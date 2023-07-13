@@ -15,7 +15,6 @@ export const ADD_CREDIT_CARD_API = async (card_cvv, card_holdername, card_number
             authorization: Constants.Token,
         }
     });
-    console.log('getode')
     try {
         const { data, error } = await client.mutate({
             mutation: gql`
